@@ -7,11 +7,24 @@
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
+  :root {
+    --bg: #07090d;
+    --bg-card: #12161d;
+    --border: #21262d;
+    --border-subtle: #1a1f27;
+    --ink: #f0f6fc;
+    --ink-soft: #c9d1d9;
+    --muted: #8b949e;
+    --accent-1: #818cf8;
+    --accent-2: #c084fc;
+    --gradient: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+    --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: #f1f5f9;
-    background: #0b0d12;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
     line-height: 1.6;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
@@ -20,66 +33,136 @@
     align-items: center;
     justify-content: center;
     padding: 24px;
+    overflow-x: hidden;
   }
+
+  .mesh-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .mesh-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; animation: drift 24s ease-in-out infinite; }
+  .mesh-blob.a { width: 480px; height: 480px; background: #818cf8; top: -100px; left: -80px; }
+  .mesh-blob.b { width: 380px; height: 380px; background: #c084fc; bottom: -60px; right: -60px; animation-delay: -10s; }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(40px, -30px) scale(1.06); }
+  }
+  .grain { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.025; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+
+  a { color: var(--accent-1); text-decoration: none; transition: color 0.2s var(--easing); }
+  a:hover { color: var(--accent-2); }
+
   .card {
-    background: #12151c;
-    border: 1px solid #232936;
-    border-radius: 20px;
-    padding: 56px 40px;
-    max-width: 560px;
+    background: rgba(18, 22, 29, 0.7);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 56px 44px;
+    max-width: 600px;
     text-align: center;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+    animation: pop 0.6s var(--easing);
   }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .logo-row {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 12px; color: var(--muted); margin-bottom: 28px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .logo-mark { width: 22px; height: 22px; background: var(--gradient); border-radius: 6px; display: grid; place-items: center; }
+  .logo-mark svg { width: 12px; height: 12px; }
+
   h1 {
-    font-size: 28px;
+    font-size: 30px;
     margin-bottom: 12px;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
   }
-  .lead { color: #cbd5e1; margin-bottom: 24px; }
-  .options {
-    text-align: left;
-    border-top: 1px solid #232936;
-    padding-top: 24px;
-    margin-top: 24px;
-    color: #cbd5e1;
-    font-size: 14px;
+  .lead {
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+    font-size: 16.5px;
   }
-  .options p { margin-bottom: 10px; }
+
+  .row { margin-top: 24px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
   .btn {
-    display: inline-block;
-    padding: 12px 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 13px 24px;
     border-radius: 10px;
     font-weight: 600;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 14.5px;
+    font-family: inherit;
+    transition: transform 0.2s var(--easing), box-shadow 0.2s var(--easing);
+    border: 1px solid transparent;
   }
+  .btn:hover { transform: translateY(-1px); }
   .btn-primary {
-    background: linear-gradient(135deg, #818cf8, #c084fc);
+    background: var(--gradient);
     color: #fff;
-    box-shadow: 0 4px 24px rgba(129, 140, 248, 0.35);
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.35);
   }
   .btn-secondary {
     background: transparent;
-    color: #f1f5f9;
-    border: 1px solid #232936;
-    margin-left: 8px;
+    color: var(--ink);
+    border-color: var(--border);
   }
-  .row { margin-top: 20px; }
-  .small { color: #64748b; font-size: 13px; margin-top: 16px; }
-  .small a { color: #818cf8; }
+  .btn-secondary:hover { border-color: var(--accent-1); color: var(--accent-1); }
+
+  .options {
+    text-align: left;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 24px;
+    margin-top: 32px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+  .options p { margin-bottom: 8px; line-height: 1.6; }
+  .options .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-1);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .small { color: var(--muted); font-size: 12.5px; margin-top: 18px; line-height: 1.55; }
+  .small a { color: var(--accent-1); }
 </style>
 </head>
 <body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="mesh-blob a"></div>
+  <div class="mesh-blob b"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
 <div class="card">
+  <div class="logo-row">
+    <span class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
+    </span>
+    SiteX-Ray
+  </div>
+
   <h1>No charge — your card is untouched</h1>
   <p class="lead">You closed the checkout before paying. Nothing happened to your card.</p>
 
   <div class="row">
-    <a href="/" class="btn btn-primary">← Try the free teaser</a>
+    <a href="/" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Try the free teaser
+    </a>
     <a href="/sample-report.html" class="btn btn-secondary">See a sample report</a>
   </div>
 
   <div class="options">
-    <p><strong>Still on the fence?</strong></p>
+    <div class="label">Still on the fence?</div>
     <p>• Try the free 1-page teaser first — see what the AI catches before paying.</p>
     <p>• Read the <a href="/sample-report.html">sample report</a> to see what you'd get for $39.</p>
     <p>• Email <a href="mailto:ernest2011kostevich@gmail.com">ernest2011kostevich@gmail.com</a> with questions.</p>
@@ -87,5 +170,6 @@
 
   <p class="small">If you think you were charged anyway, reply to your Lemon Squeezy receipt or contact us — we issue refunds with no questions.</p>
 </div>
+
 </body>
 </html>

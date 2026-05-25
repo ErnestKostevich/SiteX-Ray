@@ -7,11 +7,23 @@
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
+  :root {
+    --bg: #07090d;
+    --bg-card: #12161d;
+    --border: #21262d;
+    --ink: #f0f6fc;
+    --ink-soft: #c9d1d9;
+    --muted: #8b949e;
+    --accent-1: #818cf8;
+    --accent-2: #c084fc;
+    --gradient: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+    --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: #f1f5f9;
-    background: #0b0d12;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
     line-height: 1.6;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
@@ -20,73 +32,121 @@
     align-items: center;
     justify-content: center;
     padding: 24px;
+    overflow-x: hidden;
   }
+
+  .mesh-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .mesh-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; animation: drift 24s ease-in-out infinite; }
+  .mesh-blob.a { width: 540px; height: 540px; background: #818cf8; top: -120px; left: -120px; }
+  .mesh-blob.b { width: 440px; height: 440px; background: #c084fc; bottom: -80px; right: -80px; animation-delay: -10s; }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(40px, -30px) scale(1.06); }
+  }
+  .grain { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.025; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+
+  a { color: var(--accent-1); text-decoration: none; transition: color 0.2s var(--easing); }
+  a:hover { color: var(--accent-2); }
+
   .card {
-    background: #12151c;
-    border: 1px solid #232936;
-    border-radius: 20px;
-    padding: 56px 40px;
-    max-width: 520px;
+    background: rgba(18, 22, 29, 0.7);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 56px 44px;
+    max-width: 560px;
     text-align: center;
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+    animation: pop 0.6s var(--easing);
   }
-  .card::before {
-    content: "";
-    position: absolute;
-    top: -100px; left: 50%;
-    transform: translateX(-50%);
-    width: 400px; height: 300px;
-    background: radial-gradient(circle, rgba(129, 140, 248, 0.16), transparent 60%);
-    pointer-events: none;
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
   }
+
+  .logo-row {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 12px; color: var(--muted); margin-bottom: 24px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .logo-mark { width: 22px; height: 22px; background: var(--gradient); border-radius: 6px; display: grid; place-items: center; }
+  .logo-mark svg { width: 12px; height: 12px; }
+
   .glyph {
-    font-size: 96px;
+    font-size: 108px;
     font-weight: 800;
-    background: linear-gradient(135deg, #818cf8, #c084fc);
+    background: var(--gradient);
+    background-size: 200% auto;
+    animation: shimmer 4s linear infinite;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     letter-spacing: -4px;
-    margin-bottom: 8px;
+    line-height: 1;
+    margin-bottom: 12px;
   }
+  @keyframes shimmer { to { background-position: 200% center; } }
+
   h1 {
-    font-size: 24px;
+    font-size: 22px;
     margin-bottom: 12px;
     letter-spacing: -0.01em;
+    line-height: 1.2;
   }
-  p {
-    color: #cbd5e1;
-    margin-bottom: 28px;
-  }
-  .home {
-    display: inline-block;
-    padding: 14px 28px;
-    background: linear-gradient(135deg, #818cf8, #c084fc);
-    color: #fff;
+  p { color: var(--ink-soft); margin-bottom: 32px; line-height: 1.6; }
+
+  .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 13px 24px;
     border-radius: 10px;
-    text-decoration: none;
-    font-size: 15px;
     font-weight: 600;
-    box-shadow: 0 4px 24px rgba(129, 140, 248, 0.35);
+    text-decoration: none;
+    font-size: 14.5px;
+    transition: transform 0.2s var(--easing);
+    border: 1px solid transparent;
   }
-  .home:hover { transform: translateY(-1px); }
-  .second {
-    display: block;
-    margin-top: 16px;
-    color: #64748b;
-    font-size: 13px;
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary {
+    background: var(--gradient);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.35);
   }
-  .second a { color: #818cf8; }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--border); }
+  .btn-secondary:hover { border-color: var(--accent-1); color: var(--accent-1); }
 </style>
 </head>
 <body>
+
+<div class="mesh-bg" aria-hidden="true">
+  <div class="mesh-blob a"></div>
+  <div class="mesh-blob b"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
 <div class="card">
+  <div class="logo-row">
+    <span class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
+    </span>
+    SiteX-Ray
+  </div>
+
   <div class="glyph">404</div>
   <h1>This page hasn't been audited yet</h1>
   <p>The URL you followed doesn't exist on this site. Try the homepage to run an audit on your own.</p>
-  <a class="home" href="/">← Back to SiteX-Ray</a>
-  <span class="second">Or check out the <a href="/sample-report.html">sample report</a>.</span>
+
+  <div class="row">
+    <a class="btn btn-primary" href="/">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to homepage
+    </a>
+    <a class="btn btn-secondary" href="/sample-report.html">See sample report</a>
+  </div>
 </div>
+
 </body>
 </html>
