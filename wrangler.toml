@@ -12,5 +12,11 @@ name = "sitexray"
 compatibility_date = "2025-01-01"
 pages_build_output_dir = "landing"
 
+# Cloudflare Workers AI binding — gives the worker access to free Llama 3.1
+# inference. This is what makes free teasers cost $0 for the founder.
+# Free plan: 10,000 Neurons/day (≈50–200 audits/day).
+[ai]
+binding = "AI"
+
 # When deploying via wrangler directly (instead of GitHub auto-deploy):
 #   wrangler pages deploy landing --project-name=sitexray

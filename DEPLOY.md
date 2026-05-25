@@ -1,16 +1,29 @@
 # DEPLOY.md — turning this repo into a live, money-making site
 
-Read top to bottom. Everything is **free-tier** until you make a sale. Plan on ~60 minutes the first time, then 5 minutes for updates.
+Read top to bottom. **Truly $0 upfront** — every required piece is on a free tier with no credit-card-on-file. Plan ~60 minutes the first time, then 5 minutes for updates.
 
-The pieces:
+## What you need
+
+**Required** (free, no credit card):
+- GitHub account
+- Cloudflare account (hosts site + provides FREE Llama 3.1 AI inference)
+- Resend account (free 3000 emails/month)
+
+**Required only after you start selling** (no upfront cost):
+- Lemon Squeezy account (collects $39 payments, takes ~7% fee per sale)
+
+**Optional, recommended later** (small cost, only after first sale):
+- Anthropic API account ($5 min credit) — upgrades the paid $39 audit from Llama to Claude Sonnet quality. Skip for launch; add once you have revenue.
+
+## Sections
 
 1. [GitHub repo](#0-github) — already done ✅
-2. [Anthropic API account](#1-anthropic-api) — for Claude
-3. [Resend account](#2-resend-email) — for email delivery
-4. [Cloudflare account + Pages](#3-cloudflare-pages) — for hosting landing + backend
-5. [Lemon Squeezy account](#4-lemon-squeezy) — for accepting payments
-6. [Cloudflare Turnstile](#5-cloudflare-turnstile) — anti-bot (optional but recommended)
-7. [Wire it all together](#6-wire-everything-together)
+2. [Cloudflare account + Pages + AI binding](#1-cloudflare-pages--workers-ai)
+3. [Resend account](#2-resend-email) — email delivery
+4. [Lemon Squeezy account](#3-lemon-squeezy) — payments
+5. [Cloudflare Turnstile](#4-cloudflare-turnstile) — anti-bot (optional)
+6. [Anthropic API](#5-anthropic-api-optional-quality-upgrade) — optional Claude upgrade
+7. [Wire everything together](#6-wire-everything-together)
 8. [Test the full flow](#7-final-test)
 9. [Go live](#8-go-live--start-selling)
 
@@ -24,16 +37,33 @@ You'll connect Cloudflare Pages to this repo in step 3 — it'll auto-deploy on 
 
 ---
 
-## 1. Anthropic API
+## 1. Cloudflare Pages + Workers AI
 
-Anthropic is the company that makes Claude — the AI generating your audits.
+Cloudflare hosts the landing page, runs the backend (the JS in `landing/functions/`), AND provides **free Llama 3.1 inference** via Workers AI — that's how your free teasers cost you $0.
 
-1. Sign up: https://console.anthropic.com/
-2. Add **$5 in credits** (Settings → Plans & billing). This is the only real upfront cost. $5 = ~16 full audits, paid back by your first sale.
-3. Create an API key: Settings → API Keys → **Create Key** → name it `sitexray-prod`
-4. **Copy the key**, you'll only see it once. Save it somewhere safe (e.g. password manager). Starts with `sk-ant-`.
+1. Sign up: https://dash.cloudflare.com/sign-up (free, no card required for Pages + Workers AI free tier)
+2. **Workers & Pages** → **Create application** → **Pages** tab → **Connect to Git**
+3. Authorize Cloudflare to read your GitHub
+4. Pick the `Project-4` repo
+5. Configure build:
+   - **Production branch:** `main`
+   - **Build command:** *(leave empty)*
+   - **Build output directory:** `landing`
+   - **Root directory:** *(leave as `/`)*
+6. Click **Save and Deploy**. First deploy takes 1–2 minutes.
+7. You now have a live URL like `https://project-4-abc.pages.dev` — open it, you should see the landing.
 
-Anthropic also lets you set a **monthly spend limit** — set it to e.g. $50/month so you can never get a surprise bill. Settings → Plans & billing → Usage limits.
+### Enable the Workers AI binding (THIS is what makes free teasers free)
+
+After the first deploy:
+
+- Pages → your project → **Settings** → **Functions** → **Workers AI bindings** → **Add binding**
+- Variable name: `AI`
+- Save → Retry the latest deployment so the binding takes effect
+
+This binding gives your worker access to Cloudflare's Llama 3.1 8B model with **10,000 Neurons/day free** (≈ 50–200 audits/day). Past that, ~$0.01 per 1000 Neurons — basically free at any indie volume.
+
+> 💡 If you skip this binding AND skip Anthropic, the backend will throw "No AI configured" on every request. At minimum, you need ONE AI source.
 
 ---
 
@@ -54,22 +84,6 @@ Resend sends your reports to customers' inboxes. Free tier: 3,000 emails/month, 
 
 ---
 
-## 3. Cloudflare Pages
-
-This hosts the landing page **and** runs your backend (the JS files in `landing/functions/`). Free tier: unlimited bandwidth, 100,000 function requests/day.
-
-1. Sign up: https://dash.cloudflare.com/sign-up
-2. **Workers & Pages** → **Create application** → **Pages** tab → **Connect to Git**
-3. Authorize Cloudflare to read your GitHub
-4. Pick the `Project-4` repo
-5. Configure build:
-   - **Production branch:** `main`
-   - **Build command:** *(leave empty)*
-   - **Build output directory:** `landing`
-   - **Root directory:** *(leave as `/`)*
-6. Click **Save and Deploy**. First deploy takes 1–2 minutes.
-7. You now have a live URL like `https://project-4-abc.pages.dev` — open it, you should see the landing.
-
 ### Add environment variables
 
 This is where your API keys live. Cloudflare encrypts them at rest.
@@ -78,15 +92,16 @@ This is where your API keys live. Cloudflare encrypts them at rest.
 
 For **Production** environment, add:
 
-| Variable name | Value | Encrypted? |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | `sk-ant-...` from step 1 | ✅ yes |
-| `RESEND_API_KEY` | `re_...` from step 2 | ✅ yes |
-| `RESEND_FROM_EMAIL` | `SiteX-Ray <reports@yourdomain.com>` (or skip — defaults to onboarding@resend.dev) | no |
-| `ANTHROPIC_MODEL` | `claude-sonnet-4-5` (or leave blank for default) | no |
-| `LEMON_WEBHOOK_SECRET` | (we'll fill in step 4) | ✅ yes |
-| `LEMON_CHECKOUT_URL` | (we'll fill in step 4) | no |
-| `TURNSTILE_SECRET` | (we'll fill in step 5) | ✅ yes |
+| Variable name | Required? | Value | Encrypted? |
+|---|---|---|---|
+| `RESEND_API_KEY` | ✅ required | `re_...` from step 2 | yes |
+| `RESEND_FROM_EMAIL` | optional | `SiteX-Ray <reports@yourdomain.com>` (else defaults to onboarding@resend.dev) | no |
+| `LEMON_WEBHOOK_SECRET` | required to sell | (filled in step 3) | yes |
+| `LEMON_CHECKOUT_URL` | required to sell | (filled in step 3) | no |
+| `TURNSTILE_SECRET` | recommended | (filled in step 4) | yes |
+| `ANTHROPIC_API_KEY` | optional | `sk-ant-...` (skip = use free Cloudflare AI for everything) | yes |
+| `ANTHROPIC_MODEL` | optional | `claude-sonnet-4-5` | no |
+| `CF_AI_MODEL` | optional | overrides default `@cf/meta/llama-3.1-8b-instruct` | no |
 
 After adding, click **Save** then **Redeploy** the latest deployment (top right of the project page → triple dot → Retry deployment) so functions pick up the new env vars.
 
@@ -98,7 +113,7 @@ Either:
 
 ---
 
-## 4. Lemon Squeezy
+## 3. Lemon Squeezy
 
 Lemon Squeezy handles checkout, payments, tax (incl. EU VAT), and webhooks. Their fee is ~5% + $0.50 per sale. **No setup fee, no monthly cost** until you sell.
 
@@ -135,7 +150,7 @@ and paste your checkout URL between the quotes. Commit & push.
 
 ---
 
-## 5. Cloudflare Turnstile
+## 4. Cloudflare Turnstile
 
 Stops bots from spamming your free-teaser endpoint and burning your Claude credits.
 
@@ -155,6 +170,26 @@ Update two places:
 const TURNSTILE_SITE_KEY = "";
 ```
 and paste the site key between the quotes. Commit & push.
+
+---
+
+## 5. Anthropic API (optional, quality upgrade)
+
+**Skip this section for launch.** Come back after your first 5–10 sales when you want to upgrade the $39 audit from Llama-quality to Claude-quality.
+
+What changes when you add Anthropic:
+- Free teasers stay on free Cloudflare AI (no change, $0 cost)
+- Paid $39 audits switch to **Claude Sonnet** — noticeably better writing, more specific fixes, more reliable structure
+- Your cost per paid report becomes ~$0.30, paid out of the $39 customer payment (still net positive: ~$36 margin)
+
+To set up:
+1. Sign up: https://console.anthropic.com/
+2. Add **$5 in credits** (Settings → Plans & billing). $5 = ~16 audits.
+3. Create an API key: Settings → API Keys → **Create Key** → name it `sitexray-prod` → copy the key (starts with `sk-ant-`).
+4. **Set a monthly spend cap** so you never get a surprise bill: Settings → Plans & billing → Usage limits → set to e.g. $50/month.
+5. Cloudflare Pages → Settings → Environment variables → add `ANTHROPIC_API_KEY` (encrypted) → Retry deployment.
+
+Once set, paid orders automatically use Claude. No code changes needed.
 
 ---
 
@@ -242,11 +277,21 @@ The local server runs the **same Functions code** that production runs. If somet
 
 ## Costs at scale (reality check)
 
-| Stage | Sales/month | Anthropic | Lemon Squeezy | Resend | CF Pages | Total cost | Revenue | Net |
-|---|---|---|---|---|---|---|---|---|
-| Bootstrapping | 0 | $0 | $0 | $0 | $0 | **$0** | $0 | $0 |
-| First 10 sales | 10 | $5 | $40 (fees) | $0 | $0 | **$45** | $390 | **+$345** |
-| 50 sales/mo | 50 | $20 | $200 | $0 | $0 | **$220** | $1,950 | **+$1,730** |
-| 500 sales/mo | 500 | $200 | $2,000 | $20 | $0 | **$2,220** | $19,500 | **+$17,280** |
+### Mode A — pure $0 (Cloudflare AI only, no Anthropic at all)
 
-The model is robust. Every sale is profitable from #1.
+| Stage | Sales/mo | Free teasers/mo | CF AI cost | Lemon | Resend | CF Pages | Total | Revenue | Net |
+|---|---|---|---|---|---|---|---|---|---|
+| Bootstrapping | 0 | 50 | $0 (free tier) | $0 | $0 | $0 | **$0** | $0 | $0 |
+| 10 sales | 10 | 200 | $0 (free tier) | $40 | $0 | $0 | **$40** | $390 | **+$350** |
+| 50 sales | 50 | 1000 | $0 (free tier) | $200 | $0 | $0 | **$200** | $1,950 | **+$1,750** |
+| 500 sales | 500 | 10k | ~$10 | $2,000 | $20 | $0 | **$2,030** | $19,500 | **+$17,470** |
+
+### Mode B — Anthropic upgrade (Claude for paid audits)
+
+| Stage | Sales/mo | Anthropic | Lemon | Resend | CF | Total | Revenue | Net |
+|---|---|---|---|---|---|---|---|---|
+| First sales | 10 | $5 prepay + $3 | $40 | $0 | $0 | **$48** | $390 | **+$342** |
+| 50 sales | 50 | $20 | $200 | $0 | $0 | **$220** | $1,950 | **+$1,730** |
+| 500 sales | 500 | $200 | $2,000 | $20 | $0 | **$2,220** | $19,500 | **+$17,280** |
+
+Both modes are profitable from sale #1. Mode A has the lowest possible launch friction; Mode B trades $5 upfront for better paid-audit quality (and likely higher conversion + lower refunds long-term).

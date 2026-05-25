@@ -2,7 +2,7 @@
 
 AI-powered website audit. Visitor pastes their URL, gets a senior-consultant-grade report in their inbox within 2 minutes. Free 1-page teaser, full 10-15 page report for $39.
 
-Built to run on **$0 upfront cost** — every piece sits on a free tier (Cloudflare Pages, Resend, Anthropic pay-per-use). First sale pays for the next 100 reports.
+Built to run on **truly $0 upfront cost** — every piece sits on a free tier, *including AI inference*. Cloudflare Workers AI (Llama 3.1 8B) generates the audits for free. Anthropic Claude is an optional quality upgrade for the paid tier; even there, the $0.30 cost comes out of the $39 customer payment — never out of your pocket.
 
 ---
 
@@ -29,12 +29,13 @@ Built to run on **$0 upfront cost** — every piece sits on a free tier (Cloudfl
 │       └── _shared/
 │           ├── prompt.js          # JS mirror of the system prompt
 │           ├── scraper.js         # site scraper (uses HTMLRewriter)
-│           ├── analyzer.js        # Anthropic API client
+│           ├── analyzer.js        # Anthropic Claude API client (optional)
+│           ├── cloudflareAI.js    # Cloudflare Workers AI client (free, default)
+│           ├── auditFlow.js       # picks the cheapest available backend
 │           ├── renderer.js        # HTML report email body
 │           ├── mailer.js          # Resend client
 │           ├── turnstile.js       # bot check verifier
-│           ├── lemon.js           # HMAC signature verifier
-│           └── auditFlow.js       # shared scrape → analyze → email pipeline
+│           └── lemon.js           # HMAC signature verifier
 │
 ├── outreach/                      # day-1 sales materials
 │   ├── linkedin_dm.md             # cold-DM templates + daily routine
@@ -88,11 +89,13 @@ Opens `report.html` in your browser. Save as PDF via Ctrl+P.
 
 See **[DEPLOY.md](DEPLOY.md)**. First-time setup: ~60 minutes. Costs $0 upfront (you need to put $5 on Anthropic for API credits, fully refunded by your first sale).
 
-Required accounts (all free tier):
-- [Anthropic](https://console.anthropic.com) — Claude API (~$0.30/report)
+Required accounts (all free tier, no card needed):
+- [Cloudflare](https://dash.cloudflare.com) — hosting + backend + free AI inference (unlimited free)
 - [Resend](https://resend.com) — email delivery (3000 free/mo)
-- [Cloudflare Pages](https://dash.cloudflare.com) — hosting + backend (unlimited free)
-- [Lemon Squeezy](https://lemonsqueezy.com) — payments (5% fee, $0 upfront)
+- [Lemon Squeezy](https://lemonsqueezy.com) — payments (~7% fee, $0 upfront, only after first sale)
+
+Optional (quality upgrade once you have revenue):
+- [Anthropic](https://console.anthropic.com) — Claude API for the $39 tier (~$0.30/report, $5 minimum prepay)
 
 ---
 

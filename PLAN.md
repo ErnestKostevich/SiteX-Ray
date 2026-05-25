@@ -7,8 +7,8 @@ AI website auditor for SMBs in EU & North America. Sells one-shot reports for $3
 
 ## Constraints (founder rules)
 
-- **$0 upfront cost.** No paid hosting, no paid SaaS, no marketing budget on day 1.
-- **Founder doesn't pay for end-user usage.** Cost-per-report must be covered by the sale itself OR pushed to the customer (BYOK).
+- **Truly $0 upfront cost.** No paid hosting, no paid SaaS, no minimum-credit prepayment to any vendor, no marketing budget on day 1.
+- **Founder never pays for user-generated traffic.** Free teasers run on Cloudflare Workers AI (free tier). Paid audits — when sold — pull from the $39 customer payment, never out of founder pocket.
 - **English-speaking, high-purchasing-power audience only.** Targeting US, UK, Canada, Australia, Western Europe SMBs. No RU/CIS.
 - **No SaaS subscriptions.** One-time payments, services, or ad/traffic-based revenue.
 
@@ -18,21 +18,37 @@ AI website auditor for SMBs in EU & North America. Sells one-shot reports for $3
 
 | Layer | Tool | Cost on day 1 | Cost at scale |
 |-------|------|---------------|---------------|
-| Domain | Cloudflare / Namecheap | $0 (use subdomain) → $10/yr after first sale | $10/yr |
-| Hosting (landing) | Cloudflare Pages or GitHub Pages | $0 (unlimited free) | $0 |
-| Backend (form → audit) | Cloudflare Worker (free 100k req/day) OR manual | $0 | $0 until 100k reports/day |
-| Email delivery | Resend free tier (3000/mo) OR personal Gmail SMTP | $0 | $20/mo at scale |
-| Payments | Lemon Squeezy / Gumroad | 5–10% fee per sale, $0 upfront | 5–10% per sale |
-| AI inference | Anthropic API ($0.30/report on Sonnet) | **paid out of the sale revenue** | ~$0.30/report |
+| Domain | use Cloudflare's `*.pages.dev` subdomain | $0 | $10/yr (custom) |
+| Hosting (landing) | Cloudflare Pages | $0 (unlimited free) | $0 |
+| Backend (form → audit) | Cloudflare Pages Functions (free 100k req/day) | $0 | $0 until 100k/day |
+| **AI inference — free teaser** | **Cloudflare Workers AI / Llama 3.1 8B** | **$0 (free 10k Neurons/day)** | **~$0.001/teaser past free tier** |
+| AI inference — paid audit (default) | Same Cloudflare Workers AI | $0 | ~$0.005/audit past free tier |
+| AI inference — paid audit (OPTIONAL upgrade) | Anthropic Claude Sonnet | $5 prepay (only if you opt in) | ~$0.30/audit |
+| Email delivery | Resend free tier (3000/mo) | $0 | $20/mo at scale |
+| Payments | Lemon Squeezy | ~7% per sale, $0 upfront | ~7% per sale |
 | Anti-bot | Cloudflare Turnstile | $0 | $0 |
 
-**Net economics on a $39 sale:**
+**Truly $0 to launch.** Cloudflare gives free AI inference. The only money that ever leaves your account is the ~7% Lemon Squeezy takes per sale — deducted automatically from the $39 customer payment, never out-of-pocket.
+
+### Net economics — Mode A (default, Cloudflare AI throughout)
+
+Per $39 sale:
 - Lemon Squeezy fee (~7%): -$2.73
-- Anthropic API (one full report): -$0.30
+- AI inference: -$0.00 (free tier covers indie volume)
+- Email: -$0.00
+- **Margin: ~$36.27 per sale**
+
+### Net economics — Mode B (optional Claude upgrade for paid tier)
+
+Per $39 sale:
+- Lemon Squeezy fee (~7%): -$2.73
+- Anthropic Claude API (~one full report): -$0.30
 - Email: -$0.00
 - **Margin: ~$35.97 per sale**
 
-**The only real upfront cost:** $5 minimum credit on Anthropic API to start. Pays for ~16 full reports. After first sale, fully self-funded.
+Mode B requires $5 prepay on Anthropic (refunded by first sale). The trade-off you pay $0.30 for: noticeably better writing in the paid report, more specific fixes, lower refund rate.
+
+**Recommended path:** launch in Mode A → make first 5 sales → switch to Mode B for quality. Both modes are profitable from sale #1.
 
 ---
 

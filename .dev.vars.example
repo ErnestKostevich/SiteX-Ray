@@ -2,11 +2,21 @@
 # .dev.vars is gitignored — never commit real keys.
 # Used by `wrangler pages dev` for local development only.
 # Production keys go in Cloudflare Pages → Settings → Environment variables.
+#
+# Minimum to run: just RESEND_API_KEY. Cloudflare Workers AI is auto-bound
+# via wrangler.toml and is free. Claude is only needed if you want to use
+# Anthropic for the paid $39 tier (quality upgrade — optional).
 
-ANTHROPIC_API_KEY=sk-ant-your-key-here
+# Email delivery (REQUIRED)
 RESEND_API_KEY=re_your-key-here
 RESEND_FROM_EMAIL=SiteX-Ray <onboarding@resend.dev>
+
+# Claude — paid $39 tier upgrade (OPTIONAL — leave empty to use free Cloudflare AI for paid too)
+ANTHROPIC_API_KEY=
 ANTHROPIC_MODEL=claude-sonnet-4-5
+
+# Cloudflare AI model override (OPTIONAL — defaults to llama-3.1-8b-instruct)
+CF_AI_MODEL=
 
 # Lemon Squeezy (only needed when testing webhook flow locally)
 LEMON_WEBHOOK_SECRET=your-webhook-secret
