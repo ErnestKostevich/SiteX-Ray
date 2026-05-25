@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sample SiteX-Ray audit — acmedental.com</title>
+<meta name="robots" content="noindex">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #0f172a;
+    background: #f1f5f9;
+    line-height: 1.55;
+    font-size: 15px;
+  }
+  .disclaimer {
+    background: #fef3c7;
+    border-bottom: 1px solid #fde68a;
+    color: #92400e;
+    padding: 12px 24px;
+    text-align: center;
+    font-size: 13px;
+  }
+  .disclaimer strong { color: #78350f; }
+  .disclaimer a { color: #92400e; font-weight: 600; }
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 48px 28px;
+    background: white;
+    min-height: 100vh;
+  }
+  .brand {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 8px;
+  }
+  h1 { font-size: 32px; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .url { color: #64748b; font-size: 14px; margin-bottom: 32px; }
+  .url a { color: #6366f1; text-decoration: none; }
+
+  .hero {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+    padding: 24px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 32px;
+  }
+  .score-circle {
+    flex: 0 0 140px;
+    height: 140px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background: #dc2626;
+  }
+  .score-circle .num { font-size: 48px; font-weight: 700; line-height: 1; }
+  .score-circle .max { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+  .hero-text { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .verdict {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #dc2626;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    align-self: flex-start;
+  }
+  .tldr { font-size: 17px; line-height: 1.5; margin: 0 0 8px; }
+  .headline { color: #64748b; font-size: 14px; margin: 0; }
+
+  .sections-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .section-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+  .section-card .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    margin-bottom: 8px;
+  }
+  .section-card .score { font-size: 28px; font-weight: 700; }
+  h2 {
+    font-size: 22px;
+    margin: 40px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #0f172a;
+  }
+  h3 { font-size: 17px; margin: 24px 0 8px; }
+  .section-block { margin-bottom: 32px; }
+  .section-block .summary { color: #64748b; margin-bottom: 16px; }
+  .finding {
+    border-left: 4px solid #e2e8f0;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    background: #f8fafc;
+    border-radius: 0 8px 8px 0;
+  }
+  .finding .sev {
+    display: inline-block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+    font-weight: 600;
+  }
+  .finding .title { font-weight: 600; font-size: 16px; }
+  .finding .body { margin-top: 8px; font-size: 14px; }
+  .finding .body p { margin: 6px 0; }
+
+  .quick-win {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .quick-win .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .quick-win .title { font-weight: 600; font-size: 16px; }
+  .quick-win .meta { font-size: 12px; color: #64748b; }
+  .quick-win .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #f8fafc;
+    border-radius: 999px;
+    margin-left: 6px;
+  }
+  .upsell {
+    margin: 40px 0;
+    padding: 24px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .upsell h2 { color: white; border: none; margin: 0 0 8px; }
+  .upsell p { margin: 0 0 16px; opacity: 0.95; }
+  .upsell .cta {
+    display: inline-block;
+    padding: 12px 24px;
+    background: white;
+    color: #6366f1;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+    color: #64748b;
+    font-size: 12px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="disclaimer">
+  <strong>Sample report.</strong> Fictional company for demonstration. <a href="/">Run a real audit on your own site →</a>
+</div>
+
+<div class="page">
+
+  <div class="brand">AI Site Audit</div>
+  <h1>acmedental.com</h1>
+  <div class="url"><a href="#">https://acmedental.com</a></div>
+
+  <div class="hero">
+    <div class="score-circle">
+      <div class="num">38</div>
+      <div class="max">out of 100</div>
+    </div>
+    <div class="hero-text">
+      <span class="verdict">Critical</span>
+      <p class="tldr">Acme Dental's homepage is invisible to Google and confusing to visitors. The site reads like a brochure rather than a booking funnel — strangers can't tell what's offered or how to book.</p>
+      <p class="headline">→ The single biggest leak: there's no clear "Book an appointment" CTA anywhere above the fold.</p>
+    </div>
+  </div>
+
+  <div class="sections-grid">
+    <div class="section-card"><div class="label">SEO</div><div class="score" style="color:#dc2626;">31</div></div>
+    <div class="section-card"><div class="label">UX</div><div class="score" style="color:#ea580c;">48</div></div>
+    <div class="section-card"><div class="label">Content</div><div class="score" style="color:#dc2626;">35</div></div>
+    <div class="section-card"><div class="label">Convert</div><div class="score" style="color:#dc2626;">22</div></div>
+    <div class="section-card"><div class="label">Tech</div><div class="score" style="color:#ca8a04;">56</div></div>
+  </div>
+
+  <h2>Quick wins — ship today</h2>
+
+  <div class="quick-win">
+    <div class="header">
+      <div class="title">Replace the homepage title tag</div>
+      <div class="meta">
+        <span class="pill">⏱ 5 minutes</span>
+        <span class="pill">📈 high</span>
+      </div>
+    </div>
+    <div>Current title is "Home | Acme Dental". Replace with: <strong>"Family &amp; Cosmetic Dentistry in Boston — Acme Dental"</strong>. This single change typically lifts homepage CTR 10–25% in 2 weeks.</div>
+  </div>
+
+  <div class="quick-win">
+    <div class="header">
+      <div class="title">Write a real meta description</div>
+      <div class="meta">
+        <span class="pill">⏱ 10 minutes</span>
+        <span class="pill">📈 high</span>
+      </div>
+    </div>
+    <div>You have no meta description, so Google is grabbing a random sentence from the footer. Paste this in your CMS: <strong>"Family dentistry in Boston with same-day emergency appointments. All major insurance accepted. Book online 24/7."</strong> Stays under the 160-char limit.</div>
+  </div>
+
+  <div class="quick-win">
+    <div class="header">
+      <div class="title">Add a phone number to the hero</div>
+      <div class="meta">
+        <span class="pill">⏱ 15 minutes</span>
+        <span class="pill">📈 high</span>
+      </div>
+    </div>
+    <div>Your phone number only appears in the footer. Most high-intent visitors on a dental site want to call. Add a tap-to-call button next to your H1 — <code>&lt;a href="tel:+16175550100"&gt;(617) 555-0100&lt;/a&gt;</code>. Style it as a button on mobile.</div>
+  </div>
+
+  <div class="quick-win">
+    <div class="header">
+      <div class="title">Add alt text to your 14 photos</div>
+      <div class="meta">
+        <span class="pill">⏱ 30 minutes</span>
+        <span class="pill">📈 medium</span>
+      </div>
+    </div>
+    <div>Every single &lt;img&gt; on your homepage has empty alt. This hurts accessibility and image-search SEO. Write a one-line description for each — e.g. "Smiling patient after teeth whitening at Acme Dental Boston".</div>
+  </div>
+
+  <div class="quick-win">
+    <div class="header">
+      <div class="title">Drop the stock photo carousel</div>
+      <div class="meta">
+        <span class="pill">⏱ 30 minutes</span>
+        <span class="pill">📈 medium</span>
+      </div>
+    </div>
+    <div>The rotating hero of three stock-photo dentists is hurting you twice: it pushes your actual content below the fold, and stock photos signal "generic, low-trust" to visitors. Replace with a single photo of your actual team or office.</div>
+  </div>
+
+  <h2>Critical issues</h2>
+
+  <div class="finding" style="border-left-color:#dc2626;">
+    <span class="sev" style="background:#dc2626;">critical</span>
+    <span class="title">No primary CTA above the fold</span>
+    <div class="body">
+      <p><strong>What:</strong> The first screen contains a logo, a tagline ("Your trusted dental partner"), and a rotating stock-photo banner. There is no button, no phone number, and no form. The first CTA ("Schedule an Appointment") doesn't appear until ~1500px down the page.</p>
+      <p><strong>Why it matters:</strong> Industry data: dental sites that move the booking CTA above the fold see a 30–45% lift in form starts. You're leaving roughly $4,000–$8,000/month on the table if your site does ~2,500 visits/month.</p>
+      <p><strong>How to fix:</strong> Replace the rotating banner with a static hero containing: (1) Single H1 "Family &amp; Cosmetic Dentistry in Boston", (2) Sub-heading "Same-day emergency appointments. All insurance accepted.", (3) A primary CTA button "Book an Appointment", (4) Tap-to-call phone number, (5) Office address one-liner. Keep it under 500px tall.</p>
+    </div>
+  </div>
+
+  <div class="finding" style="border-left-color:#dc2626;">
+    <span class="sev" style="background:#dc2626;">critical</span>
+    <span class="title">Generic title tag is killing your SEO</span>
+    <div class="body">
+      <p><strong>What:</strong> Your homepage title is literally "Home | Acme Dental". This is the single most important on-page SEO factor and it contains zero ranking signals — no location, no service type, no qualifier.</p>
+      <p><strong>Why:</strong> Google uses the title tag as the strongest signal of what the page is about. With "Home | Acme Dental" you can only rank when someone searches your exact brand name. You're missing every "dentist Boston" / "family dentistry near me" search.</p>
+      <p><strong>How to fix:</strong> Change the title to <strong>"Family &amp; Cosmetic Dentistry in Boston — Acme Dental"</strong>. Update in your CMS's SEO settings or directly in the HTML &lt;title&gt; tag. Expect SERP impressions to climb within 1–3 weeks.</p>
+    </div>
+  </div>
+
+  <div class="finding" style="border-left-color:#ea580c;">
+    <span class="sev" style="background:#ea580c;">high</span>
+    <span class="title">Page weight is 2.1MB — slow on mobile</span>
+    <div class="body">
+      <p><strong>What:</strong> Your homepage HTML is 247KB, but you're loading 14 uncompressed images totaling ~1.8MB. On a 4G connection this is a 4–6 second wait before anything is interactive.</p>
+      <p><strong>Why:</strong> Google's Core Web Vitals are now a ranking factor. More importantly, every 1-second delay on mobile costs you ~10% of conversions. Your dental competitors in Boston are loading in 1.5s.</p>
+      <p><strong>How to fix:</strong> (1) Compress images: drop into <a href="https://squoosh.app">squoosh.app</a> and re-export at 85% quality WebP. Should drop total image weight to ~400KB. (2) Add <code>loading="lazy"</code> to all below-the-fold images. (3) If you're on WordPress, install the "Smush" or "ShortPixel" plugin.</p>
+    </div>
+  </div>
+
+  <h2>Detailed analysis</h2>
+
+  <div class="section-block">
+    <h3>SEO <span style="color:#dc2626;">— 31/100</span></h3>
+    <p class="summary">Your SEO foundations are missing or broken. Title is generic, meta description is auto-generated, no structured data, no internal linking strategy. Google sees a site but doesn't know what it's for.</p>
+
+    <div class="finding" style="border-left-color:#dc2626;">
+      <span class="sev" style="background:#dc2626;">critical</span>
+      <span class="title">No meta description</span>
+      <div class="body">
+        <p><strong>What:</strong> Your &lt;meta name="description"&gt; tag is empty. Google is grabbing the first paragraph of your footer ("Acme Dental was founded in 1987...") as your search snippet.</p>
+        <p><strong>Why:</strong> The meta description IS your free ad copy in search results. A compelling one can 2x your click-through rate.</p>
+        <p><strong>How to fix:</strong> Add to your &lt;head&gt;: <code>&lt;meta name="description" content="Family dentistry in Boston with same-day emergency appointments. All major insurance accepted. Book online 24/7."&gt;</code></p>
+      </div>
+    </div>
+
+    <div class="finding" style="border-left-color:#ea580c;">
+      <span class="sev" style="background:#ea580c;">high</span>
+      <span class="title">Missing local business schema</span>
+      <div class="body">
+        <p><strong>What:</strong> You have no structured data (JSON-LD) for LocalBusiness. Google can't reliably pull your hours, address, and reviews into the rich snippets that win the map pack.</p>
+        <p><strong>Why:</strong> Without LocalBusiness schema you're invisible in the 3-pack of Google Maps results — which is where 70% of "dentist near me" clicks go.</p>
+        <p><strong>How to fix:</strong> Add a &lt;script type="application/ld+json"&gt; block with type Dentist (a subtype of LocalBusiness). Include name, address, telephone, openingHours, geo, aggregateRating. Generator: <a href="https://technicalseo.com/tools/schema-markup-generator/">technicalseo.com/tools/schema-markup-generator</a>.</p>
+      </div>
+    </div>
+
+    <div class="finding" style="border-left-color:#ea580c;">
+      <span class="sev" style="background:#ea580c;">high</span>
+      <span class="title">Three H1 tags on one page</span>
+      <div class="body">
+        <p><strong>What:</strong> Your homepage has H1 tags around "Your trusted dental partner", "Acme Dental", and "Welcome to our practice". Each rotating slide is wrapped in &lt;h1&gt;.</p>
+        <p><strong>Why:</strong> Multiple H1s confuse Google about what the page is "about." Best practice (and what every site that ranks does): exactly one H1 per page.</p>
+        <p><strong>How to fix:</strong> Keep one H1 only. Make it specific to the search intent: <strong>"Family &amp; Cosmetic Dentistry in Boston, MA"</strong>. Change the others to H2 or remove them.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h3>Content &amp; tone <span style="color:#dc2626;">— 35/100</span></h3>
+    <p class="summary">The copy is about you, not them. Lots of "we provide world-class care" and zero specifics on what a visit actually involves, what insurance you take, or who the dentists are. No social proof.</p>
+
+    <div class="finding" style="border-left-color:#ea580c;">
+      <span class="sev" style="background:#ea580c;">high</span>
+      <span class="title">Vague value proposition</span>
+      <div class="body">
+        <p><strong>What:</strong> The tagline reads "Your trusted dental partner for over 30 years." This is essentially noise — every dental practice says some variant. A visitor in Boston with a toothache has no idea if you can see them today.</p>
+        <p><strong>Why:</strong> The hero is where you win or lose the visit. Vague claims = bounce. Specific promises = action.</p>
+        <p><strong>How to fix:</strong> Replace with a benefit-led headline + sub: <strong>"Pain-free dentistry in Boston. Same-day appointments for emergencies. All insurance accepted."</strong> Pair with a "Book online" CTA.</p>
+      </div>
+    </div>
+
+    <div class="finding" style="border-left-color:#dc2626;">
+      <span class="sev" style="background:#dc2626;">critical</span>
+      <span class="title">Zero social proof on the page</span>
+      <div class="body">
+        <p><strong>What:</strong> No reviews, no testimonials, no Google rating, no "X happy patients", no logos of insurance providers you accept. Healthcare buying = trust-driven, and there's nothing here that builds it.</p>
+        <p><strong>Why:</strong> 88% of people trust online reviews as much as personal recommendations. Healthcare visitors particularly look for ratings + insurance acceptance before they convert.</p>
+        <p><strong>How to fix:</strong> (1) Pull your Google review average (e.g. "★ 4.8 from 312 patients on Google") into the hero. (2) Add 3 short testimonials below the fold (real names, real photos if possible — first names + city + photo). (3) Show logos of the top 6 insurances you accept.</p>
+      </div>
+    </div>
+
+    <div class="finding" style="border-left-color:#ca8a04;">
+      <span class="sev" style="background:#ca8a04;">medium</span>
+      <span class="title">No team photos or bios</span>
+      <div class="body">
+        <p><strong>What:</strong> Visitors can't see who they'll meet. The "About" link mentions Dr. Smith but no photo, no credentials, no story.</p>
+        <p><strong>Why:</strong> Picking a dentist is intimate. People want to see the face of who's going in their mouth.</p>
+        <p><strong>How to fix:</strong> Add a "Meet your dentist" section with a real photo of Dr. Smith, credentials, years in practice, and a one-line story ("Boston-trained at Tufts, founded Acme in 2008 after seeing patients struggle to find honest dental care").</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h3>Conversion &amp; CTAs <span style="color:#dc2626;">— 22/100</span></h3>
+    <p class="summary">The lowest score for a reason. There is no booking flow, no phone CTA above the fold, no obvious next action. People arrive, fail to find what they need, and leave.</p>
+
+    <div class="finding" style="border-left-color:#ea580c;">
+      <span class="sev" style="background:#ea580c;">high</span>
+      <span class="title">Booking form has 8 fields</span>
+      <div class="body">
+        <p><strong>What:</strong> Your "Schedule an Appointment" form asks for name, email, phone, address, date of birth, insurance provider, member ID, and reason for visit — all on one screen.</p>
+        <p><strong>Why:</strong> Each additional form field cuts conversion ~7%. You're losing about half your potential form starts before they even pick up a pen.</p>
+        <p><strong>How to fix:</strong> Cut to 3 fields: name, phone, "what do you need?" (dropdown: cleaning / emergency / cosmetic / other). Capture everything else when they arrive or via a follow-up email. Move from 8 → 3 fields typically doubles form completions.</p>
+      </div>
+    </div>
+
+    <div class="finding" style="border-left-color:#ca8a04;">
+      <span class="sev" style="background:#ca8a04;">medium</span>
+      <span class="title">CTA text is forgettable</span>
+      <div class="body">
+        <p><strong>What:</strong> Your buttons say "Submit" and "Learn More" — words from a generic CMS template.</p>
+        <p><strong>Why:</strong> "Submit" is what you do to a tax form. "Learn more" is a dodge. Action-oriented copy converts 30–50% better.</p>
+        <p><strong>How to fix:</strong> "Submit" → <strong>"Book my visit"</strong>. "Learn more" → <strong>"See our services"</strong>. Use first-person ("my") on conversion-critical buttons.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="upsell">
+    <h2>This is what a SiteX-Ray audit looks like</h2>
+    <p>Get one for your own site — full report, 5 dimensions, every fix spelled out in plain English. Free teaser in 2 minutes, full report $39.</p>
+    <a class="cta" href="/">Audit my site →</a>
+  </div>
+
+  <h2>90-day strategic plan</h2>
+
+  <div class="quick-win">
+    <div class="header">
+      <div class="title">Build a service-specific landing page strategy</div>
+      <div class="meta">
+        <span class="pill">⏱ weeks</span>
+      </div>
+    </div>
+    <div>Right now your homepage tries to rank for "dentist boston" against 50 entrenched competitors. Better strategy: build 6 sub-pages, each laser-focused on one service in one neighborhood ("Emergency Dentist Cambridge", "Teeth Whitening Back Bay"). Easier to rank for, higher commercial intent.</div>
+  </div>
+
+  <div class="quick-win">
+    <div class="header">
+      <div class="title">Implement a review-collection system</div>
+      <div class="meta">
+        <span class="pill">⏱ days</span>
+      </div>
+    </div>
+    <div>Your Google reviews (4.6 ★, 38 reviews) are below the Boston dental average (4.7 ★, 120+ reviews). After every visit, send an SMS asking for a review with a direct Google link. Aim for 200 reviews in 12 months. This compounds in local-pack rankings and conversion both.</div>
+  </div>
+
+  <div class="footer">
+    SiteX-Ray · Sample report (fictional company) · Powered by Claude
+  </div>
+
+</div>
+</body>
+</html>

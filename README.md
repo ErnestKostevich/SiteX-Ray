@@ -1,73 +1,124 @@
-# AI-аудитор сайтов
+# SiteX-Ray
 
-Инструмент для малого бизнеса: вставляешь URL — получаешь подробный отчёт о том, что сломано на сайте и как это починить. Под капотом — Claude AI.
+AI-powered website audit. Visitor pastes their URL, gets a senior-consultant-grade report in their inbox within 2 minutes. Free 1-page teaser, full 10-15 page report for $39.
 
-## Что это решает
+Built to run on **$0 upfront cost** — every piece sits on a free tier (Cloudflare Pages, Resend, Anthropic pay-per-use). First sale pays for the next 100 reports.
 
-У 90% малого бизнеса сайт сделан подрядчиком и про него все забыли. Конверсия низкая, в Google не находят, тексты слабые — но владельцу некогда разбираться, что именно не так.
+---
 
-Этот скрипт за 30 секунд:
-- Скрапит главную страницу
-- Прогоняет через Claude по чек-листу из 50+ пунктов (SEO, UX, контент, конверсия, техника)
-- Выдаёт человеческий отчёт с конкретными правками и приоритетами
-
-## Бизнес-модель
-
-См. [PLAN.md](PLAN.md). Кратко:
-- **Бесплатный тизер** — 1 страница, hook для лида
-- **Полный отчёт** — $29-49 разово
-- **Услуга "доделаем"** — $200-500 на правки
-
-## Быстрый старт
-
-### 1. Установи зависимости
-```powershell
-pip install -r requirements.txt
-```
-
-### 2. Положи API-ключ Anthropic
-Скопируй `.env.example` в `.env` и впиши свой ключ:
-```
-ANTHROPIC_API_KEY=sk-ant-...
-```
-Ключ берёшь на https://console.anthropic.com.
-
-### 3. Запусти аудит
-```powershell
-# Бесплатный тизер (1 страница)
-python audit.py https://example.com --free
-
-# Полный отчёт
-python audit.py https://example.com --out report.html
-```
-
-Откроется `report.html` в браузере — можно сохранить как PDF через Ctrl+P → "Сохранить как PDF".
-
-## Структура проекта
+## What's in this repo
 
 ```
 .
-├── audit.py              # CLI вход
-├── src/
-│   ├── scraper.py        # парсинг сайта
-│   ├── analyzer.py       # вызов Claude
-│   ├── report.py         # генерация HTML/MD отчёта
-│   └── prompts/
-│       └── auditor_system.md  # промпт аудитора (сердце продукта)
-├── templates/
-│   └── report.html       # темплейт отчёта
-├── examples/             # пример отчётов (для лендинга)
-├── requirements.txt
-├── .env.example
-└── PLAN.md               # бизнес-план и roadmap
+├── audit.py                       # Python CLI — local audits for manual fulfillment
+├── src/                           # CLI implementation
+│   ├── scraper.py                 # parses ~30 signals from a page
+│   ├── analyzer.py                # calls Anthropic API
+│   ├── report.py                  # renders HTML report
+│   └── prompts/auditor_system.md  # the auditor prompt (the moat)
+├── templates/report.html          # Jinja2 template for the Python CLI's report
+├── requirements.txt               # Python deps
+│
+├── landing/                       # the production site — deploys to Cloudflare Pages
+│   ├── index.html                 # marketing page + form + checkout
+│   ├── sample-report.html         # "See sample report" link target
+│   └── functions/                 # backend (Cloudflare Pages Functions)
+│       ├── api/
+│       │   ├── audit.js           # POST /api/audit — free teaser endpoint
+│       │   └── lemon-webhook.js   # POST /api/lemon-webhook — paid order
+│       └── _shared/
+│           ├── prompt.js          # JS mirror of the system prompt
+│           ├── scraper.js         # site scraper (uses HTMLRewriter)
+│           ├── analyzer.js        # Anthropic API client
+│           ├── renderer.js        # HTML report email body
+│           ├── mailer.js          # Resend client
+│           ├── turnstile.js       # bot check verifier
+│           ├── lemon.js           # HMAC signature verifier
+│           └── auditFlow.js       # shared scrape → analyze → email pipeline
+│
+├── outreach/                      # day-1 sales materials
+│   ├── linkedin_dm.md             # cold-DM templates + daily routine
+│   ├── cold_email.md              # cold-email templates + funnel math
+│   ├── niche_lists.md             # where to find prospects (free + paid)
+│   └── onboarding_email.md        # post-purchase email sequence
+│
+├── PLAN.md                        # business model, pricing, channels
+├── DEPLOY.md                      # 1-hour deployment guide ← START HERE
+└── README.md
 ```
+
+---
+
+## How it works (the live product)
+
+1. Visitor on `sitexray.com` pastes their URL and email
+2. Cloudflare Pages Function (`landing/functions/api/audit.js`) takes the request
+3. It scrapes the homepage (HTMLRewriter), calls Claude with the auditor prompt, gets back a structured JSON audit
+4. Renders to an HTML email and sends via Resend
+5. Visitor opens the report on their phone within 2 minutes
+
+If they want the full report ($39), they click → Lemon Squeezy checkout → on payment, Lemon's webhook hits `/api/lemon-webhook` → the same pipeline runs in `Mode: FULL`, delivers the full audit.
+
+The Python CLI (`audit.py`) does the exact same thing locally. Use it for testing, sales demos, or manual fulfillment of paid orders before you fully automate.
+
+---
+
+## Quick start — local Python CLI
+
+For testing and manual fulfillment.
+
+```powershell
+cd "D:\Project 4"
+pip install -r requirements.txt
+copy .env.example .env
+# Edit .env: paste your ANTHROPIC_API_KEY from console.anthropic.com
+
+# Free teaser
+python audit.py https://example.com --free --out teaser.html
+
+# Full audit
+python audit.py https://example.com --out report.html
+```
+
+Opens `report.html` in your browser. Save as PDF via Ctrl+P.
+
+---
+
+## Quick start — deploy live
+
+See **[DEPLOY.md](DEPLOY.md)**. First-time setup: ~60 minutes. Costs $0 upfront (you need to put $5 on Anthropic for API credits, fully refunded by your first sale).
+
+Required accounts (all free tier):
+- [Anthropic](https://console.anthropic.com) — Claude API (~$0.30/report)
+- [Resend](https://resend.com) — email delivery (3000 free/mo)
+- [Cloudflare Pages](https://dash.cloudflare.com) — hosting + backend (unlimited free)
+- [Lemon Squeezy](https://lemonsqueezy.com) — payments (5% fee, $0 upfront)
+
+---
 
 ## Roadmap
 
-- [x] MVP: CLI + HTML-отчёт
-- [ ] Скриншоты сайта в отчёт (через playwright)
-- [ ] PDF-экспорт автоматом
-- [ ] Веб-интерфейс (FastAPI + одна страница)
-- [ ] Лендинг для продажи
-- [ ] Интеграция с Lemon Squeezy / Stripe для оплаты
-- [ ] Параллельный анализ нескольких страниц (не только главной)
+- [x] MVP: Python CLI generating HTML reports
+- [x] Production landing page (English, dark theme)
+- [x] Cloudflare Pages backend (free teaser + paid webhook)
+- [x] Sample report for "See sample" link
+- [x] Deploy guide
+- [x] Outreach playbook (LinkedIn DMs, cold email, niches)
+- [ ] First 10 sales (manual fulfillment via CLI to validate prompt quality)
+- [ ] Custom Resend domain so emails come from `reports@sitexray.com`
+- [ ] Add multi-page crawl option (currently homepage only)
+- [ ] Add screenshots to the report via headless Chrome
+- [ ] Agency white-label tier ($15/audit wholesale)
+
+---
+
+## Business model
+
+See **[PLAN.md](PLAN.md)** for the full breakdown. TL;DR:
+
+- **$0 free teaser** → lead magnet (cost: ~$0.05 API)
+- **$39 full audit** → core SKU (net margin ~$36)
+- **$299+ done-for-you** → upsell after the audit
+- **$15/audit wholesale** → agencies, partnership tier (future)
+
+Target: English-speaking SMBs in US, UK, Canada, Australia, Western EU. Not RU/CIS (per founder choice).

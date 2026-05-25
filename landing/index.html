@@ -170,9 +170,10 @@
     margin: 0 auto 16px;
     flex-wrap: wrap;
   }
-  .hero-form input[type=url] {
+  .hero-form input[type=url],
+  .hero-form input[type=email] {
     flex: 1;
-    min-width: 260px;
+    min-width: 240px;
     padding: 14px 18px;
     background: var(--bg-card);
     border: 1px solid var(--line);
@@ -181,7 +182,7 @@
     font-size: 15px;
     font-family: inherit;
   }
-  .hero-form input[type=url]:focus {
+  .hero-form input:focus {
     outline: none;
     border-color: var(--accent);
   }
@@ -191,6 +192,25 @@
     margin-top: 12px;
   }
   .hero-tiny .check { color: var(--green); }
+  .form-status {
+    margin-top: 14px;
+    font-size: 14px;
+    text-align: center;
+    min-height: 20px;
+  }
+  .form-status[data-kind="success"] { color: var(--green); }
+  .form-status[data-kind="error"] { color: var(--red); }
+  .hero-secondary-row {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .hero-secondary-row a { color: var(--accent); }
+  #turnstile-container {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+  }
 
   /* Sample report mockup */
   .mockup-wrap {
@@ -556,13 +576,23 @@
       Get a senior-consultant-grade audit of your site in 60 seconds. AI scans SEO, UX, conversion, content and tech — then hands you specific fixes, not vague advice.
     </p>
 
-    <form class="hero-form" id="hero-form" onsubmit="event.preventDefault(); alert('Demo mode — payment & report delivery coming soon. Email ernest2011kostevich@gmail.com to be a beta tester.');">
-      <input type="url" placeholder="https://yourwebsite.com" required>
-      <button type="submit" class="btn btn-primary">Get my free report →</button>
+    <form class="hero-form" id="hero-form" novalidate>
+      <input type="url" name="url" id="url-input" placeholder="https://yourwebsite.com" required>
+      <input type="email" name="email" id="email-input" placeholder="your@email.com" required>
+      <button type="submit" class="btn btn-primary" id="submit-btn">Get my free report →</button>
     </form>
 
+    <div id="turnstile-container"></div>
+    <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
+
     <p class="hero-tiny">
-      <span class="check">✓</span> No signup &nbsp; <span class="check">✓</span> No credit card &nbsp; <span class="check">✓</span> Delivered to your inbox in 60 seconds
+      <span class="check">✓</span> No signup &nbsp; <span class="check">✓</span> No credit card &nbsp; <span class="check">✓</span> Free teaser arrives in ~2 minutes
+    </p>
+
+    <p class="hero-secondary-row">
+      Or skip the teaser — <a href="#" onclick="return goToCheckout(event)">get the full $39 audit</a>
+      &nbsp;·&nbsp;
+      <a href="/sample-report.html" target="_blank" rel="noopener">See sample report</a>
     </p>
 
     <!-- Sample report mockup -->
@@ -774,7 +804,7 @@
           <li>90-day strategic recommendations</li>
           <li>7-day full refund guarantee</li>
         </ul>
-        <a href="#hero-form" class="btn btn-primary">Get full audit — $39</a>
+        <a href="#" onclick="return goToCheckout(event)" class="btn btn-primary">Get full audit — $39</a>
       </div>
 
       <div class="price-card">
@@ -857,6 +887,113 @@
     </div>
   </div>
 </footer>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script>
+  // ============================================================
+  // Customer-facing config — update once you've set up accounts.
+  // See DEPLOY.md for the full step-by-step.
+  // ============================================================
+  const LEMON_CHECKOUT_URL = "";   // e.g. "https://yourshop.lemonsqueezy.com/buy/abc-123-xyz"
+  const TURNSTILE_SITE_KEY = "";   // public site key from Cloudflare Turnstile (optional but recommended)
+
+  (function () {
+    const form = document.getElementById("hero-form");
+    const urlInput = document.getElementById("url-input");
+    const emailInput = document.getElementById("email-input");
+    const submitBtn = document.getElementById("submit-btn");
+    const statusEl = document.getElementById("form-status");
+    const turnstileContainer = document.getElementById("turnstile-container");
+
+    if (TURNSTILE_SITE_KEY && turnstileContainer) {
+      const w = document.createElement("div");
+      w.className = "cf-turnstile";
+      w.setAttribute("data-sitekey", TURNSTILE_SITE_KEY);
+      w.setAttribute("data-theme", "dark");
+      turnstileContainer.appendChild(w);
+    }
+
+    function setStatus(text, kind) {
+      statusEl.textContent = text || "";
+      if (kind) statusEl.setAttribute("data-kind", kind);
+      else statusEl.removeAttribute("data-kind");
+    }
+
+    function getTurnstileToken() {
+      if (!TURNSTILE_SITE_KEY) return null;
+      const input = document.querySelector('input[name="cf-turnstile-response"]');
+      return input ? input.value : null;
+    }
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const url = urlInput.value.trim();
+      const email = emailInput.value.trim();
+      if (!url || !email) {
+        setStatus("Please enter both a URL and an email.", "error");
+        return;
+      }
+      if (TURNSTILE_SITE_KEY && !getTurnstileToken()) {
+        setStatus("Please complete the bot check first.", "error");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      const originalLabel = submitBtn.textContent;
+      submitBtn.textContent = "Sending…";
+      setStatus("", null);
+
+      try {
+        const response = await fetch("/api/audit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            url: url,
+            email: email,
+            turnstileToken: getTurnstileToken(),
+          }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.ok && data.ok) {
+          setStatus(
+            data.message ||
+              "Your report is on its way! Check your inbox in ~2 minutes.",
+            "success"
+          );
+          form.style.display = "none";
+        } else {
+          setStatus(data.error || "Something went wrong. Please try again.", "error");
+        }
+      } catch (e) {
+        setStatus("Couldn't reach the server. Please try again in a moment.", "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
+    });
+
+    window.goToCheckout = function (event) {
+      if (event) event.preventDefault();
+      if (!LEMON_CHECKOUT_URL) {
+        alert(
+          "Payments come online once you configure Lemon Squeezy (see DEPLOY.md). " +
+            "Try the free teaser above, or email ernest2011kostevich@gmail.com to be a beta tester."
+        );
+        return false;
+      }
+      const url =
+        (urlInput.value || "").trim() ||
+        prompt("What site should we audit? (e.g. https://yourbusiness.com)");
+      if (!url) return false;
+      const email = (emailInput.value || "").trim();
+      const params = new URLSearchParams();
+      params.set("checkout[custom][audit_url]", url);
+      if (email) params.set("checkout[email]", email);
+      window.location.href = LEMON_CHECKOUT_URL + "?" + params.toString();
+      return false;
+    };
+  })();
+</script>
 
 </body>
 </html>
