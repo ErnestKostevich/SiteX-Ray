@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AI-аудит: {{ report.domain }}</title>
+<title>AI audit: {{ report.domain }}</title>
 <style>
   :root {
     --bg: #ffffff;
@@ -260,14 +260,14 @@
 <body>
 <div class="page">
 
-  <div class="brand">AI-аудит сайта</div>
+  <div class="brand">AI Site Audit</div>
   <h1>{{ report.domain }}</h1>
   <div class="url">{{ report.url }}</div>
 
   <div class="hero">
     <div class="score-circle" style="background: {{ report.overall_score | score_color }};">
       <div class="num">{{ report.overall_score }}</div>
-      <div class="max">из 100</div>
+      <div class="max">out of 100</div>
     </div>
     <div class="hero-text">
       <span class="verdict" style="background: {{ report.verdict | verdict_color }};">{{ report.verdict }}</span>
@@ -279,7 +279,7 @@
   </div>
 
   <div class="sections-grid">
-    {% for key, name in [('seo','SEO'),('ux','UX'),('content','Контент'),('conversion','Конверсия'),('technical','Техника')] %}
+    {% for key, name in [('seo','SEO'),('ux','UX'),('content','Content'),('conversion','Convert'),('technical','Tech')] %}
       {% set sec = report.sections.get(key, {}) %}
       <div class="section-card">
         <div class="label">{{ name }}</div>
@@ -289,10 +289,10 @@
   </div>
 
   {% if free %}
-    {# TEASER: показываем headline + top quick wins + 1 critical, потом upsell #}
+    {# TEASER: show top quick wins + 1 critical, then upsell #}
 
     {% if report.quick_wins %}
-    <h2>Что чинить в первую очередь</h2>
+    <h2>Top quick wins</h2>
     {% for qw in report.quick_wins %}
     <div class="quick-win">
       <div class="header">
@@ -308,30 +308,30 @@
     {% endif %}
 
     {% if report.critical_issues %}
-    <h2>Критическая проблема</h2>
+    <h2>Most critical issue</h2>
     {% for f in report.critical_issues %}
     <div class="finding" style="border-left-color: {{ f.severity | severity_color }};">
       <span class="sev" style="background: {{ f.severity | severity_color }};">{{ f.severity }}</span>
       <span class="title">{{ f.title }}</span>
       <div class="body">
-        <p><strong>Что:</strong> {{ f.what }}</p>
-        <p><strong>Почему важно:</strong> {{ f.why }}</p>
+        <p><strong>What:</strong> {{ f.what }}</p>
+        <p><strong>Why it matters:</strong> {{ f.why }}</p>
       </div>
     </div>
     {% endfor %}
     {% endif %}
 
     <div class="upsell">
-      <h2>Это был бесплатный тизер</h2>
-      <p>В полном отчёте: разбор по 5 направлениям, 5-7 quick wins, все критические проблемы, стратегические рекомендации. 10-15 страниц.</p>
-      <a class="cta" href="#" onclick="return false;">Получить полный отчёт — $39</a>
+      <h2>This was the free teaser</h2>
+      <p>In the full report: deep dives across all 5 dimensions, 5–7 quick wins, every critical issue, and a 90-day strategic plan. 10–15 pages.</p>
+      <a class="cta" href="#" onclick="return false;">Get the full audit — $39</a>
     </div>
 
   {% else %}
-    {# FULL: показываем всё #}
+    {# FULL: show everything #}
 
     {% if report.quick_wins %}
-    <h2>Quick wins — сделать сегодня</h2>
+    <h2>Quick wins — ship today</h2>
     {% for qw in report.quick_wins %}
     <div class="quick-win">
       <div class="header">
@@ -347,23 +347,23 @@
     {% endif %}
 
     {% if report.critical_issues %}
-    <h2>Критические проблемы</h2>
+    <h2>Critical issues</h2>
     {% for f in report.critical_issues %}
     <div class="finding" style="border-left-color: {{ f.severity | severity_color }};">
       <span class="sev" style="background: {{ f.severity | severity_color }};">{{ f.severity }}</span>
       <span class="title">{{ f.title }}</span>
       <div class="body">
-        <p><strong>Что:</strong> {{ f.what }}</p>
-        <p><strong>Почему:</strong> {{ f.why }}</p>
-        <p><strong>Как починить:</strong> {{ f.how }}</p>
+        <p><strong>What:</strong> {{ f.what }}</p>
+        <p><strong>Why:</strong> {{ f.why }}</p>
+        <p><strong>How to fix:</strong> {{ f.how }}</p>
       </div>
     </div>
     {% endfor %}
     {% endif %}
 
-    <h2>Детальный разбор по направлениям</h2>
+    <h2>Detailed analysis</h2>
 
-    {% for key, name in [('seo','SEO'),('ux','UX и удобство'),('content','Контент и tone of voice'),('conversion','Конверсия и CTA'),('technical','Техническое состояние')] %}
+    {% for key, name in [('seo','SEO'),('ux','UX & usability'),('content','Content & tone'),('conversion','Conversion & CTAs'),('technical','Technical health')] %}
       {% set sec = report.sections.get(key, {}) %}
       {% if sec %}
       <div class="section-block">
@@ -374,9 +374,9 @@
           <span class="sev" style="background: {{ f.severity | severity_color }};">{{ f.severity }}</span>
           <span class="title">{{ f.title }}</span>
           <div class="body">
-            <p><strong>Что:</strong> {{ f.what }}</p>
-            <p><strong>Почему:</strong> {{ f.why }}</p>
-            <p><strong>Как починить:</strong> {{ f.how }}</p>
+            <p><strong>What:</strong> {{ f.what }}</p>
+            <p><strong>Why:</strong> {{ f.why }}</p>
+            <p><strong>How to fix:</strong> {{ f.how }}</p>
           </div>
         </div>
         {% endfor %}
@@ -385,7 +385,7 @@
     {% endfor %}
 
     {% if report.long_term %}
-    <h2>Стратегические рекомендации (на квартал)</h2>
+    <h2>90-day strategic plan</h2>
     {% for r in report.long_term %}
     <div class="quick-win">
       <div class="header">
@@ -402,7 +402,7 @@
   {% endif %}
 
   <div class="footer">
-    AI-аудит сгенерирован {{ generated_at }} · powered by Claude
+    AI audit generated {{ generated_at }} · powered by Claude
   </div>
 
 </div>
