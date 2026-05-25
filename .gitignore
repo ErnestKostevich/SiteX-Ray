@@ -1,0 +1,38 @@
+# Secrets
+.env
+*.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Reports (генерируются локально, в репо не нужны)
+# Только из корня — не трогаем templates/report.html
+/report.html
+/report.pdf
+/report*.html
+/report*.pdf
+/audit_*.html
+/audit_*.pdf
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
