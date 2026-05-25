@@ -1,131 +1,155 @@
-# PLAN.md — бизнес-план AI-аудитора
+# PLAN.md — SiteX-Ray business plan
 
 ## TL;DR
-Инструмент, который за 30 секунд делает экспертный аудит сайта малого бизнеса и продаётся за $29-49 разово. Три потока денег: продажа отчётов, услуги "доделаем за вас", партнёрка с веб-студиями.
+AI website auditor for SMBs in EU & North America. Sells one-shot reports for $39 via a static landing page. **$0 upfront cost** to the founder — every piece runs on a free tier or post-revenue commission. First sale should fully cover the cost of the next 100 reports.
 
 ---
 
-## Кому продаём
+## Constraints (founder rules)
 
-**Первичная аудитория (MVP):**
-- Малый бизнес с собственным сайтом, которому больше 1 года
-- Локальные услуги: стоматологии, юристы, автосервисы, репетиторы, фитнес-студии
-- B2B: бухгалтерские, юридические, маркетинговые агентства
-- E-commerce до $50k выручки/мес
-
-**Почему именно они:**
-- Сайт есть, но в него никто не лазил
-- Деньги в бизнесе есть ($50-500 на отчёт — не вопрос)
-- Боль ощутимая: "не нахожусь в Google", "лиды кончаются", "конкурент лучше"
-- Решение покупают быстро (не надо долго убеждать команду)
-
-**Кому НЕ продаём (отсев):**
-- Стартапы без выручки (нет денег)
-- Корпорации (долгий sale cycle, нужны процедуры)
-- Программисты/маркетологи (сделают сами или раскритикуют)
+- **$0 upfront cost.** No paid hosting, no paid SaaS, no marketing budget on day 1.
+- **Founder doesn't pay for end-user usage.** Cost-per-report must be covered by the sale itself OR pushed to the customer (BYOK).
+- **English-speaking, high-purchasing-power audience only.** Targeting US, UK, Canada, Australia, Western Europe SMBs. No RU/CIS.
+- **No SaaS subscriptions.** One-time payments, services, or ad/traffic-based revenue.
 
 ---
 
-## Что продаём и за сколько
+## The free-tier stack (every dollar accounted for)
 
-### Тариф 1: Бесплатный тизер (lead magnet)
-- 1 страница: общая оценка + 3 самых критичных проблемы
-- Цель: собрать email/контакт, показать ценность
-- Distribute через: лендинг, холодный аутрич, посты в LinkedIn
+| Layer | Tool | Cost on day 1 | Cost at scale |
+|-------|------|---------------|---------------|
+| Domain | Cloudflare / Namecheap | $0 (use subdomain) → $10/yr after first sale | $10/yr |
+| Hosting (landing) | Cloudflare Pages or GitHub Pages | $0 (unlimited free) | $0 |
+| Backend (form → audit) | Cloudflare Worker (free 100k req/day) OR manual | $0 | $0 until 100k reports/day |
+| Email delivery | Resend free tier (3000/mo) OR personal Gmail SMTP | $0 | $20/mo at scale |
+| Payments | Lemon Squeezy / Gumroad | 5–10% fee per sale, $0 upfront | 5–10% per sale |
+| AI inference | Anthropic API ($0.30/report on Sonnet) | **paid out of the sale revenue** | ~$0.30/report |
+| Anti-bot | Cloudflare Turnstile | $0 | $0 |
 
-### Тариф 2: Полный отчёт — **$39** (стартовая цена)
-- 10-15 страниц с детальным разбором по 5 направлениям (SEO, UX, контент, конверсия, техника)
-- Quick wins (3-5 правок, которые можно сделать сегодня)
-- Critical issues (что чинить срочно)
-- Long-term recommendations (стратегия на квартал)
-- Доставка: PDF на email через 5 минут
+**Net economics on a $39 sale:**
+- Lemon Squeezy fee (~7%): -$2.73
+- Anthropic API (one full report): -$0.30
+- Email: -$0.00
+- **Margin: ~$35.97 per sale**
 
-### Тариф 3: "Доделаем за вас" — **$249-499**
-- Берём свой же отчёт и реализуем quick wins + critical fixes
-- Тексты переписываем, мета-теги ставим, структуру правим
-- Цель: маржа на услугах × отчёт как лид-магнит
-
-### Тариф 4 (потом): Партнёрка с веб-студиями
-- Студии прогоняют сайты потенциальных клиентов через нас
-- Используют отчёт как pitch ("у вас 23/100, мы починим")
-- 30% revenue share или $15 за отчёт wholesale
+**The only real upfront cost:** $5 minimum credit on Anthropic API to start. Pays for ~16 full reports. After first sale, fully self-funded.
 
 ---
 
-## Каналы продаж (по приоритету)
+## Two operating modes (pick based on volume)
 
-### 1. Холодный аутрич в LinkedIn / Email (первые $1000)
-- Скрипт: парсим список бизнесов в нише → аудитим их сайты бесплатно → шлём тизер-отчёт с CTA "хочешь полный?"
-- Цель: 100 отправок/день, конверсия 1-2% в покупку = 1-2 продажи/день = $40-80/день
+### Mode A: Manual fulfillment (week 1–4)
+1. Customer pays $39 on landing page → Lemon Squeezy webhook → email to founder
+2. Founder copy/pastes URL into `python audit.py <url>` on their laptop
+3. Saves HTML as PDF (browser Ctrl+P), emails to customer
+4. **Pros:** zero infrastructure, total quality control, ship today
+5. **Cons:** founder is the bottleneck — caps at maybe 20 reports/day
 
-### 2. SEO-контент ("разбор сайта Х")
-- Раз в неделю — публичный разбор реального сайта (с разрешения или анонимно)
-- Темы: "Разобрали сайт сети стоматологий — 17 ошибок", "Почему сайт юриста не приносит лидов"
-- Distribute: LinkedIn, VC.ru, Habr, Telegram-каналы по маркетингу
-- Цель: органический трафик на лендинг
+### Mode B: Automated (after 50+ sales validates demand)
+1. Customer pays → Lemon Squeezy webhook → Cloudflare Worker
+2. Worker calls Claude API → renders HTML → PDF via Puppeteer or browserless free tier
+3. Worker emails PDF via Resend
+4. **Pros:** scales infinitely, founder sleeps
+5. **Cons:** ~1 day of dev work, more moving parts to debug
 
-### 3. Twitter/X — мини-разборы
-- Тред: "Аудитим случайный сайт малого бизнеса в реальном времени"
-- Каждый тред = 1-3 лида
-- Подходит для англоязычной аудитории (там и чеки выше)
+**Decision rule:** stay manual until you hit 5 sales/day for 3 consecutive days. Then automate.
 
-### 4. Partnership с веб-студиями (когда будет track record)
-- Cold outreach студиям-фрилансерам
-- "Бесплатный аудит для ваших клиентов как pitch tool"
-
----
-
-## Этапы (4 недели)
-
-### Неделя 1: MVP технически работает
-- [x] CLI-скрипт audit.py
-- [x] Промпт аудитора (главный актив)
-- [x] HTML-отчёт
-- [ ] Прогон на 10 реальных сайтах знакомых, собрать фидбек
-- [ ] Доточить промпт по фидбеку
-
-### Неделя 2: первые продажи через аутрич
-- [ ] Список 200 целевых бизнесов
-- [ ] Шаблон холодного email/LinkedIn message
-- [ ] Простой лендинг (один HTML на GitHub Pages или Tilda)
-- [ ] Оплата через ЮKassa / Lemon Squeezy / Boosty
-- [ ] Цель: 5 продаж × $39 = $195
-
-### Неделя 3: контент и масштабирование
-- [ ] 3 публичных разбора в LinkedIn/VC
-- [ ] Автоматизация: форма на сайте → автогенерация отчёта → оплата → PDF на email
-- [ ] Цель: 20 продаж = $780
-
-### Неделя 4: услуги
-- [ ] Upsell на "доделаем" в каждом отчёте
-- [ ] Первые 2-3 услуги-проекта
-- [ ] Цель: $1500 общая выручка месяца
+### Mode C (optional, alternative monetization): BYOK
+Sell the Python tool itself on Gumroad for $19 ("audit any website with your own Anthropic key"). Targets dev-savvy customers and agencies. Smaller market, but $0 ongoing costs and instant scale.
 
 ---
 
-## Метрики, на которые смотрим
+## Target customer (English-speaking, high LTV)
 
-- **Conversion тизер → полный отчёт:** цель 5%+
-- **Cost per report:** Claude API ~$0.10-0.30 за отчёт. Маржа ~$38
-- **Refund rate:** цель <5% (если выше — слабый продукт)
-- **Time to first sale:** цель < 2 недели
+- US/UK/CA/AU local services: dentists, lawyers, plumbers, real-estate brokers, dental practices, accountants
+- Western European SMBs running their own e-commerce
+- Solopreneurs and consultants with personal sites that aren't converting
+- Small marketing agencies needing quick audits as sales tools (partnership angle)
+
+**Where they live (channels by priority):**
+1. **LinkedIn cold outreach** — search "owner [niche] [city]", DM with a pre-generated free teaser audit as a personalized hook. ~$0 cost, founder time.
+2. **Reddit niche subs** — r/Entrepreneur, r/smallbusiness, r/Plumbing etc. Post case-study "I audited 10 plumber sites, here's what I found." Soft CTA in comments.
+3. **Twitter/X mini-audits** — public threads "Auditing a random SMB site live." Each thread = 1–3 leads.
+4. **Cold email** to scraped lists (Apollo free tier = 50 emails/day).
+5. **SEO content** — long-tail "[niche] website audit checklist 2026" posts. Slow but compounds.
 
 ---
 
-## Риски и как их митигируем
+## Pricing ladder
 
-| Риск | Митигация |
+| Tier | Price | What | Margin |
+|------|-------|------|--------|
+| Free teaser | $0 | 1 page, hook the lead | -$0.05 (API cost as marketing) |
+| Full audit | **$39** | 10–15 page PDF | ~$36 |
+| Done-for-you | $299–$499 | Audit + we implement fixes | ~$200–$400 (founder time) |
+| Agency partnership | $15/audit wholesale (50+) | White-label audits | ~$12 |
+
+**Why $39:**
+- Below "I need to think about it" threshold ($50) → impulse-buy zone
+- Above "must be junk" threshold ($9) → signals quality
+- Comparable: PageSpeed is free, consultants are $2000+ — we fit in a previously empty gap
+
+---
+
+## 4-week roadmap (specific)
+
+### Week 1 — Build & ship landing
+- [x] MVP CLI (`audit.py`) working
+- [x] Landing page (`landing/index.html`)
+- [ ] Deploy landing to Cloudflare Pages (subdomain)
+- [ ] Connect Lemon Squeezy checkout to landing
+- [ ] Buy $5 Anthropic API credit
+- [ ] Run audits on 10 friends' / acquaintances' sites → gather feedback → refine prompt
+
+### Week 2 — First sales (manual mode)
+- [ ] LinkedIn cold outreach: 50 DMs/day to US dentists, lawyers, plumbers with personalized free teaser
+- [ ] Post one mini-audit thread on Twitter/X
+- [ ] Post one case study on r/smallbusiness or r/Entrepreneur
+- [ ] **Goal: 5 sales = $195**
+
+### Week 3 — Iterate & scale
+- [ ] Identify which channel converted best, double down
+- [ ] Improve prompt based on customer feedback ("not specific enough" / "too long")
+- [ ] Add testimonials section to landing (from real buyers)
+- [ ] **Goal: 15 sales = $585 cumulative**
+
+### Week 4 — Automate & upsell
+- [ ] If hitting 5+ sales/day, automate with Cloudflare Worker
+- [ ] Add post-purchase upsell page → "Want us to fix it? $299"
+- [ ] First done-for-you project: ~$300
+- [ ] **Goal: 25 audits + 1 service = $1275 cumulative**
+
+---
+
+## Metrics that matter
+
+- **Landing → free teaser conversion:** target 8–15%
+- **Teaser → paid conversion:** target 5–10%
+- **LinkedIn DM → reply rate:** target 10%
+- **Cost per acquired customer (CAC):** target < $5 (founder time only on day 1)
+- **Refund rate:** must stay below 5%
+- **Time to first sale:** target < 14 days from landing live
+
+---
+
+## Risks & mitigations
+
+| Risk | Mitigation |
 |------|-----------|
-| Claude генерит generic советы | Промпт с конкретными чек-листами, evidence-based findings |
-| Конкуренты уже есть (PageSpeed, Semrush) | Наше преимущество — человеческий язык, конкретные правки, дешевле, для малого бизнеса |
-| Юзеры не платят за то, что Google делает бесплатно | Позиционирование: "не циферки, а готовые правки от эксперта" |
-| Сайты блокируют скрапер | User-Agent ротация, fallback на ручной ввод HTML |
+| Claude generates generic advice | Tight prompt with banned phrases, evidence-cited findings, sample reports reviewed before each prompt update |
+| Cloudflare / Lemon Squeezy / Resend changes free-tier limits | Architecture is portable: swap to Vercel / Stripe / Mailgun, all have similar free tiers |
+| Founder can't fulfill 20 reports/day manually | Hit that limit only after $780/day MRR; automate at that point |
+| Competitors copy the idea | First-mover advantage compounds via SEO + reviews. Prompt is the moat — keep iterating on it. |
+| Customers expect ongoing service | Position clearly as one-shot. Upsell to done-for-you for relationship-style buyers. |
+| Sites block our scraper | User-Agent rotation, fallback to taking raw HTML from buyer |
 
 ---
 
-## Что НЕ делаем (антипаттерны)
+## What we're explicitly NOT doing
 
-- ❌ Подписка SaaS — не наша модель (юзер сказал)
-- ❌ Многостраничный анализ всего сайта — overkill для MVP, главная страница даёт 80% инсайтов
-- ❌ Красивая дизайн-студия лендинга — простой HTML на старте, дизайн потом
-- ❌ Маркетплейс/community — на старте только продукт + аутрич
+- ❌ SaaS subscription
+- ❌ Paid ads before validating with cold outreach
+- ❌ Building for RU/CIS market (lower ARPU, payment friction)
+- ❌ Multi-page deep crawls in MVP (homepage = 80% of insights)
+- ❌ Native mobile app
+- ❌ White-label dashboard before first 100 sales
