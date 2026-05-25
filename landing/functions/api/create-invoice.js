@@ -1,9 +1,13 @@
 // POST /api/create-invoice
 // Body: { url, email }
-// Creates a Cryptomus invoice for $39 and returns the hosted-checkout URL.
+// Creates a NOWPayments invoice for $39 and returns the hosted-checkout URL.
 // The landing-page JS redirects the customer there.
+//
+// Customer audit metadata (URL + email) is encoded into the NOWPayments
+// order_id as URL-safe base64 — see _shared/nowpayments.js. Webhook
+// decodes it back when the payment confirms.
 
-import { createInvoice, newOrderId } from "../_shared/cryptomus.js";
+import { createInvoice, newOrderId } from "../_shared/nowpayments.js";
 
 const PRICE_USD = 39;
 const corsHeaders = {
@@ -38,13 +42,18 @@ export async function onRequestPost(context) {
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json(400, { ok: false, error: "Valid email is required" });
   }
+  // Defensive: keep order_id under ~250 chars (base64-of-JSON of url+email)
+  if (url.length > 300 || email.length > 150) {
+    return json(400, { ok: false, error: "URL or email is unreasonably long" });
+  }
+  let parsedUrl;
   try {
-    new URL(/^https?:\/\//i.test(url) ? url : "https://" + url);
+    parsedUrl = new URL(/^https?:\/\//i.test(url) ? url : "https://" + url);
   } catch {
     return json(400, { ok: false, error: "Invalid URL" });
   }
 
-  if (!env.CRYPTOMUS_MERCHANT_ID || !env.CRYPTOMUS_API_KEY) {
+  if (!env.NOWPAYMENTS_API_KEY) {
     return json(503, {
       ok: false,
       error:
@@ -53,20 +62,17 @@ export async function onRequestPost(context) {
   }
 
   const origin = new URL(request.url).origin;
-  const orderId = newOrderId();
+  const orderId = newOrderId(url, email);
 
   try {
     const invoice = await createInvoice({
-      merchantId: env.CRYPTOMUS_MERCHANT_ID,
-      apiKey: env.CRYPTOMUS_API_KEY,
+      apiKey: env.NOWPAYMENTS_API_KEY,
       amount: PRICE_USD,
       orderId,
-      urlCallback: `${origin}/api/cryptomus-webhook`,
-      urlSuccess: `${origin}/success.html`,
-      urlReturn: `${origin}/cancel.html`,
-      customerUrl: url,
-      customerEmail: email,
-      toCurrency: env.CRYPTOMUS_TO_CURRENCY || "USDT",
+      orderDescription: `SiteX-Ray full audit · ${parsedUrl.hostname}`,
+      ipnCallbackUrl: `${origin}/api/nowpayments-webhook`,
+      successUrl: `${origin}/success.html`,
+      cancelUrl: `${origin}/cancel.html`,
     });
 
     return json(200, {
@@ -75,7 +81,7 @@ export async function onRequestPost(context) {
       orderId: invoice.orderId,
     });
   } catch (err) {
-    console.error("Cryptomus invoice creation failed:", err && err.stack ? err.stack : err);
+    console.error("NOWPayments invoice creation failed:", err && err.stack ? err.stack : err);
     return json(502, {
       ok: false,
       error: "Couldn't create checkout. Please try again, or contact support.",
