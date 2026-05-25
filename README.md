@@ -26,9 +26,9 @@ Built to run on **truly $0 upfront cost** — every piece sits on a free tier, *
 │   ├── favicon.svg · logo.svg · logo-mark.svg · og-image.svg
 │   └── functions/                 # backend (Cloudflare Pages Functions)
 │       ├── api/
-│       │   ├── audit.js                # POST /api/audit — free teaser endpoint
-│       │   ├── create-invoice.js       # POST /api/create-invoice — creates Cryptomus checkout
-│       │   └── cryptomus-webhook.js    # POST /api/cryptomus-webhook — paid order delivery
+│       │   ├── audit.js                  # POST /api/audit — free teaser endpoint
+│       │   ├── create-invoice.js         # POST /api/create-invoice — creates NOWPayments checkout
+│       │   └── nowpayments-webhook.js    # POST /api/nowpayments-webhook — paid order delivery
 │       └── _shared/
 │           ├── prompt.js          # JS mirror of the system prompt
 │           ├── scraper.js         # site scraper (uses HTMLRewriter)
@@ -39,7 +39,7 @@ Built to run on **truly $0 upfront cost** — every piece sits on a free tier, *
 │           ├── renderer.js        # HTML report email body
 │           ├── mailer.js          # Resend client
 │           ├── turnstile.js       # bot check verifier
-│           └── cryptomus.js       # crypto payment processor + MD5 signing
+│           └── nowpayments.js     # crypto payment processor + HMAC-SHA512
 │
 ├── outreach/                      # day-1 sales materials
 │   ├── linkedin_dm.md             # cold-DM templates + daily routine
@@ -96,7 +96,7 @@ See **[DEPLOY.md](DEPLOY.md)**. First-time setup: ~60 minutes. Costs $0 upfront 
 Required accounts (all free tier, no KYC, no card needed):
 - [Cloudflare](https://dash.cloudflare.com) — hosting + backend + free AI inference (unlimited free)
 - [Resend](https://resend.com) — email delivery (3000 free/mo)
-- [Cryptomus](https://cryptomus.com) — accepts crypto payments without KYC for low volumes (0.5% fee, payouts to your wallet)
+- [NOWPayments](https://nowpayments.io) — accepts crypto payments (0.5% fee, crypto payouts to your wallet, no KYC for non-custodial flow)
 
 Optional (quality upgrade once you have revenue):
 - [Anthropic](https://console.anthropic.com) — Claude API for the $39 tier (~$0.30/report, $5 minimum prepay)

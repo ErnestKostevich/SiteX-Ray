@@ -2,10 +2,6 @@
 # .dev.vars is gitignored — never commit real keys.
 # Used by `wrangler pages dev` for local development only.
 # Production keys go in Cloudflare Pages → Settings → Environment variables.
-#
-# Minimum to run: just RESEND_API_KEY. Cloudflare Workers AI is auto-bound
-# via wrangler.toml and is free. Claude is only needed if you want to use
-# Anthropic for the paid $39 tier (quality upgrade — optional).
 
 # Email delivery (REQUIRED)
 RESEND_API_KEY=re_your-key-here
@@ -18,11 +14,12 @@ ANTHROPIC_MODEL=claude-sonnet-4-5
 # Cloudflare AI model override (OPTIONAL — defaults to llama-3.1-8b-instruct)
 CF_AI_MODEL=
 
-# Cryptomus payments (REQUIRED to sell — no KYC for low volumes)
-# Sign up at https://cryptomus.com → Merchant → create → copy these values
-CRYPTOMUS_MERCHANT_ID=your-merchant-uuid
-CRYPTOMUS_API_KEY=your-payment-api-key
-CRYPTOMUS_TO_CURRENCY=USDT
+# NOWPayments — crypto checkout (REQUIRED to sell)
+# Get these from https://account.nowpayments.io/dashboard
+#   API key:    Store → API keys → Create
+#   IPN secret: Store → IPN Settings → set/generate
+NOWPAYMENTS_API_KEY=your-api-key
+NOWPAYMENTS_IPN_SECRET=your-ipn-secret
 
 # Cloudflare Turnstile (optional — leave blank to skip bot check locally)
 TURNSTILE_SECRET=
