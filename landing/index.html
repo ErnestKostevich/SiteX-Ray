@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SiteX-Ray — AI-powered website audit in 60 seconds</title>
+<meta name="description" content="Get a pro-grade audit of your website in 60 seconds. AI analyzes SEO, UX, conversion, content, and tech. Specific fixes, not vague advice. Free teaser, full report $39.">
+<meta property="og:title" content="SiteX-Ray — AI audit your website in 60 seconds">
+<meta property="og:description" content="Pro-grade website audit powered by Claude AI. Free teaser, full report $39.">
+<meta property="og:type" content="website">
+
+<style>
+  :root {
+    --bg: #0b0d12;
+    --bg-soft: #12151c;
+    --bg-card: #171b24;
+    --ink: #f1f5f9;
+    --ink-soft: #cbd5e1;
+    --muted: #64748b;
+    --line: #232936;
+    --accent: #818cf8;
+    --accent-2: #c084fc;
+    --green: #34d399;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --gradient: linear-gradient(135deg, #818cf8, #c084fc);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-2); }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Nav */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(11, 13, 18, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    padding: 16px 0;
+  }
+  nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  .logo .dot { color: var(--accent); }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    font-size: 14px;
+  }
+  .nav-links a { color: var(--ink-soft); }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    text-decoration: none;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary {
+    background: var(--gradient);
+    color: white;
+    box-shadow: 0 4px 24px rgba(129, 140, 248, 0.35);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 6px 32px rgba(129, 140, 248, 0.5);
+    color: white;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btn-sm { padding: 10px 18px; font-size: 14px; }
+
+  /* Hero */
+  .hero {
+    padding: 96px 0 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 800px; height: 600px;
+    background: radial-gradient(circle, rgba(129, 140, 248, 0.18), transparent 60%);
+    pointer-events: none;
+  }
+  .hero .container { position: relative; }
+  .badge {
+    display: inline-block;
+    padding: 6px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+  }
+  .badge .pulse {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    margin-right: 8px;
+    box-shadow: 0 0 8px var(--green);
+  }
+  h1 {
+    font-size: clamp(36px, 5.5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  h1 .grad {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-sub {
+    font-size: clamp(17px, 2vw, 20px);
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin: 0 auto 36px;
+  }
+  .hero-form {
+    display: flex;
+    gap: 12px;
+    max-width: 540px;
+    margin: 0 auto 16px;
+    flex-wrap: wrap;
+  }
+  .hero-form input[type=url] {
+    flex: 1;
+    min-width: 260px;
+    padding: 14px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+  }
+  .hero-form input[type=url]:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .hero-tiny {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+  .hero-tiny .check { color: var(--green); }
+
+  /* Sample report mockup */
+  .mockup-wrap {
+    margin-top: 72px;
+    position: relative;
+  }
+  .mockup {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: left;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  .mockup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .mockup-header .left .title { font-weight: 600; font-size: 18px; }
+  .mockup-header .left .url { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .mockup-score {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .mockup-score-num {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--red);
+  }
+  .mockup-verdict {
+    background: var(--red);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .mockup-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .mockup-cell {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .mockup-cell .label { font-size: 10px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.05em; }
+  .mockup-cell .val { font-size: 22px; font-weight: 700; }
+  .mockup-finding {
+    background: rgba(248,113,113,0.08);
+    border-left: 3px solid var(--red);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .mockup-finding .sev {
+    display: inline-block;
+    background: var(--red);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+    text-transform: uppercase;
+  }
+
+  /* Section base */
+  section { padding: 80px 0; }
+  .section-eyebrow {
+    text-align: center;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+  h2 {
+    text-align: center;
+    font-size: clamp(28px, 4vw, 42px);
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    line-height: 1.15;
+  }
+  .section-sub {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 17px;
+    max-width: 620px;
+    margin: 0 auto 56px;
+  }
+
+  /* Pain points */
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .pain-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px;
+  }
+  .pain-card .icon {
+    width: 44px; height: 44px;
+    background: rgba(248,113,113,0.12);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+  .pain-card h3 { font-size: 18px; margin-bottom: 8px; }
+  .pain-card p { color: var(--ink-soft); font-size: 15px; }
+
+  /* How it works */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    position: relative;
+  }
+  .step {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px;
+    position: relative;
+  }
+  .step-num {
+    width: 32px; height: 32px;
+    background: var(--gradient);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .step h3 { font-size: 18px; margin-bottom: 8px; }
+  .step p { color: var(--ink-soft); font-size: 15px; }
+
+  /* What's inside */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .feature {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+  }
+  .feature .check {
+    color: var(--green);
+    font-weight: 700;
+    margin-right: 8px;
+  }
+  .feature h4 { font-size: 16px; margin-bottom: 6px; }
+  .feature p { color: var(--ink-soft); font-size: 14px; }
+
+  /* Comparison */
+  .compare {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .compare table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .compare th, .compare td {
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .compare th { background: var(--bg-card); font-weight: 600; }
+  .compare th:nth-child(2) { color: var(--accent); }
+  .compare tr:last-child td { border-bottom: none; }
+  .compare .yes { color: var(--green); }
+  .compare .no { color: var(--muted); }
+
+  /* Pricing */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    align-items: stretch;
+  }
+  .price-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .price-card.featured {
+    border-color: var(--accent);
+    background: linear-gradient(180deg, rgba(129,140,248,0.08), transparent);
+    transform: scale(1.02);
+  }
+  .price-card .name {
+    font-size: 14px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .price-card .price {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .price-card .price-sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .price-card ul {
+    list-style: none;
+    margin-bottom: 28px;
+    flex: 1;
+  }
+  .price-card li {
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .price-card li::before {
+    content: "✓";
+    color: var(--green);
+    font-weight: 700;
+    margin-right: 10px;
+  }
+  .price-card .btn { width: 100%; text-align: center; }
+  .price-card .badge-pop {
+    position: absolute;
+    top: -12px; right: 20px;
+    background: var(--gradient);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* FAQ */
+  .faq {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .faq-item {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 18px 24px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-q::after {
+    content: "+";
+    color: var(--accent);
+    font-size: 20px;
+    transition: transform 0.2s;
+  }
+  details[open] .faq-q::after { transform: rotate(45deg); }
+  .faq-a {
+    padding: 0 24px 20px;
+    color: var(--ink-soft);
+    font-size: 15px;
+  }
+
+  /* Final CTA */
+  .final-cta {
+    text-align: center;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 64px 32px;
+    margin: 40px 0;
+  }
+  .final-cta h2 { margin-bottom: 12px; }
+  .final-cta p { color: var(--ink-soft); margin-bottom: 32px; max-width: 520px; margin-left: auto; margin-right: auto; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 32px 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  @media (max-width: 720px) {
+    .nav-links { display: none; }
+    .mockup-grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .mockup-cell { padding: 8px 4px; }
+    .mockup-cell .val { font-size: 16px; }
+    section { padding: 56px 0; }
+    .price-card.featured { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="logo">Site<span class="dot">X</span>-Ray</div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#hero-form" class="btn btn-primary btn-sm">Get free audit</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="badge"><span class="pulse"></span> Powered by Claude — analyzes 50+ signals in 60 seconds</div>
+
+    <h1>Your website is leaking <span class="grad">money</span>.<br>Find out exactly where.</h1>
+
+    <p class="hero-sub">
+      Get a senior-consultant-grade audit of your site in 60 seconds. AI scans SEO, UX, conversion, content and tech — then hands you specific fixes, not vague advice.
+    </p>
+
+    <form class="hero-form" id="hero-form" onsubmit="event.preventDefault(); alert('Demo mode — payment & report delivery coming soon. Email ernest2011kostevich@gmail.com to be a beta tester.');">
+      <input type="url" placeholder="https://yourwebsite.com" required>
+      <button type="submit" class="btn btn-primary">Get my free report →</button>
+    </form>
+
+    <p class="hero-tiny">
+      <span class="check">✓</span> No signup &nbsp; <span class="check">✓</span> No credit card &nbsp; <span class="check">✓</span> Delivered to your inbox in 60 seconds
+    </p>
+
+    <!-- Sample report mockup -->
+    <div class="mockup-wrap">
+      <div class="mockup">
+        <div class="mockup-header">
+          <div class="left">
+            <div class="title">AI Site Audit</div>
+            <div class="url">acmedental.com</div>
+          </div>
+          <div class="mockup-score">
+            <span class="mockup-verdict">Critical</span>
+            <div class="mockup-score-num">34</div>
+          </div>
+        </div>
+        <div class="mockup-grid">
+          <div class="mockup-cell"><div class="label">SEO</div><div class="val" style="color: var(--red);">28</div></div>
+          <div class="mockup-cell"><div class="label">UX</div><div class="val" style="color: var(--yellow);">52</div></div>
+          <div class="mockup-cell"><div class="label">Content</div><div class="val" style="color: var(--red);">31</div></div>
+          <div class="mockup-cell"><div class="label">Convert</div><div class="val" style="color: var(--red);">22</div></div>
+          <div class="mockup-cell"><div class="label">Tech</div><div class="val" style="color: var(--yellow);">61</div></div>
+        </div>
+        <div class="mockup-finding">
+          <span class="sev">Critical</span>
+          <strong>Meta description missing.</strong> Google is auto-generating it from random page text. Replace with: "Family dentistry in Boston — same-day appointments, all insurance accepted. Book online 24/7."
+        </div>
+        <div class="mockup-finding">
+          <span class="sev">High</span>
+          <strong>No CTA above the fold.</strong> Visitors see your logo and a stock photo but no clear next action. Add a "Book a free consultation" button next to your phone number.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section id="pain" style="background: var(--bg-soft);">
+  <div class="container">
+    <div class="section-eyebrow">The problem</div>
+    <h2>Your site was built years ago.<br>Nobody's touched it since.</h2>
+    <p class="section-sub">Most small-business sites silently bleed traffic and leads. You don't have time to figure out why — and the agency that built it isn't going to call.</p>
+
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="icon">📉</div>
+        <h3>Traffic is flat</h3>
+        <p>You're not ranking on Google for the keywords your customers actually search. Meta tags, structure, and content are working against you.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">💸</div>
+        <h3>Visitors don't convert</h3>
+        <p>People land on your homepage, can't figure out what you do in 5 seconds, and bounce. Your CTA is buried or missing entirely.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🤷</div>
+        <h3>You don't know what's broken</h3>
+        <p>Hiring a consultant costs $2000+. Free tools give you cryptic numbers but no actual fixes. You're flying blind.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how">
+  <div class="container">
+    <div class="section-eyebrow">How it works</div>
+    <h2>From URL to action plan in 60 seconds</h2>
+    <p class="section-sub">No accounts. No installs. Paste a URL, get a report. That's it.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Enter your URL</h3>
+        <p>Just your homepage. We handle the rest.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>AI scans 50+ signals</h3>
+        <p>SEO, UX, content, conversion, technical. Claude AI checks against a senior-consultant playbook.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Get your report</h3>
+        <p>PDF in your inbox. Quick wins for today, critical issues, and a 90-day strategy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INSIDE -->
+<section style="background: var(--bg-soft);">
+  <div class="container">
+    <div class="section-eyebrow">What you get</div>
+    <h2>A consultant's brain. In a PDF.</h2>
+    <p class="section-sub">Every report is generated fresh by Claude using a 50+ point checklist refined from years of conversion audits. No templates, no copy-paste.</p>
+
+    <div class="features-grid">
+      <div class="feature">
+        <h4>5 dimensions scored 0–100</h4>
+        <p>SEO, UX, Content, Conversion, Technical — color-coded so you instantly see where to focus.</p>
+      </div>
+      <div class="feature">
+        <h4>Specific fixes, not vague advice</h4>
+        <p>"Replace title with 'X'" — not "improve your title". Hand it to your dev or do it yourself.</p>
+      </div>
+      <div class="feature">
+        <h4>Quick wins for today</h4>
+        <p>5–7 changes you can ship in under an hour. Effort + impact labeled.</p>
+      </div>
+      <div class="feature">
+        <h4>Critical issues, ranked</h4>
+        <p>What's costing you money right now, sorted by severity.</p>
+      </div>
+      <div class="feature">
+        <h4>90-day strategy</h4>
+        <p>2–4 strategic moves that compound. Not a 50-item to-do list.</p>
+      </div>
+      <div class="feature">
+        <h4>Plain English</h4>
+        <p>No "schema markup leveraging" — just "Google can't read your business hours, here's how to fix it."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section>
+  <div class="container">
+    <div class="section-eyebrow">Compared to</div>
+    <h2>Why not just use PageSpeed?</h2>
+    <p class="section-sub">Free tools give you numbers. Consultants give you fixes. SiteX-Ray gives you fixes at a free-tool price.</p>
+
+    <div class="compare">
+      <table>
+        <tr>
+          <th></th>
+          <th>SiteX-Ray</th>
+          <th>PageSpeed / Lighthouse</th>
+          <th>SEO consultant</th>
+        </tr>
+        <tr>
+          <td>Specific copy rewrites</td>
+          <td class="yes">✓</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Conversion analysis</td>
+          <td class="yes">✓</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Plain-English explanations</td>
+          <td class="yes">✓</td>
+          <td class="no">—</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>Delivered in 60 seconds</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+          <td class="no">2–3 weeks</td>
+        </tr>
+        <tr>
+          <td>Price</td>
+          <td class="yes"><strong>$39</strong></td>
+          <td class="yes">Free</td>
+          <td class="no">$2000+</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background: var(--bg-soft);">
+  <div class="container">
+    <div class="section-eyebrow">Pricing</div>
+    <h2>Simple. No subscriptions.</h2>
+    <p class="section-sub">Pay once, own the report. Refund within 7 days, no questions asked.</p>
+
+    <div class="pricing-grid">
+
+      <div class="price-card">
+        <div class="name">Free teaser</div>
+        <div class="price">$0</div>
+        <div class="price-sub">Hook, not the full meal.</div>
+        <ul>
+          <li>Overall score (0–100)</li>
+          <li>Top 3 quick wins</li>
+          <li>Single most critical issue</li>
+          <li>Delivered to your inbox</li>
+        </ul>
+        <a href="#hero-form" class="btn btn-secondary">Get free teaser</a>
+      </div>
+
+      <div class="price-card featured">
+        <span class="badge-pop">Most popular</span>
+        <div class="name">Full audit</div>
+        <div class="price">$39</div>
+        <div class="price-sub">One-time. Lifetime access to the report.</div>
+        <ul>
+          <li>Everything in free teaser</li>
+          <li>Full 10–15 page PDF report</li>
+          <li>5 dimensions deeply analyzed</li>
+          <li>5–7 quick wins (effort + impact)</li>
+          <li>All critical & high-severity issues</li>
+          <li>90-day strategic recommendations</li>
+          <li>7-day full refund guarantee</li>
+        </ul>
+        <a href="#hero-form" class="btn btn-primary">Get full audit — $39</a>
+      </div>
+
+      <div class="price-card">
+        <div class="name">Done for you</div>
+        <div class="price">$299+</div>
+        <div class="price-sub">We implement the fixes. Quote-based.</div>
+        <ul>
+          <li>Full audit included</li>
+          <li>We implement all quick wins</li>
+          <li>We rewrite weak copy</li>
+          <li>We fix meta tags & structure</li>
+          <li>Before / after report</li>
+          <li>Money-back if no improvement</li>
+        </ul>
+        <a href="mailto:ernest2011kostevich@gmail.com?subject=Done-for-you%20audit%20request" class="btn btn-secondary">Request a quote</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-eyebrow">FAQ</div>
+    <h2>Questions, honestly answered</h2>
+    <p class="section-sub">Still curious? Email <a href="mailto:ernest2011kostevich@gmail.com">ernest2011kostevich@gmail.com</a>.</p>
+
+    <div class="faq">
+      <details class="faq-item">
+        <summary class="faq-q">How is this different from PageSpeed Insights?</summary>
+        <div class="faq-a">PageSpeed gives you a Performance number and tells you to "minify CSS." SiteX-Ray reads your actual content, your CTAs, your value proposition, and gives you specific rewrites and structural changes a human consultant would. Think of PageSpeed as a doctor saying "your blood pressure is 145." SiteX-Ray is the doctor saying "stop drinking coffee at 4pm and walk 20 minutes a day."</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Is the AI actually any good, or generic fluff?</summary>
+        <div class="faq-a">It runs on Claude Sonnet — Anthropic's flagship — with a custom 200-line prompt built from real conversion-audit checklists. Every finding cites evidence from your actual site (your real title, your real CTAs). Vague advice like "improve your content" is explicitly banned in the prompt.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">What if I don't like the report?</summary>
+        <div class="faq-a">Full refund within 7 days, no questions asked. Just email us. We'd rather have you happy than your $39.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Do you store my data?</summary>
+        <div class="faq-a">We process your URL through Claude's API to generate the report, then email it to you. We don't store URLs, reports, or share data with third parties. Stripe / Lemon Squeezy handles payment data separately under their privacy policies.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">How fresh is the audit? Will it work next month?</summary>
+        <div class="faq-a">Every audit is generated live from your current homepage. If you change your site, run a new audit. We recommend re-running quarterly after big content updates.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Can you audit pages other than the homepage?</summary>
+        <div class="faq-a">MVP is homepage-only — that's where 80% of conversion issues live. Multi-page audits are on the roadmap. Email us if you need a specific page audited and we'll do it manually.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">I'm a web agency — can I resell this?</summary>
+        <div class="faq-a">Yes. We're piloting a partnership program: wholesale audits + your branding. Email us with "Partnership" in the subject.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section>
+  <div class="container">
+    <div class="final-cta">
+      <h2>Find out what your site is hiding</h2>
+      <p>Free teaser in 60 seconds. No signup. No credit card.</p>
+      <a href="#hero-form" class="btn btn-primary">Get my free report →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>© 2026 SiteX-Ray · Built with Claude</div>
+    <div>
+      <a href="mailto:ernest2011kostevich@gmail.com">Contact</a> &nbsp;·&nbsp;
+      <a href="#">Terms</a> &nbsp;·&nbsp;
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
