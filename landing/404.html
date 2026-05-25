@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — SiteX-Ray</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #f1f5f9;
+    background: #0b0d12;
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    background: #12151c;
+    border: 1px solid #232936;
+    border-radius: 20px;
+    padding: 56px 40px;
+    max-width: 520px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: -100px; left: 50%;
+    transform: translateX(-50%);
+    width: 400px; height: 300px;
+    background: radial-gradient(circle, rgba(129, 140, 248, 0.16), transparent 60%);
+    pointer-events: none;
+  }
+  .glyph {
+    font-size: 96px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #818cf8, #c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -4px;
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-size: 24px;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  p {
+    color: #cbd5e1;
+    margin-bottom: 28px;
+  }
+  .home {
+    display: inline-block;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #818cf8, #c084fc);
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 4px 24px rgba(129, 140, 248, 0.35);
+  }
+  .home:hover { transform: translateY(-1px); }
+  .second {
+    display: block;
+    margin-top: 16px;
+    color: #64748b;
+    font-size: 13px;
+  }
+  .second a { color: #818cf8; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="glyph">404</div>
+  <h1>This page hasn't been audited yet</h1>
+  <p>The URL you followed doesn't exist on this site. Try the homepage to run an audit on your own.</p>
+  <a class="home" href="/">← Back to SiteX-Ray</a>
+  <span class="second">Or check out the <a href="/sample-report.html">sample report</a>.</span>
+</div>
+</body>
+</html>

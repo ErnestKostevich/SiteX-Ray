@@ -130,6 +130,7 @@ Lemon Squeezy handles checkout, payments, tax (incl. EU VAT), and webhooks. Thei
    - Product → **Checkout** tab → **Custom data** → add field with key `audit_url`, label "Website URL to audit"
 6. Copy the **checkout URL**: Product → **Share** → **Pay link** → copy. Looks like `https://yourshop.lemonsqueezy.com/buy/abc-123-xyz`
 7. **Thank-you redirect**: Product → **Checkout** tab → "Redirect URL after purchase" → enter `https://yourdomain.com/success` (or `https://project-4-abc.pages.dev/success`). This sends paying customers to the friendly `success.html` page while their full audit is being generated in the background.
+   - **Cancel URL** (same tab, "Redirect URL on cancel"): enter `https://yourdomain.com/cancel`. Brings users who close the checkout back to a friendly "no charge" page that points them to the free teaser instead.
 8. **Webhooks**:
    - Settings → **Webhooks** → **+ Add endpoint**
    - URL: `https://yourdomain.com/api/lemon-webhook` (or `https://project-4-abc.pages.dev/api/lemon-webhook`)

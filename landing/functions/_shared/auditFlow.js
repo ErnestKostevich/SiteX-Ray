@@ -10,6 +10,7 @@
 import { scrapeSite } from "./scraper.js";
 import { analyzeWithClaude } from "./analyzer.js";
 import { analyzeWithCloudflareAI } from "./cloudflareAI.js";
+import { normalizeReport } from "./normalize.js";
 import { renderReport } from "./renderer.js";
 import { sendReportEmail } from "./mailer.js";
 
@@ -54,11 +55,10 @@ export async function runAuditAndEmail(opts) {
 
   const siteData = await scrapeSite(url);
 
-  const report = await pickBackendAndAnalyze(siteData, env, free);
-
-  // Merge URL/domain if the model didn't echo them
-  report.url = report.url || siteData.final_url;
-  report.domain = report.domain || siteData.domain;
+  const rawReport = await pickBackendAndAnalyze(siteData, env, free);
+  // Always pass the AI output through the normalizer so the renderer can
+  // assume a consistent shape (severity values, missing sections, etc.).
+  const report = normalizeReport(rawReport, siteData);
 
   const html = renderReport(report, { free, ctaUrl });
 

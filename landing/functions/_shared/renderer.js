@@ -199,7 +199,7 @@ export function renderReport(report, opts = {}) {
   }
 
   <div style="margin-top:56px; padding-top:24px; border-top:1px solid #e2e8f0; color:#64748b; font-size:12px; text-align:center;">
-    SiteX-Ray · AI audit generated ${new Date().toUTCString()} · Powered by Claude
+    SiteX-Ray · AI audit generated ${new Date().toUTCString()}
   </div>
 
 </div>
