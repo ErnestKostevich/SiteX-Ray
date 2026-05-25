@@ -902,7 +902,7 @@
   <div class="container">
     <a class="logo" href="/">
       <span class="logo-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><line x1="7" y1="7" x2="13" y2="13" stroke-width="1.2" opacity="0.55"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
       </span>
       SiteX-Ray
     </a>
@@ -1285,7 +1285,7 @@
   <div class="container">
     <div class="logo">
       <span class="logo-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><line x1="7" y1="7" x2="13" y2="13" stroke-width="1.2" opacity="0.55"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
       </span>
       © 2026 SiteX-Ray
     </div>
@@ -1300,10 +1300,10 @@
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
   // ============================================================
-  // Customer-facing config — update once you've set up accounts.
-  // See DEPLOY.md for the full step-by-step.
+  // Customer-facing config — only TURNSTILE_SITE_KEY needs editing.
+  // Paid checkout is fully server-side (Cryptomus, no-KYC crypto payments).
+  // See DEPLOY.md for the step-by-step.
   // ============================================================
-  const LEMON_CHECKOUT_URL = "";   // e.g. "https://yourshop.lemonsqueezy.com/buy/abc-123-xyz"
   const TURNSTILE_SITE_KEY = "";   // public site key from Cloudflare Turnstile (optional but recommended)
 
   // ── Form & checkout logic ────────────────────────────────────
@@ -1384,24 +1384,33 @@
       }
     });
 
-    window.goToCheckout = function (event) {
+    window.goToCheckout = async function (event) {
       if (event) event.preventDefault();
-      if (!LEMON_CHECKOUT_URL) {
-        alert(
-          "Payments come online once you configure Lemon Squeezy (see DEPLOY.md). " +
-            "Try the free teaser above, or email ernest2011kostevich@gmail.com to be a beta tester."
-        );
-        return false;
-      }
       const url =
         (urlInput.value || "").trim() ||
         prompt("What site should we audit? (e.g. https://yourbusiness.com)");
       if (!url) return false;
-      const email = (emailInput.value || "").trim();
-      const params = new URLSearchParams();
-      params.set("checkout[custom][audit_url]", url);
-      if (email) params.set("checkout[email]", email);
-      window.location.href = LEMON_CHECKOUT_URL + "?" + params.toString();
+      const email =
+        (emailInput.value || "").trim() ||
+        prompt("Where should we email the report?");
+      if (!email) return false;
+
+      setStatus("Preparing your secure crypto checkout…", null);
+      try {
+        const response = await fetch("/api/create-invoice", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url, email }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.ok && data.ok && data.url) {
+          window.location.href = data.url;
+        } else {
+          setStatus(data.error || "Couldn't create checkout. Please try again.", "error");
+        }
+      } catch (e) {
+        setStatus("Couldn't reach the payment server. Please try again.", "error");
+      }
       return false;
     };
   })();

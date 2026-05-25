@@ -4,13 +4,13 @@ Read top to bottom. **Truly $0 upfront** — every required piece is on a free t
 
 ## What you need
 
-**Required** (free, no credit card):
+**Required** (free, no KYC, no credit card):
 - GitHub account
 - Cloudflare account (hosts site + provides FREE Llama 3.1 AI inference)
 - Resend account (free 3000 emails/month)
 
-**Required only after you start selling** (no upfront cost):
-- Lemon Squeezy account (collects $39 payments, takes ~7% fee per sale)
+**Required only when you start selling** (no upfront cost, no KYC for low volumes):
+- Cryptomus account (collects crypto payments, 0.5% fee per sale, payouts to your own wallet)
 
 **Optional, recommended later** (small cost, only after first sale):
 - Anthropic API account ($5 min credit) — upgrades the paid $39 audit from Llama to Claude Sonnet quality. Skip for launch; add once you have revenue.
@@ -20,7 +20,7 @@ Read top to bottom. **Truly $0 upfront** — every required piece is on a free t
 1. [GitHub repo](#0-github) — already done ✅
 2. [Cloudflare account + Pages + AI binding](#1-cloudflare-pages--workers-ai)
 3. [Resend account](#2-resend-email) — email delivery
-4. [Lemon Squeezy account](#3-lemon-squeezy) — payments
+4. [Cryptomus account](#3-cryptomus-no-kyc-crypto-payments) — accept payments without KYC
 5. [Cloudflare Turnstile](#4-cloudflare-turnstile) — anti-bot (optional)
 6. [Anthropic API](#5-anthropic-api-optional-quality-upgrade) — optional Claude upgrade
 7. [Wire everything together](#6-wire-everything-together)
@@ -96,8 +96,9 @@ For **Production** environment, add:
 |---|---|---|---|
 | `RESEND_API_KEY` | ✅ required | `re_...` from step 2 | yes |
 | `RESEND_FROM_EMAIL` | optional | `SiteX-Ray <reports@yourdomain.com>` (else defaults to onboarding@resend.dev) | no |
-| `LEMON_WEBHOOK_SECRET` | required to sell | (filled in step 3) | yes |
-| `LEMON_CHECKOUT_URL` | required to sell | (filled in step 3) | no |
+| `CRYPTOMUS_MERCHANT_ID` | required to sell | merchant UUID from step 3 | yes |
+| `CRYPTOMUS_API_KEY` | required to sell | payment API key from step 3 | yes |
+| `CRYPTOMUS_TO_CURRENCY` | optional | payout currency, default `USDT` | no |
 | `TURNSTILE_SECRET` | recommended | (filled in step 4) | yes |
 | `ANTHROPIC_API_KEY` | optional | `sk-ant-...` (skip = use free Cloudflare AI for everything) | yes |
 | `ANTHROPIC_MODEL` | optional | `claude-sonnet-4-5` | no |
@@ -113,41 +114,40 @@ Either:
 
 ---
 
-## 3. Lemon Squeezy
+## 3. Cryptomus (no-KYC crypto payments)
 
-Lemon Squeezy handles checkout, payments, tax (incl. EU VAT), and webhooks. Their fee is ~5% + $0.50 per sale. **No setup fee, no monthly cost** until you sell.
+Cryptomus is a crypto payment processor that lets you accept BTC, ETH, USDT, USDC and ~50 other coins. **No KYC required for low volumes** (their default limit at signup is around €1k/month and grows automatically with usage). Customer pays in any crypto, you receive in stablecoin (USDT/USDC) to your own wallet. Fee: 0.5% — eight times cheaper than card processors.
 
-1. Sign up: https://www.lemonsqueezy.com/
-2. Verify email, fill in basic account info
-3. **Products** → **+ New Product**:
-   - Name: `SiteX-Ray Full Audit`
-   - Price: $39 USD
-   - Type: **Single payment**, digital product
-   - Description: paste from your landing's pricing card
-   - Save
-4. Click the product → **Variants** tab → make sure default variant is published
-5. **Custom checkout fields** (so you can collect the audit URL even if customer didn't fill it on the landing):
-   - Product → **Checkout** tab → **Custom data** → add field with key `audit_url`, label "Website URL to audit"
-6. Copy the **checkout URL**: Product → **Share** → **Pay link** → copy. Looks like `https://yourshop.lemonsqueezy.com/buy/abc-123-xyz`
-7. **Thank-you redirect**: Product → **Checkout** tab → "Redirect URL after purchase" → enter `https://yourdomain.com/success` (or `https://project-4-abc.pages.dev/success`). This sends paying customers to the friendly `success.html` page while their full audit is being generated in the background.
-   - **Cancel URL** (same tab, "Redirect URL on cancel"): enter `https://yourdomain.com/cancel`. Brings users who close the checkout back to a friendly "no charge" page that points them to the free teaser instead.
-8. **Webhooks**:
-   - Settings → **Webhooks** → **+ Add endpoint**
-   - URL: `https://yourdomain.com/api/lemon-webhook` (or `https://project-4-abc.pages.dev/api/lemon-webhook`)
-   - Events: check **order_created**
-   - Save → it generates a **signing secret** → copy it
+**The trade-off you accept:** the SMB owner has to be comfortable paying with crypto. Many are; many aren't. Crypto-paying customers tend to be: agency owners, indie founders, tech-savvy operators, anyone in countries with strict capital controls. Expect lower conversion than card processors but you keep all the upside (no chargebacks, no account freezes, no KYC for you OR the buyer).
 
-> ⚠️ If you renumber the steps above, also update the matching env-var names below — `LEMON_CHECKOUT_URL` is the URL from step 6, `LEMON_WEBHOOK_SECRET` is the secret from step 8.
+### Setup (~15 minutes, no documents required)
 
-Now go back to Cloudflare → Pages → Settings → Environment variables and fill in:
-- `LEMON_CHECKOUT_URL` = the checkout URL from step 6
-- `LEMON_WEBHOOK_SECRET` = the signing secret from step 7
+1. Sign up: https://cryptomus.com → email + password. No identity verification at signup.
+2. After login: **Personal area** → **Business** → **Create merchant** → name it `SiteX-Ray` → Save.
+3. Open your merchant. Copy and save these two values:
+   - **Merchant ID** (UUID format) — goes into env var `CRYPTOMUS_MERCHANT_ID`
+   - **Payment API key** (Settings → API keys → "Payment" key, click "Show") — goes into env var `CRYPTOMUS_API_KEY`
+4. Configure **payout currency** (Settings → Wallets):
+   - Add your own USDT wallet address. Recommended chains: **Tron (TRC20)** for lowest fees (~$1), or **Solana** for instant settlement. Avoid Ethereum mainnet — fees are too high for small amounts.
+   - Or just let payouts accumulate in your Cryptomus balance and withdraw manually later.
+5. Set the webhook URL in your merchant settings:
+   - **Settings** → **Notifications** / **Webhooks** → **Payment notifications URL**:
+     `https://yourdomain.com/api/cryptomus-webhook` (or `https://project-4-abc.pages.dev/api/cryptomus-webhook`)
+   - Save. The same `CRYPTOMUS_API_KEY` is used to sign the webhook, so no separate secret to manage.
+6. **Test in sandbox first**: Cryptomus has a Testnet mode — switch on, send a test payment with testnet USDT (free from a faucet), verify your webhook fires and you get an email. Once it works → switch to **Production** mode.
 
-Also, edit `landing/index.html` — find the line:
-```js
-const LEMON_CHECKOUT_URL = "";
-```
-and paste your checkout URL between the quotes. Commit & push.
+> 💡 Cryptomus payouts of accumulated USDT to your own wallet don't trigger KYC under their default limits. If you go over the threshold, they'll ask you to verify — at that point you've already made >€1k and the KYC ask is fine. Receiving USDT to your own wallet is permissionless.
+
+### Add the env vars to Cloudflare Pages
+
+Cloudflare Pages → Settings → Environment variables → add:
+- `CRYPTOMUS_MERCHANT_ID` (encrypted) — the merchant UUID from step 3
+- `CRYPTOMUS_API_KEY` (encrypted) — the payment API key from step 3
+- `CRYPTOMUS_TO_CURRENCY` = `USDT` (or `USDC` — optional, defaults to `USDT`)
+
+Then **Retry deployment** so functions pick up the env vars. The landing's "Get full audit — $39" button is already wired to call `/api/create-invoice`, which uses these vars to create a hosted Cryptomus checkout and redirects the customer there. After payment, Cryptomus webhooks `/api/cryptomus-webhook` and your full audit is delivered by email.
+
+No edits to `landing/index.html` required — checkout is fully server-side.
 
 ---
 
@@ -225,13 +225,13 @@ If nothing arrives in 5 minutes:
 - Cloudflare → Pages → your project → **Logs** → look for the most recent invocation of `/api/audit` and read the error
 - Common culprits: missing env var, wrong API key, Resend domain not verified, Claude credit balance is $0
 
-### Test the paid flow (use Lemon Squeezy test mode)
-1. Lemon Squeezy → Settings → **Test mode: ON**
-2. Open your live site → click "Get full audit — $39"
-3. You'll get redirected to Lemon's checkout. Use card `4242 4242 4242 4242`, any future expiry, any CVC
-4. The custom field `audit_url` should be pre-filled
-5. Complete checkout → you should receive the FULL report in your email
-6. When everything works → Lemon Squeezy → Settings → **Test mode: OFF**
+### Test the paid flow (use Cryptomus testnet mode)
+1. Cryptomus dashboard → Settings → switch to **Test / sandbox mode**
+2. Open your live site → fill in URL + email → click "Get full audit — $39"
+3. You'll get redirected to a Cryptomus checkout page. Pick any crypto.
+4. Use testnet USDT from a faucet (Cryptomus provides one in test mode) to pay
+5. Once confirmed, you should get redirected to `/success.html` and the FULL audit should arrive by email within 2–3 minutes
+6. When everything works → Cryptomus → Settings → switch to **Production mode**
 
 ---
 
@@ -267,12 +267,13 @@ The local server runs the **same Functions code** that production runs. If somet
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| Form submits, no email arrives | Missing `ANTHROPIC_API_KEY` or `RESEND_API_KEY` env var | Add it in Pages → Settings → env vars, then Retry deployment |
+| Free-teaser form submits, no email arrives | Missing AI binding or `RESEND_API_KEY` env var | Pages → Settings → Functions → add Workers AI binding `AI`; check `RESEND_API_KEY` is set; Retry deployment |
 | Email arrives from `onboarding@resend.dev` | Custom Resend domain not verified | Verify domain in Resend, set `RESEND_FROM_EMAIL` env var |
-| "Anthropic API 429" in logs | Out of Claude credits | Top up at console.anthropic.com |
-| "Invalid signature" on Lemon webhook | Webhook secret mismatch | Re-copy from Lemon Squeezy → paste fresh into `LEMON_WEBHOOK_SECRET` |
+| "Anthropic API 429" in logs | Out of Claude credits | Top up at console.anthropic.com (only relevant if you opted into Anthropic) |
+| "Couldn't create checkout" when clicking $39 button | Missing `CRYPTOMUS_MERCHANT_ID` / `CRYPTOMUS_API_KEY` | Add both in Pages → Settings → env vars; Retry deployment |
+| "Invalid signature" on Cryptomus webhook | Webhook signed with a different key than the one in env | Re-copy `CRYPTOMUS_API_KEY` from Cryptomus → paste fresh into Cloudflare env vars |
+| Cryptomus webhook fires but no email goes out | Audit pipeline crashed; check Cloudflare → Pages → Functions logs | Likely a malformed `additional_data` field or missing AI backend |
 | Site loads, no functions respond | Wrong build output dir | Pages → Settings → Build → set output dir to `landing` → Retry |
-| Local form click → "Demo mode" alert | You haven't set `LEMON_CHECKOUT_URL` in `landing/index.html` yet | See step 6 above |
 
 ---
 
@@ -280,19 +281,19 @@ The local server runs the **same Functions code** that production runs. If somet
 
 ### Mode A — pure $0 (Cloudflare AI only, no Anthropic at all)
 
-| Stage | Sales/mo | Free teasers/mo | CF AI cost | Lemon | Resend | CF Pages | Total | Revenue | Net |
+| Stage | Sales/mo | Free teasers/mo | CF AI | Cryptomus 0.5% | Resend | CF Pages | Total | Revenue | Net |
 |---|---|---|---|---|---|---|---|---|---|
-| Bootstrapping | 0 | 50 | $0 (free tier) | $0 | $0 | $0 | **$0** | $0 | $0 |
-| 10 sales | 10 | 200 | $0 (free tier) | $40 | $0 | $0 | **$40** | $390 | **+$350** |
-| 50 sales | 50 | 1000 | $0 (free tier) | $200 | $0 | $0 | **$200** | $1,950 | **+$1,750** |
-| 500 sales | 500 | 10k | ~$10 | $2,000 | $20 | $0 | **$2,030** | $19,500 | **+$17,470** |
+| Bootstrapping | 0 | 50 | $0 | $0 | $0 | $0 | **$0** | $0 | $0 |
+| 10 sales | 10 | 200 | $0 | ~$2 | $0 | $0 | **$2** | $390 | **+$388** |
+| 50 sales | 50 | 1000 | $0 | ~$10 | $0 | $0 | **$10** | $1,950 | **+$1,940** |
+| 500 sales | 500 | 10k | ~$10 | ~$100 | $20 | $0 | **$130** | $19,500 | **+$19,370** |
 
 ### Mode B — Anthropic upgrade (Claude for paid audits)
 
-| Stage | Sales/mo | Anthropic | Lemon | Resend | CF | Total | Revenue | Net |
+| Stage | Sales/mo | Anthropic | Cryptomus | Resend | CF | Total | Revenue | Net |
 |---|---|---|---|---|---|---|---|---|
-| First sales | 10 | $5 prepay + $3 | $40 | $0 | $0 | **$48** | $390 | **+$342** |
-| 50 sales | 50 | $20 | $200 | $0 | $0 | **$220** | $1,950 | **+$1,730** |
-| 500 sales | 500 | $200 | $2,000 | $20 | $0 | **$2,220** | $19,500 | **+$17,280** |
+| First sales | 10 | $5 prepay + $3 | $2 | $0 | $0 | **$10** | $390 | **+$380** |
+| 50 sales | 50 | $20 | $10 | $0 | $0 | **$30** | $1,950 | **+$1,920** |
+| 500 sales | 500 | $200 | $100 | $20 | $0 | **$320** | $19,500 | **+$19,180** |
 
-Both modes are profitable from sale #1. Mode A has the lowest possible launch friction; Mode B trades $5 upfront for better paid-audit quality (and likely higher conversion + lower refunds long-term).
+Both modes profitable from sale #1. Cryptomus's 0.5% fee leaves dramatically more margin than the 7% card processors take — this is the upside of crypto.

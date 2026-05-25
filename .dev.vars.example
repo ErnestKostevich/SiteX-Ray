@@ -18,9 +18,11 @@ ANTHROPIC_MODEL=claude-sonnet-4-5
 # Cloudflare AI model override (OPTIONAL — defaults to llama-3.1-8b-instruct)
 CF_AI_MODEL=
 
-# Lemon Squeezy (only needed when testing webhook flow locally)
-LEMON_WEBHOOK_SECRET=your-webhook-secret
-LEMON_CHECKOUT_URL=https://yourshop.lemonsqueezy.com/buy/abc-123-xyz
+# Cryptomus payments (REQUIRED to sell — no KYC for low volumes)
+# Sign up at https://cryptomus.com → Merchant → create → copy these values
+CRYPTOMUS_MERCHANT_ID=your-merchant-uuid
+CRYPTOMUS_API_KEY=your-payment-api-key
+CRYPTOMUS_TO_CURRENCY=USDT
 
 # Cloudflare Turnstile (optional — leave blank to skip bot check locally)
 TURNSTILE_SECRET=

@@ -25,7 +25,7 @@ AI website auditor for SMBs in EU & North America. Sells one-shot reports for $3
 | AI inference — paid audit (default) | Same Cloudflare Workers AI | $0 | ~$0.005/audit past free tier |
 | AI inference — paid audit (OPTIONAL upgrade) | Anthropic Claude Sonnet | $5 prepay (only if you opt in) | ~$0.30/audit |
 | Email delivery | Resend free tier (3000/mo) | $0 | $20/mo at scale |
-| Payments | Lemon Squeezy | ~7% per sale, $0 upfront | ~7% per sale |
+| Payments | **Cryptomus (crypto, no-KYC)** | 0.5% per sale, $0 upfront, no KYC for low volumes | 0.5% per sale |
 | Anti-bot | Cloudflare Turnstile | $0 | $0 |
 
 **Truly $0 to launch.** Cloudflare gives free AI inference. The only money that ever leaves your account is the ~7% Lemon Squeezy takes per sale — deducted automatically from the $39 customer payment, never out-of-pocket.
@@ -33,22 +33,22 @@ AI website auditor for SMBs in EU & North America. Sells one-shot reports for $3
 ### Net economics — Mode A (default, Cloudflare AI throughout)
 
 Per $39 sale:
-- Lemon Squeezy fee (~7%): -$2.73
+- Cryptomus fee (0.5%): -$0.20
 - AI inference: -$0.00 (free tier covers indie volume)
 - Email: -$0.00
-- **Margin: ~$36.27 per sale**
+- **Margin: ~$38.80 per sale**
 
 ### Net economics — Mode B (optional Claude upgrade for paid tier)
 
 Per $39 sale:
-- Lemon Squeezy fee (~7%): -$2.73
+- Cryptomus fee (0.5%): -$0.20
 - Anthropic Claude API (~one full report): -$0.30
 - Email: -$0.00
-- **Margin: ~$35.97 per sale**
+- **Margin: ~$38.50 per sale**
 
 Mode B requires $5 prepay on Anthropic (refunded by first sale). The trade-off you pay $0.30 for: noticeably better writing in the paid report, more specific fixes, lower refund rate.
 
-**Recommended path:** launch in Mode A → make first 5 sales → switch to Mode B for quality. Both modes are profitable from sale #1.
+**Recommended path:** launch in Mode A → make first 5 sales → switch to Mode B for quality. Both modes are profitable from sale #1. The Cryptomus fee is so low compared to card processors that your effective per-sale revenue is ~10% higher than equivalent SaaS using Lemon Squeezy / Stripe.
 
 ---
 

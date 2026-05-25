@@ -22,20 +22,24 @@ Built to run on **truly $0 upfront cost** — every piece sits on a free tier, *
 ├── landing/                       # the production site — deploys to Cloudflare Pages
 │   ├── index.html                 # marketing page + form + checkout
 │   ├── sample-report.html         # "See sample report" link target
+│   ├── success.html · cancel.html · 404.html · privacy.html · terms.html
+│   ├── favicon.svg · logo.svg · logo-mark.svg · og-image.svg
 │   └── functions/                 # backend (Cloudflare Pages Functions)
 │       ├── api/
-│       │   ├── audit.js           # POST /api/audit — free teaser endpoint
-│       │   └── lemon-webhook.js   # POST /api/lemon-webhook — paid order
+│       │   ├── audit.js                # POST /api/audit — free teaser endpoint
+│       │   ├── create-invoice.js       # POST /api/create-invoice — creates Cryptomus checkout
+│       │   └── cryptomus-webhook.js    # POST /api/cryptomus-webhook — paid order delivery
 │       └── _shared/
 │           ├── prompt.js          # JS mirror of the system prompt
 │           ├── scraper.js         # site scraper (uses HTMLRewriter)
 │           ├── analyzer.js        # Anthropic Claude API client (optional)
 │           ├── cloudflareAI.js    # Cloudflare Workers AI client (free, default)
 │           ├── auditFlow.js       # picks the cheapest available backend
+│           ├── normalize.js       # normalizes AI output for the renderer
 │           ├── renderer.js        # HTML report email body
 │           ├── mailer.js          # Resend client
 │           ├── turnstile.js       # bot check verifier
-│           └── lemon.js           # HMAC signature verifier
+│           └── cryptomus.js       # crypto payment processor + MD5 signing
 │
 ├── outreach/                      # day-1 sales materials
 │   ├── linkedin_dm.md             # cold-DM templates + daily routine
@@ -89,10 +93,10 @@ Opens `report.html` in your browser. Save as PDF via Ctrl+P.
 
 See **[DEPLOY.md](DEPLOY.md)**. First-time setup: ~60 minutes. Costs $0 upfront (you need to put $5 on Anthropic for API credits, fully refunded by your first sale).
 
-Required accounts (all free tier, no card needed):
+Required accounts (all free tier, no KYC, no card needed):
 - [Cloudflare](https://dash.cloudflare.com) — hosting + backend + free AI inference (unlimited free)
 - [Resend](https://resend.com) — email delivery (3000 free/mo)
-- [Lemon Squeezy](https://lemonsqueezy.com) — payments (~7% fee, $0 upfront, only after first sale)
+- [Cryptomus](https://cryptomus.com) — accepts crypto payments without KYC for low volumes (0.5% fee, payouts to your wallet)
 
 Optional (quality upgrade once you have revenue):
 - [Anthropic](https://console.anthropic.com) — Claude API for the $39 tier (~$0.30/report, $5 minimum prepay)

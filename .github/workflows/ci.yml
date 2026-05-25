@@ -46,7 +46,7 @@ jobs:
       - name: Ensure required pages exist
         run: |
           set -e
-          for f in landing/index.html landing/sample-report.html landing/privacy.html landing/terms.html landing/success.html landing/cancel.html landing/404.html landing/favicon.svg landing/og-image.svg landing/robots.txt landing/sitemap.xml landing/_headers; do
+          for f in landing/index.html landing/sample-report.html landing/privacy.html landing/terms.html landing/success.html landing/cancel.html landing/404.html landing/favicon.svg landing/logo.svg landing/logo-mark.svg landing/og-image.svg landing/robots.txt landing/sitemap.xml landing/_headers; do
             test -f "$f" || { echo "MISSING: $f"; exit 1; }
           done
           echo "All required assets present."
