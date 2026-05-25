@@ -114,11 +114,14 @@ Lemon Squeezy handles checkout, payments, tax (incl. EU VAT), and webhooks. Thei
 5. **Custom checkout fields** (so you can collect the audit URL even if customer didn't fill it on the landing):
    - Product → **Checkout** tab → **Custom data** → add field with key `audit_url`, label "Website URL to audit"
 6. Copy the **checkout URL**: Product → **Share** → **Pay link** → copy. Looks like `https://yourshop.lemonsqueezy.com/buy/abc-123-xyz`
-7. **Webhooks**:
+7. **Thank-you redirect**: Product → **Checkout** tab → "Redirect URL after purchase" → enter `https://yourdomain.com/success` (or `https://project-4-abc.pages.dev/success`). This sends paying customers to the friendly `success.html` page while their full audit is being generated in the background.
+8. **Webhooks**:
    - Settings → **Webhooks** → **+ Add endpoint**
    - URL: `https://yourdomain.com/api/lemon-webhook` (or `https://project-4-abc.pages.dev/api/lemon-webhook`)
    - Events: check **order_created**
    - Save → it generates a **signing secret** → copy it
+
+> ⚠️ If you renumber the steps above, also update the matching env-var names below — `LEMON_CHECKOUT_URL` is the URL from step 6, `LEMON_WEBHOOK_SECRET` is the secret from step 8.
 
 Now go back to Cloudflare → Pages → Settings → Environment variables and fill in:
 - `LEMON_CHECKOUT_URL` = the checkout URL from step 6
@@ -203,6 +206,24 @@ The product is live. Open `outreach/linkedin_dm.md` and `outreach/cold_email.md`
 **Your day-1 task:** send 50 personalized LinkedIn DMs to US small-business owners (dentists, lawyers, plumbers, real-estate brokers). Each DM should include a **specific** observation from running their site through the free teaser. Goal: 1–3 sales in week 1.
 
 Track your pipeline however you want (a spreadsheet works) — see `outreach/niche_lists.md` for prospect sources.
+
+---
+
+## (Optional) Local development with Wrangler
+
+If you want to test the backend on your own laptop before pushing to Cloudflare:
+
+```powershell
+npm install -g wrangler
+wrangler login                            # opens browser, logs you in to Cloudflare
+
+copy .dev.vars.example .dev.vars          # then paste your real keys into .dev.vars
+wrangler pages dev landing                # serves http://localhost:8788
+```
+
+`.dev.vars` is gitignored — only lives on your machine. Production env vars are managed in the Cloudflare dashboard.
+
+The local server runs the **same Functions code** that production runs. If something works locally, it'll work after deploy.
 
 ---
 

@@ -1,0 +1,22 @@
+# Cloudflare Pages reads this file at deploy time and sends these headers
+# with every response. Syntax: https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+/api/*
+  Cache-Control: no-store, max-age=0
+  Access-Control-Allow-Origin: *
+
+/*.svg
+  Cache-Control: public, max-age=2592000
+
+/*.png
+  Cache-Control: public, max-age=2592000
+
+/*.html
+  Cache-Control: public, max-age=300

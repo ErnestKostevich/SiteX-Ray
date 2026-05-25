@@ -13,6 +13,13 @@ import sys
 from pathlib import Path
 from urllib.parse import urlparse
 
+# Make stdout/stderr UTF-8 on Windows so emoji ("✓", "❌", "✅") render correctly.
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except (AttributeError, ValueError):
+    pass
+
 from dotenv import load_dotenv
 
 # Грузим .env из директории скрипта

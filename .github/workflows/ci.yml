@@ -1,0 +1,52 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python-syntax:
+    name: Python syntax check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile every .py
+        run: |
+          python -m py_compile audit.py
+          python -m py_compile src/scraper.py
+          python -m py_compile src/analyzer.py
+          python -m py_compile src/report.py
+
+  js-syntax:
+    name: JS syntax check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: node --check every .js
+        run: |
+          set -e
+          for f in landing/functions/api/*.js landing/functions/_shared/*.js; do
+            echo "checking $f"
+            node --check "$f"
+          done
+
+  html-sanity:
+    name: HTML sanity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure required pages exist
+        run: |
+          set -e
+          for f in landing/index.html landing/sample-report.html landing/privacy.html landing/terms.html landing/success.html landing/favicon.svg landing/robots.txt landing/_headers; do
+            test -f "$f" || { echo "MISSING: $f"; exit 1; }
+          done
+          echo "All required assets present."

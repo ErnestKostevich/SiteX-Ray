@@ -8,6 +8,9 @@
 <meta property="og:title" content="SiteX-Ray — AI audit your website in 60 seconds">
 <meta property="og:description" content="Pro-grade website audit powered by Claude AI. Free teaser, full report $39.">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
 
 <style>
   :root {
@@ -211,6 +214,20 @@
     display: flex;
     justify-content: center;
   }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .btn-loading::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-right: 8px;
+    vertical-align: -2px;
+  }
+  .btn-loading { opacity: 0.85; cursor: progress; }
 
   /* Sample report mockup */
   .mockup-wrap {
@@ -882,8 +899,8 @@
     <div>© 2026 SiteX-Ray · Built with Claude</div>
     <div>
       <a href="mailto:ernest2011kostevich@gmail.com">Contact</a> &nbsp;·&nbsp;
-      <a href="#">Terms</a> &nbsp;·&nbsp;
-      <a href="#">Privacy</a>
+      <a href="/terms.html">Terms</a> &nbsp;·&nbsp;
+      <a href="/privacy.html">Privacy</a>
     </div>
   </div>
 </footer>
@@ -941,6 +958,7 @@
       submitBtn.disabled = true;
       const originalLabel = submitBtn.textContent;
       submitBtn.textContent = "Sending…";
+      submitBtn.classList.add("btn-loading");
       setStatus("", null);
 
       try {
@@ -969,6 +987,7 @@
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = originalLabel;
+        submitBtn.classList.remove("btn-loading");
       }
     });
 

@@ -1,0 +1,16 @@
+# Copy this to .dev.vars and paste your keys.
+# .dev.vars is gitignored — never commit real keys.
+# Used by `wrangler pages dev` for local development only.
+# Production keys go in Cloudflare Pages → Settings → Environment variables.
+
+ANTHROPIC_API_KEY=sk-ant-your-key-here
+RESEND_API_KEY=re_your-key-here
+RESEND_FROM_EMAIL=SiteX-Ray <onboarding@resend.dev>
+ANTHROPIC_MODEL=claude-sonnet-4-5
+
+# Lemon Squeezy (only needed when testing webhook flow locally)
+LEMON_WEBHOOK_SECRET=your-webhook-secret
+LEMON_CHECKOUT_URL=https://yourshop.lemonsqueezy.com/buy/abc-123-xyz
+
+# Cloudflare Turnstile (optional — leave blank to skip bot check locally)
+TURNSTILE_SECRET=

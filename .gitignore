@@ -1,6 +1,14 @@
 # Secrets
 .env
 *.env.local
+.dev.vars
+
+# Wrangler local cache
+.wrangler/
+.mf/
+
+# Temporary commit-message helper
+.git-commit-msg.tmp
 
 # Python
 __pycache__/

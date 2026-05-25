@@ -1,0 +1,16 @@
+# Wrangler config for local dev and Cloudflare deployment.
+# This is OPTIONAL — Cloudflare Pages works without it once you connect
+# the GitHub repo via the dashboard (see DEPLOY.md step 3).
+#
+# Useful if you want to run the backend locally before deploying:
+#   1. npm install -g wrangler
+#   2. wrangler login                       (opens browser)
+#   3. cp .dev.vars.example .dev.vars       (then paste your real keys)
+#   4. wrangler pages dev landing           (serves http://localhost:8788)
+
+name = "sitexray"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "landing"
+
+# When deploying via wrangler directly (instead of GitHub auto-deploy):
+#   wrangler pages deploy landing --project-name=sitexray
