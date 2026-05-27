@@ -130,3 +130,4 @@ See **[PLAN.md](PLAN.md)** for the full breakdown. TL;DR:
 - **$15/audit wholesale** → agencies, partnership tier (future)
 
 Target: English-speaking SMBs in US, UK, Canada, Australia, Western EU. Not RU/CIS (per founder choice).
+
