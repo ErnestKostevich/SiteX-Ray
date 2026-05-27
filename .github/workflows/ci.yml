@@ -33,7 +33,7 @@ jobs:
       - name: node --check every .js
         run: |
           set -e
-          for f in landing/functions/api/*.js landing/functions/_shared/*.js; do
+          for f in functions/api/*.js functions/_shared/*.js; do
             echo "checking $f"
             node --check "$f"
           done

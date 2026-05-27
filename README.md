@@ -19,27 +19,28 @@ Built to run on **truly $0 upfront cost** — every piece sits on a free tier, *
 ├── templates/report.html          # Jinja2 template for the Python CLI's report
 ├── requirements.txt               # Python deps
 │
-├── landing/                       # the production site — deploys to Cloudflare Pages
+├── landing/                       # static assets — Cloudflare Pages build output dir
 │   ├── index.html                 # marketing page + form + checkout
 │   ├── sample-report.html         # "See sample report" link target
 │   ├── success.html · cancel.html · 404.html · privacy.html · terms.html
-│   ├── favicon.svg · logo.svg · logo-mark.svg · og-image.svg
-│   └── functions/                 # backend (Cloudflare Pages Functions)
-│       ├── api/
-│       │   ├── audit.js                  # POST /api/audit — free teaser endpoint
-│       │   ├── create-invoice.js         # POST /api/create-invoice — creates NOWPayments checkout
-│       │   └── nowpayments-webhook.js    # POST /api/nowpayments-webhook — paid order delivery
-│       └── _shared/
-│           ├── prompt.js          # JS mirror of the system prompt
-│           ├── scraper.js         # site scraper (uses HTMLRewriter)
-│           ├── analyzer.js        # Anthropic Claude API client (optional)
-│           ├── cloudflareAI.js    # Cloudflare Workers AI client (free, default)
-│           ├── auditFlow.js       # picks the cheapest available backend
-│           ├── normalize.js       # normalizes AI output for the renderer
-│           ├── renderer.js        # HTML report email body
-│           ├── mailer.js          # Resend client
-│           ├── turnstile.js       # bot check verifier
-│           └── nowpayments.js     # crypto payment processor + HMAC-SHA512
+│   └── favicon.svg · logo.svg · logo-mark.svg · og-image.svg
+│
+├── functions/                     # backend — Cloudflare Pages Functions (auto-routed)
+│   ├── api/
+│   │   ├── audit.js                  # POST /api/audit — free teaser endpoint
+│   │   ├── create-invoice.js         # POST /api/create-invoice — creates NOWPayments checkout
+│   │   └── nowpayments-webhook.js    # POST /api/nowpayments-webhook — paid order delivery
+│   └── _shared/
+│       ├── prompt.js          # JS mirror of the system prompt
+│       ├── scraper.js         # site scraper (uses HTMLRewriter)
+│       ├── analyzer.js        # Anthropic Claude API client (optional)
+│       ├── cloudflareAI.js    # Cloudflare Workers AI client (free, default)
+│       ├── auditFlow.js       # picks the cheapest available backend
+│       ├── normalize.js       # normalizes AI output for the renderer
+│       ├── renderer.js        # HTML report email body
+│       ├── mailer.js          # Resend client
+│       ├── turnstile.js       # bot check verifier
+│       └── nowpayments.js     # crypto payment processor + HMAC-SHA512
 │
 ├── outreach/                      # day-1 sales materials
 │   ├── linkedin_dm.md             # cold-DM templates + daily routine
@@ -57,7 +58,7 @@ Built to run on **truly $0 upfront cost** — every piece sits on a free tier, *
 ## How it works (the live product)
 
 1. Visitor on `sitexray.com` pastes their URL and email
-2. Cloudflare Pages Function (`landing/functions/api/audit.js`) takes the request
+2. Cloudflare Pages Function (`functions/api/audit.js`) takes the request
 3. It scrapes the homepage (HTMLRewriter), calls Claude with the auditor prompt, gets back a structured JSON audit
 4. Renders to an HTML email and sends via Resend
 5. Visitor opens the report on their phone within 2 minutes

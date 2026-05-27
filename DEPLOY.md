@@ -39,7 +39,7 @@ You'll connect Cloudflare Pages to this repo in step 3 — it'll auto-deploy on 
 
 ## 1. Cloudflare Pages + Workers AI
 
-Cloudflare hosts the landing page, runs the backend (the JS in `landing/functions/`), AND provides **free Llama 3.1 inference** via Workers AI — that's how your free teasers cost you $0.
+Cloudflare hosts the landing page, runs the backend (the JS in `functions/` at repo root), AND provides **free Llama 3.1 inference** via Workers AI — that's how your free teasers cost you $0.
 
 1. Sign up: https://dash.cloudflare.com/sign-up (free, no card required for Pages + Workers AI free tier)
 2. **Workers & Pages** → **Create application** → **Pages** tab → **Connect to Git**
