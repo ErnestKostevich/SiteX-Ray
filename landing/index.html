@@ -331,6 +331,82 @@
   .form-status[data-kind="success"] { color: var(--green); }
   .form-status[data-kind="error"] { color: var(--red); }
 
+  /* BYOK / Pro section under the form */
+  .pro-section {
+    max-width: 720px;
+    margin: 16px auto 0;
+    background: rgba(18, 22, 29, 0.5);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    text-align: left;
+    transition: border-color 0.3s var(--easing);
+  }
+  .pro-section[open] { border-color: var(--accent-1); }
+  .pro-section summary {
+    padding: 14px 20px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .pro-section summary::-webkit-details-marker { display: none; }
+  .pro-section summary::after {
+    content: "+";
+    color: var(--accent-1);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .pro-section[open] summary::after { content: "−"; }
+  .pro-section .pro-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--gradient-soft);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent-1);
+    letter-spacing: 0.04em;
+    margin-right: 8px;
+  }
+  .pro-section .pro-body {
+    padding: 0 20px 18px;
+  }
+  .pro-section input[type=password] {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    border-radius: 10px;
+    font-size: 13px;
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    transition: border-color 0.2s var(--easing);
+  }
+  .pro-section input[type=password]:focus {
+    outline: none;
+    border-color: var(--accent-1);
+  }
+  .pro-section .pro-note {
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .pro-section .pro-note a {
+    color: var(--accent-1);
+    border-bottom: 1px dashed transparent;
+  }
+  .pro-section .pro-note a:hover { border-bottom-color: var(--accent-1); }
+
   /* Hero floating mockup */
   .hero-mockup {
     margin-top: 72px;
@@ -942,6 +1018,24 @@
     <div id="turnstile-container"></div>
     <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
 
+    <details class="pro-section" id="pro-section">
+      <summary>
+        <span><span class="pro-badge">PRO</span>BYOK Claude — paste your own key for the full premium report (free)</span>
+      </summary>
+      <div class="pro-body">
+        <input
+          type="password"
+          id="anthropic-key-input"
+          placeholder="sk-ant-api03-..."
+          autocomplete="off"
+          spellcheck="false"
+        >
+        <p class="pro-note">
+          With your own Anthropic key, we'll skip the 1-page teaser and deliver the <strong>full 10–15 page Claude Sonnet audit</strong>, free. Your key is used once and never stored. Get one at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>.
+        </p>
+      </div>
+    </details>
+
     <p class="hero-tiny">
       <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> No signup</span>
       <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> No card needed</span>
@@ -1263,6 +1357,10 @@
         <summary class="faq-q">I'm a web agency — can I resell this?</summary>
         <div class="faq-a">Yes. We're piloting a partnership program: wholesale audits + your branding. Email us with "Partnership" in the subject.</div>
       </details>
+      <details class="faq-item">
+        <summary class="faq-q">I have my own Claude API key — can I use it?</summary>
+        <div class="faq-a">Yes. Open the "PRO · BYOK Claude" panel under the form and paste a key starting with <code>sk-ant-</code>. With your own key we deliver the <strong>full 10–15 page Claude Sonnet audit</strong> (not the 1-page teaser), and you skip the $39 paid tier entirely — you pay your own Anthropic bill instead (a few cents per audit). Your key is used once for that single audit and never stored. Useful for agencies and devs running many audits.</div>
+      </details>
     </div>
   </div>
 </section>
@@ -1301,7 +1399,7 @@
 <script>
   // ============================================================
   // Customer-facing config — only TURNSTILE_SITE_KEY needs editing.
-  // Paid checkout is fully server-side (Cryptomus, no-KYC crypto payments).
+  // Paid checkout is fully server-side (NOWPayments, crypto, no-KYC).
   // See DEPLOY.md for the step-by-step.
   // ============================================================
   const TURNSTILE_SITE_KEY = "";   // public site key from Cloudflare Turnstile (optional but recommended)
@@ -1311,6 +1409,7 @@
     const form = document.getElementById("hero-form");
     const urlInput = document.getElementById("url-input");
     const emailInput = document.getElementById("email-input");
+    const byokInput = document.getElementById("anthropic-key-input");
     const submitBtn = document.getElementById("submit-btn");
     const statusEl = document.getElementById("form-status");
     const turnstileContainer = document.getElementById("turnstile-container");
@@ -1354,6 +1453,8 @@
       submitBtn.classList.add("btn-loading");
       setStatus("", null);
 
+      const anthropicApiKey = byokInput ? byokInput.value.trim() : "";
+
       try {
         const response = await fetch("/api/audit", {
           method: "POST",
@@ -1362,6 +1463,7 @@
             url: url,
             email: email,
             turnstileToken: getTurnstileToken(),
+            anthropicApiKey: anthropicApiKey || undefined,
           }),
         });
         const data = await response.json().catch(() => ({}));
@@ -1372,6 +1474,9 @@
             "success"
           );
           form.style.display = "none";
+          // Hide the BYOK panel after submission for a cleaner success state.
+          const proSection = document.getElementById("pro-section");
+          if (proSection) proSection.style.display = "none";
         } else {
           setStatus(data.error || "Something went wrong. Please try again.", "error");
         }

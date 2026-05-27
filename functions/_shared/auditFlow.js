@@ -1,11 +1,13 @@
 // End-to-end audit pipeline. Picks the right AI backend based on what's
-// configured, scrapes the site, generates the audit, emails the report.
+// configured + the caller's BYOK preference, scrapes the site, generates
+// the audit, emails the report.
 //
 // Backend selection (in priority order):
-//   - Free teaser: Cloudflare Workers AI (free for the founder)
-//   - Paid audit: Claude via Anthropic if ANTHROPIC_API_KEY is set
-//                 (best quality, ~$0.30/report, covered by the $39 sale)
-//   - Fallback in both directions if only one backend is configured.
+//   - BYOK Claude key (user-provided) → always wins. Uses user's Anthropic key,
+//     even for the free-teaser endpoint. Costs the user, not the founder.
+//   - Free teaser without BYOK: Cloudflare Workers AI (Llama 3.1, free to founder)
+//   - Paid audit without BYOK: founder's ANTHROPIC_API_KEY if set, else Cloudflare AI
+//   - Falls back gracefully if only one backend is configured.
 
 import { scrapeSite } from "./scraper.js";
 import { analyzeWithClaude } from "./analyzer.js";
@@ -14,25 +16,34 @@ import { normalizeReport } from "./normalize.js";
 import { renderReport } from "./renderer.js";
 import { sendReportEmail } from "./mailer.js";
 
-async function pickBackendAndAnalyze(siteData, env, free) {
-  const hasClaude = !!env.ANTHROPIC_API_KEY;
+async function pickBackendAndAnalyze(siteData, env, free, byokAnthropicKey) {
+  const claudeKey = byokAnthropicKey || env.ANTHROPIC_API_KEY;
+  const hasClaude = !!claudeKey;
   const hasCfAI = !!env.AI;
 
-  // Free teaser: cheapest backend that's available.
+  // BYOK ALWAYS uses Claude — that's the whole point of the Pro tier.
+  if (byokAnthropicKey) {
+    return await analyzeWithClaude(siteData, byokAnthropicKey, {
+      free,
+      model: env.ANTHROPIC_MODEL || undefined,
+    });
+  }
+
+  // Free teaser (no BYOK): cheapest backend.
   if (free) {
     if (hasCfAI) {
       return await analyzeWithCloudflareAI(siteData, env, { free: true });
     }
     if (hasClaude) {
-      return await analyzeWithClaude(siteData, env.ANTHROPIC_API_KEY, {
+      return await analyzeWithClaude(siteData, claudeKey, {
         free: true,
         model: env.ANTHROPIC_MODEL || undefined,
       });
     }
   } else {
-    // Paid audit: best quality available.
+    // Paid audit (no BYOK): best quality available.
     if (hasClaude) {
-      return await analyzeWithClaude(siteData, env.ANTHROPIC_API_KEY, {
+      return await analyzeWithClaude(siteData, claudeKey, {
         free: false,
         model: env.ANTHROPIC_MODEL || undefined,
       });
@@ -48,14 +59,26 @@ async function pickBackendAndAnalyze(siteData, env, free) {
 }
 
 export async function runAuditAndEmail(opts) {
-  const { url, email, free, env, ctaUrl = null } = opts;
+  const {
+    url,
+    email,
+    free,
+    env,
+    ctaUrl = null,
+    byokAnthropicKey = null,
+  } = opts;
 
   if (!url) throw new Error("url is required");
   if (!email) throw new Error("email is required");
 
   const siteData = await scrapeSite(url);
 
-  const rawReport = await pickBackendAndAnalyze(siteData, env, free);
+  const rawReport = await pickBackendAndAnalyze(
+    siteData,
+    env,
+    free,
+    byokAnthropicKey
+  );
   // Always pass the AI output through the normalizer so the renderer can
   // assume a consistent shape (severity values, missing sections, etc.).
   const report = normalizeReport(rawReport, siteData);
@@ -64,7 +87,9 @@ export async function runAuditAndEmail(opts) {
 
   const subject = free
     ? `Your free site audit — ${siteData.domain}`
-    : `Your full SiteX-Ray report — ${siteData.domain}`;
+    : byokAnthropicKey
+      ? `Your full SiteX-Ray audit (Claude · BYOK) — ${siteData.domain}`
+      : `Your full SiteX-Ray report — ${siteData.domain}`;
 
   await sendReportEmail({
     toEmail: email,
