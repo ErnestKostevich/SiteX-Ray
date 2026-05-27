@@ -5,6 +5,7 @@
 
 import { verifyWebhookSignature, extractAuditData } from "../_shared/nowpayments.js";
 import { runAuditAndEmail } from "../_shared/auditFlow.js";
+import { notifyFounderOfFailure } from "../_shared/notifyFounder.js";
 
 // NOWPayments payment_status values that count as "delivered":
 //   waiting, confirming, confirmed, sending, partially_paid, finished,
@@ -65,10 +66,26 @@ export async function onRequestPost(context) {
 
   // Generate + email asynchronously so we can ACK NOWPayments fast.
   // If the worker dies, NOWPayments retries the webhook.
+  //
+  // If the audit pipeline itself fails (AI down, Resend down, scrape blocked,
+  // etc.), we don't want to silently lose a paid order — so the catch handler
+  // emails the founder with all the context they need to manually fulfil.
   waitUntil(
-    runAuditAndEmail({ url: auditUrl, email, free: false, env }).catch((err) => {
-      console.error("Full audit failed (NOWPayments order):", err && err.stack ? err.stack : err);
-    })
+    runAuditAndEmail({ url: auditUrl, email, free: false, env })
+      .catch(async (err) => {
+        console.error(
+          "Full audit failed (NOWPayments order):",
+          err && err.stack ? err.stack : err
+        );
+        await notifyFounderOfFailure(env, {
+          orderId: event.order_id,
+          paymentId: event.payment_id,
+          customerEmail: email,
+          customerUrl: auditUrl,
+          error: err && err.message ? err.message : String(err),
+          extra: { payment_status: status, payment_amount: event.payment_amount },
+        });
+      })
   );
 
   return new Response("ok", { status: 200 });
