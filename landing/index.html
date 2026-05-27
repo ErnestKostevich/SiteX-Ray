@@ -1491,14 +1491,43 @@
 
     window.goToCheckout = async function (event) {
       if (event) event.preventDefault();
-      const url =
-        (urlInput.value || "").trim() ||
-        prompt("What site should we audit? (e.g. https://yourbusiness.com)");
-      if (!url) return false;
-      const email =
-        (emailInput.value || "").trim() ||
-        prompt("Where should we email the report?");
-      if (!email) return false;
+
+      const url = (urlInput.value || "").trim();
+      const email = (emailInput.value || "").trim();
+
+      // Form not filled → smooth-scroll up to the hero form, focus the
+      // missing field, show inline hint. No native browser prompts.
+      if (!url || !email) {
+        const heroForm = document.getElementById("hero-form");
+        if (heroForm) {
+          heroForm.scrollIntoView({ behavior: "smooth", block: "center" });
+          setTimeout(() => {
+            if (!url) urlInput.focus();
+            else emailInput.focus();
+          }, 600);
+        }
+        setStatus(
+          !url
+            ? "👆 Enter your website URL above, then click \"Get full audit — $39\" again."
+            : "👆 Enter your email above, then click \"Get full audit — $39\" again.",
+          "error"
+        );
+        return false;
+      }
+
+      // Validate URL/email format before hitting the API.
+      try {
+        new URL(/^https?:\/\//i.test(url) ? url : "https://" + url);
+      } catch {
+        urlInput.focus();
+        setStatus("That URL doesn't look right. Try something like https://yourbusiness.com", "error");
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailInput.focus();
+        setStatus("That email doesn't look right.", "error");
+        return false;
+      }
 
       setStatus("Preparing your secure crypto checkout…", null);
       try {
