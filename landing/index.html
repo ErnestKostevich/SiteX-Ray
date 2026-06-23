@@ -189,18 +189,33 @@
   .form-status[data-kind="success"] { color: var(--green); }
   .form-status[data-kind="error"] { color: var(--red); }
 
-  .report-ready-box {
-    margin-top: 14px; padding: 14px 16px; border-radius: 10px;
-    background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2);
-    font-size: 13px; color: var(--text-2); line-height: 1.5;
-  }
-  .report-ready-box strong { color: var(--text); font-weight: 600; }
-
   .hero-actions {
     display: flex; flex-direction: column; align-items: stretch;
     gap: 12px; margin-top: 14px; width: 100%;
   }
+
+  .result-card {
+    width: 100%;
+    padding: 28px 22px;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid rgba(52,211,153,0.28);
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+  .result-card[hidden] { display: none !important; }
+  .result-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(52,211,153,0.12); border: 1px solid rgba(52,211,153,0.35);
+    display: grid; place-items: center; margin: 0 auto 16px;
+    color: var(--green);
+  }
+  .result-icon svg { width: 24px; height: 24px; stroke-width: 2.5; fill: none; stroke: currentColor; }
+  .result-heading { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .result-detail { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 18px; }
+  .result-detail strong { color: var(--text-2); font-weight: 600; }
   #report-ready-link { width: 100%; }
+  .result-hint { font-size: 12px; color: var(--muted); margin-top: 14px; line-height: 1.5; }
 
   .sample-link {
     display: inline-flex; align-items: center; justify-content: center;
@@ -398,7 +413,7 @@
     .form-card { padding: 20px; }
     .field input { font-size: 16px; padding: 12px 14px; }
     .form-status { text-align: center; }
-    .report-ready-box { text-align: left; }
+    .result-card { padding: 24px 18px; }
 
     section:not(.hero) { padding: 56px 0; }
     .section-head { margin-bottom: 32px; }
@@ -449,9 +464,11 @@
 
 <section class="hero" id="audit">
   <div class="wrap hero-inner">
-    <div class="eyebrow"><span class="eyebrow-dot"></span>No account · private link · 7 days</div>
-    <h1>See what's wrong with your <em>website</em></h1>
-    <p class="lead">Paste URL and email. Get specific fixes — on this page and in your inbox.</p>
+    <div id="hero-intro">
+      <div class="eyebrow"><span class="eyebrow-dot"></span>No account · private link · 7 days</div>
+      <h1>See what's wrong with your <em>website</em></h1>
+      <p class="lead">Paste URL and email. Get specific fixes — on this page and in your inbox.</p>
+    </div>
 
     <form class="form-card" id="audit-form" novalidate>
       <div class="field">
@@ -463,26 +480,36 @@
         <input type="email" id="email-input" name="email" placeholder="you@company.com" required autocomplete="email">
       </div>
       <button type="submit" class="btn btn-primary" id="submit-btn">Get free report</button>
-      <p class="form-note">~2 min · link appears here + email</p>
+      <p class="form-note">~2 min · full report opens here + email with link</p>
     </form>
 
-    <div class="hero-actions">
+    <div class="hero-actions" id="hero-actions">
       <div id="turnstile-container"></div>
       <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
-      <div id="report-ready-box" class="report-ready-box" style="display:none;width:100%" aria-live="polite"></div>
     </div>
 
-    <a class="sample-link" href="/sample-report.html" target="_blank" rel="noopener">
-      View sample report
-      <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-    </a>
-
-    <details class="pro-toggle" id="pro-section">
-      <summary>Claude API key — full report free</summary>
-      <div class="inner">
-        <input type="password" id="anthropic-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false">
+    <div id="hero-result" class="result-card" hidden aria-live="polite">
+      <div class="result-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-    </details>
+      <p class="result-heading">Report ready</p>
+      <p class="result-detail" id="result-detail"></p>
+      <a href="#" id="report-ready-link" class="btn btn-primary">Open your report</a>
+      <p class="result-hint" id="result-hint"></p>
+    </div>
+
+    <div id="hero-extra">
+      <a class="sample-link" href="/sample-report.html" target="_blank" rel="noopener">
+        View sample report
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <details class="pro-toggle" id="pro-section">
+        <summary>Claude API key — full report free</summary>
+        <div class="inner">
+          <input type="password" id="anthropic-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false">
+        </div>
+      </details>
+    </div>
   </div>
   <a class="scroll-hint" href="#delivery" aria-label="Scroll down">
     <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -685,10 +712,11 @@ const PAY_NETWORKS = {
     submitBtn.classList.add("btn-loading");
     setStatus("", null);
 
-    const existingLink = document.getElementById("report-ready-link");
-    if (existingLink) existingLink.remove();
-    const readyBox = document.getElementById("report-ready-box");
-    if (readyBox) { readyBox.style.display = "none"; readyBox.innerHTML = ""; }
+    document.getElementById("hero-intro").hidden = false;
+    document.getElementById("hero-extra").hidden = false;
+    document.getElementById("audit-form").hidden = false;
+    document.getElementById("hero-actions").hidden = false;
+    document.getElementById("hero-result").hidden = true;
 
     try {
       const res = await fetch("/api/audit", {
@@ -782,30 +810,32 @@ const PAY_NETWORKS = {
 
   function showReportReady(key, status) {
     const reportHref = "/api/report?kind=free&key=" + encodeURIComponent(key);
-    let a = document.getElementById("report-ready-link");
-    if (!a) {
-      a = document.createElement("a");
-      a.id = "report-ready-link";
-      a.className = "btn btn-primary";
-      a.target = "_blank";
-      a.rel = "noopener";
-      a.textContent = "Open your report";
-      document.querySelector(".hero-actions").appendChild(a);
-    }
-    a.href = reportHref;
-    const box = document.getElementById("report-ready-box");
-    if (box) {
-      box.style.display = "block";
-      if (status.emailSent) {
-        box.innerHTML = "<strong>Report ready</strong><p>Email sent with your private link. Save this page — button works for 7 days.</p>";
-        setStatus("Done. Open report or check email.", "success");
-      } else if (status.emailError) {
-        box.innerHTML = "<strong style=\"color:var(--red)\">Email failed</strong><p>Report is ready — use the button above. (" + (status.emailError || "unknown") + ")</p>";
-        setStatus("Report ready on web.", "error");
-      } else {
-        box.innerHTML = "<strong>Report ready</strong><p>Open with the button above. Private link — 7 days.</p>";
-        setStatus("Report ready.", "success");
-      }
+    const link = document.getElementById("report-ready-link");
+    const detail = document.getElementById("result-detail");
+    const hint = document.getElementById("result-hint");
+
+    link.href = reportHref;
+    link.target = "_blank";
+    link.rel = "noopener";
+
+    document.getElementById("hero-intro").hidden = true;
+    document.getElementById("hero-extra").hidden = true;
+    document.getElementById("audit-form").hidden = true;
+    document.getElementById("hero-actions").hidden = true;
+    document.getElementById("hero-result").hidden = false;
+
+    if (status.emailSent) {
+      detail.innerHTML = "Your full audit is ready. We sent an email with a <strong>link to open it</strong> (not the full report in the email body).";
+      hint.textContent = "No email yet? Check Spam and Promotions. This button works for 7 days.";
+      setStatus("", null);
+    } else if (status.emailError) {
+      detail.innerHTML = "Report is ready on the web. Email failed: " + (status.emailError || "unknown");
+      hint.textContent = "Use the button below — your private link works for 7 days.";
+      setStatus("", null);
+    } else {
+      detail.textContent = "Your full audit is ready. Open it with the button below.";
+      hint.textContent = "Private link — works for 7 days.";
+      setStatus("", null);
     }
   }
 
