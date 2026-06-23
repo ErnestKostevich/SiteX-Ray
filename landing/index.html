@@ -784,9 +784,14 @@
   .price-card:hover { transform: translateY(-3px); }
   .price-card.featured {
     border-color: var(--accent-1);
-    background: linear-gradient(180deg, rgba(129,140,248,0.08), var(--bg-card));
+    background: linear-gradient(180deg, rgba(129,140,248,0.12), rgba(192,132,252,0.04), var(--bg-card));
     transform: scale(1.04);
-    box-shadow: 0 20px 60px rgba(129, 140, 248, 0.18);
+    box-shadow: 0 20px 60px rgba(129, 140, 248, 0.22), 0 0 80px rgba(192,132,252,0.08);
+    animation: card-glow 6s ease-in-out infinite;
+  }
+  @keyframes card-glow {
+    0%, 100% { box-shadow: 0 20px 60px rgba(129,140,248,0.22), 0 0 60px rgba(192,132,252,0.06); }
+    50% { box-shadow: 0 24px 70px rgba(129,140,248,0.32), 0 0 100px rgba(244,114,182,0.1); }
   }
   .price-card.featured:hover { transform: scale(1.04) translateY(-3px); }
   .price-card .name {
@@ -859,6 +864,97 @@
   }
   .faq-item:hover { border-color: var(--border); }
   .faq-item[open] { border-color: var(--accent-1); }
+
+  /* ──────── STARFIELD + PAYMENT MODAL ──────── */
+  .stars {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.35), transparent),
+      radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.25), transparent),
+      radial-gradient(1.5px 1.5px at 80% 20%, rgba(129,140,248,0.5), transparent),
+      radial-gradient(1px 1px at 40% 80%, rgba(192,132,252,0.4), transparent),
+      radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.2), transparent);
+    background-size: 200% 200%;
+    animation: stars-drift 120s linear infinite;
+    opacity: 0.6;
+  }
+  @keyframes stars-drift {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+  }
+
+  .pay-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(3, 5, 10, 0.82);
+    backdrop-filter: blur(12px);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .pay-overlay.open { display: flex; }
+  .pay-modal {
+    width: 100%; max-width: 560px;
+    background: rgba(14, 17, 23, 0.95);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(129,140,248,0.12);
+    max-height: 90vh; overflow-y: auto;
+  }
+  .pay-modal h2 {
+    font-size: 22px; margin-bottom: 6px;
+    background: var(--gradient);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .pay-modal .pay-sub { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+  .pay-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+  .pay-tab {
+    flex: 1; padding: 10px 12px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--bg-card);
+    color: var(--ink-soft); font-size: 13px; font-weight: 600;
+    cursor: pointer; text-align: center; transition: all 0.2s var(--easing);
+  }
+  .pay-tab.active {
+    border-color: var(--accent-1);
+    background: linear-gradient(135deg, rgba(129,140,248,0.15), rgba(192,132,252,0.08));
+    color: var(--ink);
+  }
+  .pay-box {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 18px; margin-bottom: 14px;
+  }
+  .pay-box label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
+  .pay-amount { font-size: 28px; font-weight: 800; color: var(--green); margin-bottom: 10px; }
+  .pay-address {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px; word-break: break-all;
+    background: #0a0d12; border: 1px solid var(--border-subtle);
+    padding: 12px; border-radius: 8px; color: var(--accent-1);
+    margin-bottom: 8px;
+  }
+  .pay-copy {
+    font-size: 12px; color: var(--accent-2); cursor: pointer; border: none; background: none; padding: 0;
+  }
+  .pay-copy:hover { text-decoration: underline; }
+  .pay-note { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin-bottom: 16px; }
+  .pay-modal input[type="text"] {
+    width: 100%; padding: 14px 16px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--bg-elev);
+    color: var(--ink); font-size: 14px; font-family: inherit;
+    margin-bottom: 12px;
+  }
+  .pay-modal input:focus { outline: none; border-color: var(--accent-1); box-shadow: 0 0 0 3px rgba(129,140,248,0.15); }
+  .pay-actions { display: flex; gap: 10px; margin-top: 8px; }
+  .pay-actions .btn { flex: 1; }
+  .pay-status { font-size: 13px; margin-top: 12px; min-height: 1.2em; }
+  .pay-status[data-kind="error"] { color: #f87171; }
+  .pay-status[data-kind="success"] { color: var(--green); }
+  .pay-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; color: var(--muted);
+    font-size: 24px; cursor: pointer; line-height: 1;
+  }
+  .pay-modal-wrap { position: relative; width: 100%; max-width: 560px; }
   .faq-q {
     padding: 20px 26px;
     cursor: pointer;
@@ -975,6 +1071,7 @@
   <div class="mesh-blob c"></div>
 </div>
 <div class="grain" aria-hidden="true"></div>
+<div class="stars" aria-hidden="true"></div>
 
 <nav>
   <div class="container">
@@ -1267,7 +1364,7 @@
     <div class="reveal">
       <div class="section-eyebrow">Pricing</div>
       <h2>Simple. No subscriptions.</h2>
-      <p class="section-sub">Pay once, own the report. Refund within 7 days, no questions asked.</p>
+      <p class="section-sub">Pay once in USDT (TRC-20 or ERC-20). On-chain verification · auto delivery · 7-day refund.</p>
     </div>
 
     <div class="pricing-grid reveal-stagger">
@@ -1289,7 +1386,7 @@
         <span class="badge-pop">Most popular</span>
         <div class="name">Full audit</div>
         <div class="price">$39</div>
-        <div class="price-sub">One-time. Lifetime access.</div>
+        <div class="price-sub">39 USDT · TRC-20 or ERC-20 · instant verify</div>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Everything in free teaser</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Full 10–15 page PDF report</li>
@@ -1345,7 +1442,11 @@
       </details>
       <details class="faq-item">
         <summary class="faq-q">Do you store my data?</summary>
-        <div class="faq-a">We process your URL through our AI provider to generate the report, then email it to you. We don't store URLs, reports, or share data with third parties. NOWPayments handles crypto payments separately under their privacy policy.</div>
+        <div class="faq-a">We process your URL through our AI provider to generate the report, then email it to you. We don't store URLs or reports. USDT payments are verified on-chain via public blockchain APIs — we never see your wallet keys.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">How do I pay with USDT?</summary>
+        <div class="faq-a">Click "Get full audit — $39", choose <strong>TRC-20 (TRON)</strong> or <strong>ERC-20 (Ethereum)</strong>, send exactly <strong>39 USDT</strong> to the address shown, then paste your transaction hash. We verify on-chain (must be within 24 hours) and email your full report automatically.</div>
       </details>
       <details class="faq-item">
         <summary class="faq-q">How fresh is the audit? Will it work next month?</summary>
@@ -1381,6 +1482,43 @@
   </div>
 </section>
 
+<!-- USDT PAYMENT MODAL -->
+<div class="pay-overlay" id="pay-overlay" role="dialog" aria-modal="true" aria-labelledby="pay-title">
+  <div class="pay-modal-wrap">
+    <button type="button" class="pay-close" id="pay-close" aria-label="Close">&times;</button>
+    <div class="pay-modal">
+      <h2 id="pay-title">Full audit — 39 USDT</h2>
+      <p class="pay-sub">On-chain verification · automatic delivery to your email</p>
+
+      <div class="pay-tabs">
+        <button type="button" class="pay-tab active" data-network="trc20">USDT · TRON (TRC-20)</button>
+        <button type="button" class="pay-tab" data-network="erc20">USDT · Ethereum (ERC-20)</button>
+      </div>
+
+      <div class="pay-box">
+        <label>Send exactly</label>
+        <div class="pay-amount">39 USDT</div>
+        <label>To this address</label>
+        <div class="pay-address" id="pay-address">TV1EBHTyvpP98jZGerz6sRmZvipn15LqDA</div>
+        <button type="button" class="pay-copy" id="pay-copy">Copy address</button>
+      </div>
+
+      <p class="pay-note" id="pay-note">
+        Transfer must be within the <strong>last 24 hours</strong>. After sending, paste your transaction hash below — we verify on-chain and deliver your full report automatically.
+      </p>
+
+      <label for="pay-txhash" style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink-soft);">Transaction hash (tx hash)</label>
+      <input type="text" id="pay-txhash" placeholder="Paste tx hash after payment" autocomplete="off" spellcheck="false">
+
+      <div class="pay-actions">
+        <button type="button" class="btn btn-secondary" id="pay-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="pay-submit">Verify payment &amp; deliver report</button>
+      </div>
+      <div class="pay-status" id="pay-status" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="container">
     <div class="logo">
@@ -1401,10 +1539,13 @@
 <script>
   // ============================================================
   // Customer-facing config — only TURNSTILE_SITE_KEY needs editing.
-  // Paid checkout is fully server-side (NOWPayments, crypto, no-KYC).
-  // See DEPLOY.md for the step-by-step.
+  // Paid checkout: direct USDT (TRC-20 / ERC-20) + on-chain tx hash verification.
   // ============================================================
   const TURNSTILE_SITE_KEY = "";   // public site key from Cloudflare Turnstile (optional but recommended)
+  const PAY_NETWORKS = {
+    trc20: { address: "TV1EBHTyvpP98jZGerz6sRmZvipn15LqDA", placeholder: "64-char TRON tx hash" },
+    erc20: { address: "0x9339686861079c781e0249ee64a509F893E2367c", placeholder: "0x… Ethereum tx hash" },
+  };
 
   // ── Form & checkout logic ────────────────────────────────────
   (function () {
@@ -1491,14 +1632,88 @@
       }
     });
 
-    window.goToCheckout = async function (event) {
+    // ── USDT payment modal ─────────────────────────────────────
+    const payOverlay = document.getElementById("pay-overlay");
+    const payAddress = document.getElementById("pay-address");
+    const payTxInput = document.getElementById("pay-txhash");
+    const payStatus = document.getElementById("pay-status");
+    const paySubmit = document.getElementById("pay-submit");
+    let payNetwork = "trc20";
+
+    function setPayStatus(text, kind) {
+      payStatus.textContent = text || "";
+      if (kind) payStatus.setAttribute("data-kind", kind);
+      else payStatus.removeAttribute("data-kind");
+    }
+
+    function selectPayNetwork(net) {
+      payNetwork = net;
+      document.querySelectorAll(".pay-tab").forEach((t) => {
+        t.classList.toggle("active", t.getAttribute("data-network") === net);
+      });
+      const cfg = PAY_NETWORKS[net];
+      if (cfg && payAddress) payAddress.textContent = cfg.address;
+      if (cfg && payTxInput) payTxInput.placeholder = cfg.placeholder;
+    }
+
+    document.querySelectorAll(".pay-tab").forEach((tab) => {
+      tab.addEventListener("click", () => selectPayNetwork(tab.getAttribute("data-network")));
+    });
+
+    document.getElementById("pay-close")?.addEventListener("click", () => payOverlay.classList.remove("open"));
+    document.getElementById("pay-cancel")?.addEventListener("click", () => payOverlay.classList.remove("open"));
+    payOverlay?.addEventListener("click", (e) => { if (e.target === payOverlay) payOverlay.classList.remove("open"); });
+
+    document.getElementById("pay-copy")?.addEventListener("click", async () => {
+      const addr = payAddress?.textContent || "";
+      try {
+        await navigator.clipboard.writeText(addr);
+        setPayStatus("Address copied!", "success");
+        setTimeout(() => setPayStatus(""), 2000);
+      } catch {
+        setPayStatus("Copy failed — select and copy manually", "error");
+      }
+    });
+
+    paySubmit?.addEventListener("click", async () => {
+      const url = (urlInput.value || "").trim();
+      const email = (emailInput.value || "").trim();
+      const txHash = (payTxInput.value || "").trim();
+      if (!txHash) {
+        setPayStatus("Paste your transaction hash after sending USDT.", "error");
+        return;
+      }
+      paySubmit.disabled = true;
+      setPayStatus("Verifying on-chain…", null);
+      try {
+        const response = await fetch("/api/verify-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            url, email, network: payNetwork, txHash,
+            turnstileToken: getTurnstileToken(),
+          }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.ok && data.ok) {
+          setPayStatus(data.message || "Verified! Check your inbox.", "success");
+          setTimeout(() => { window.location.href = "/success.html"; }, 1500);
+        } else {
+          setPayStatus(data.error || "Verification failed. Check amount, address, and tx hash.", "error");
+        }
+      } catch {
+        setPayStatus("Couldn't reach the server. Try again.", "error");
+      } finally {
+        paySubmit.disabled = false;
+      }
+    });
+
+    window.goToCheckout = function (event) {
       if (event) event.preventDefault();
 
       const url = (urlInput.value || "").trim();
       const email = (emailInput.value || "").trim();
 
-      // Form not filled → smooth-scroll up to the hero form, focus the
-      // missing field, show inline hint. No native browser prompts.
       if (!url || !email) {
         const heroForm = document.getElementById("hero-form");
         if (heroForm) {
@@ -1517,7 +1732,6 @@
         return false;
       }
 
-      // Validate URL/email format before hitting the API.
       try {
         new URL(/^https?:\/\//i.test(url) ? url : "https://" + url);
       } catch {
@@ -1531,22 +1745,12 @@
         return false;
       }
 
-      setStatus("Preparing your secure crypto checkout…", null);
-      try {
-        const response = await fetch("/api/create-invoice", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url, email }),
-        });
-        const data = await response.json().catch(() => ({}));
-        if (response.ok && data.ok && data.url) {
-          window.location.href = data.url;
-        } else {
-          setStatus(data.error || "Couldn't create checkout. Please try again.", "error");
-        }
-      } catch (e) {
-        setStatus("Couldn't reach the payment server. Please try again.", "error");
-      }
+      setStatus("", null);
+      setPayStatus("", null);
+      payTxInput.value = "";
+      selectPayNetwork("trc20");
+      payOverlay.classList.add("open");
+      payTxInput.focus();
       return false;
     };
   })();

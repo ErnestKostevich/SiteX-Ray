@@ -3,10 +3,13 @@
 # Used by `wrangler pages dev` for local development only.
 # Production keys go in Cloudflare Pages → Settings → Environment variables.
 
-# Email (Cloudflare Email Service — no API key needed)
-# Requires EMAIL binding in wrangler.toml + domain onboarded in Cloudflare dashboard.
+# Email (Cloudflare Email Service)
+# Pages may not show Email binding — use CLOUDFLARE_API_TOKEN with Email Sending permission.
+# Also onboard sitexray.xyz in Email Service → Email Sending.
 FROM_EMAIL=SiteX-Ray <reports@sitexray.xyz>
 REPLY_TO_EMAIL=support@sitexray.xyz
+CLOUDFLARE_API_TOKEN=
+CLOUDFLARE_ACCOUNT_ID=6609012adc88f397f50eba13ea2c242f
 
 # Claude — paid $39 tier upgrade (OPTIONAL — leave empty to use free Cloudflare AI for paid too)
 ANTHROPIC_API_KEY=
@@ -15,12 +18,10 @@ ANTHROPIC_MODEL=claude-sonnet-4-5
 # Cloudflare AI model override (OPTIONAL — defaults to llama-3.1-8b-instruct)
 CF_AI_MODEL=
 
-# NOWPayments — crypto checkout (REQUIRED to sell)
-# Get these from https://account.nowpayments.io/dashboard
-#   API key:    Store → API keys → Create
-#   IPN secret: Store → IPN Settings → set/generate
-NOWPAYMENTS_API_KEY=your-api-key
-NOWPAYMENTS_IPN_SECRET=your-ipn-secret
+# USDT payments are verified on-chain — no payment processor keys needed.
+# Optional: legacy NOWPayments (deprecated, not used by landing page)
+# NOWPAYMENTS_API_KEY=
+# NOWPAYMENTS_IPN_SECRET=
 
 # Cloudflare Turnstile (optional — leave blank to skip bot check locally)
 TURNSTILE_SECRET=
