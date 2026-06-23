@@ -6,7 +6,7 @@ LinkedIn DMs get more replies. Cold email scales bigger and is harder to ignore.
 
 ## Setup
 
-- Use a separate email for outreach — don't burn your main inbox's deliverability. E.g. `ernest@sitexray.com` once you have a domain.
+- Use a separate email for outreach — don't burn your main inbox's deliverability. E.g. `ernest@sitexray.xyz` once you have a domain.
 - Warm the inbox for 1 week before mass-sending (use a free tool like Mailwarm.com free trial, or just send 5–10 personal emails a day from it for a week).
 - **Cap at 50 cold emails per day per sending address.** Above that, Gmail/Outlook flag spam.
 - Always include a one-click unsubscribe (legally required in most countries — CAN-SPAM in US, GDPR in EU). Plain text "Reply STOP and I'll never email you again" works.

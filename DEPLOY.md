@@ -7,7 +7,7 @@ Read top to bottom. **Truly $0 upfront** — every required piece is on a free t
 **Required** (free, no KYC, no credit card):
 - GitHub account
 - Cloudflare account (hosts site + provides FREE Llama 3.1 AI inference)
-- Resend account (free 3000 emails/month)
+- Cloudflare Email Service (included with your Cloudflare account — no Resend needed)
 
 **Required only when you start selling** (no upfront cost, crypto payouts don't trigger KYC):
 - NOWPayments account (collects crypto payments, 0.5% fee per sale, payouts to your own wallet)
@@ -19,7 +19,7 @@ Read top to bottom. **Truly $0 upfront** — every required piece is on a free t
 
 1. [GitHub repo](#0-github) — already done ✅
 2. [Cloudflare account + Pages + AI binding](#1-cloudflare-pages--workers-ai)
-3. [Resend account](#2-resend-email) — email delivery
+3. [Cloudflare Email Service](#2-cloudflare-email-service) — email delivery
 4. [NOWPayments account](#3-nowpayments-crypto-checkout) — accept payments in crypto
 5. [Cloudflare Turnstile](#4-cloudflare-turnstile) — anti-bot (optional)
 6. [Anthropic API](#5-anthropic-api-optional-quality-upgrade) — optional Claude upgrade
@@ -67,35 +67,43 @@ This binding gives your worker access to Cloudflare's Llama 3.1 8B model with **
 
 ---
 
-## 2. Resend (email)
+## 2. Cloudflare Email Service
 
-Resend sends your reports to customers' inboxes. Free tier: 3,000 emails/month, 100/day. More than enough.
+Reports are sent via **Cloudflare Email Service** — same account as Pages, no Resend, no extra API keys. Emails come from `reports@sitexray.xyz`.
 
-1. Sign up: https://resend.com/
-2. Verify your email
-3. (Optional but recommended) Add a custom domain so emails come from `reports@sitexray.com` instead of `onboarding@resend.dev`:
-   - Resend → Domains → Add Domain → enter your domain → copy the DNS records they show
-   - Add those records in Cloudflare DNS (step 3 below) — TXT and MX records
-   - Wait 5–30 minutes, Resend verifies automatically
-4. API Keys → **Create API Key** → permission: "Sending access" → name it `sitexray-prod`
-5. Copy the key, starts with `re_`
+### Onboard your domain for sending
 
-> 💡 If you skip the custom domain, the `from` address will default to `onboarding@resend.dev` — works for testing but looks unprofessional. Set up the domain before your first sale.
+Your domain `sitexray.xyz` must be in Cloudflare DNS (Porkbun → point nameservers to Cloudflare).
+
+**Dashboard:**
+1. **Compute & AI** → **Email Service** → **Email Sending** → **Onboard domain**
+2. Select `sitexray.xyz` → **Add records and onboard** (SPF + DKIM auto-added)
+3. Wait 5–15 minutes for DNS to verify
+
+**Or CLI** (after `npx wrangler login`):
+```powershell
+npx wrangler email sending enable sitexray.xyz
+npx wrangler email sending dns get sitexray.xyz
+```
+
+### Add the EMAIL binding to Pages
+
+`wrangler.toml` already declares `[[send_email]] name = "EMAIL"`. You must also add it in the dashboard:
+
+1. Pages → **sitexray** → **Settings** → **Bindings** → **Add** → **Email**
+2. Variable name: `EMAIL`
+3. **Save** → **Retry deployment**
 
 ---
 
 ### Add environment variables
 
-This is where your API keys live. Cloudflare encrypts them at rest.
-
-**Cloudflare Dashboard** → Pages → your project → **Settings** → **Environment variables**
-
-For **Production** environment, add:
+**Cloudflare Dashboard** → Pages → **sitexray** → **Settings** → **Environment variables** → **Production**:
 
 | Variable name | Required? | Value | Encrypted? |
 |---|---|---|---|
-| `RESEND_API_KEY` | ✅ required | `re_...` from step 2 | yes |
-| `RESEND_FROM_EMAIL` | optional | `SiteX-Ray <reports@yourdomain.com>` (else defaults to onboarding@resend.dev) | no |
+| `FROM_EMAIL` | optional | `SiteX-Ray <reports@sitexray.xyz>` | no |
+| `REPLY_TO_EMAIL` | optional | `support@sitexray.xyz` | no |
 | `NOWPAYMENTS_API_KEY` | required to sell | API key from step 3 | yes |
 | `NOWPAYMENTS_IPN_SECRET` | required to sell | IPN secret from step 3 | yes |
 | `TURNSTILE_SECRET` | recommended | (filled in step 4) | yes |
@@ -103,13 +111,16 @@ For **Production** environment, add:
 | `ANTHROPIC_MODEL` | optional | `claude-sonnet-4-5` | no |
 | `CF_AI_MODEL` | optional | overrides default `@cf/meta/llama-3.1-8b-instruct` | no |
 
-After adding, click **Save** then **Redeploy** the latest deployment (top right of the project page → triple dot → Retry deployment) so functions pick up the new env vars.
+> Remove old `RESEND_API_KEY` / `RESEND_FROM_EMAIL` if present — no longer used.
 
-### Pick a domain
+After adding, **Save** → **Retry deployment**.
 
-Either:
-- **Free:** use the `*.pages.dev` URL Cloudflare gave you (e.g. `project-4-abc.pages.dev`). Works fine, looks indie.
-- **Custom:** buy a domain (~$10/year, e.g. `sitexray.com` via Cloudflare Registrar) → Pages → Custom domains → Add → follow the DNS instructions. Cloudflare provisions SSL automatically.
+### Custom domain (sitexray.xyz)
+
+1. Porkbun → your domain → **Nameservers** → set to Cloudflare's (from dash.cloudflare.com → sitexray.xyz → DNS)
+2. Pages → **sitexray** → **Custom domains** → **Set up a domain** → enter `sitexray.xyz` and `www.sitexray.xyz`
+3. Cloudflare auto-creates CNAME records and provisions SSL
+4. Update NOWPayments IPN callback to `https://sitexray.xyz/api/nowpayments-webhook`
 
 ---
 
@@ -127,7 +138,7 @@ You already have an account at https://account.nowpayments.io/dashboard, so we j
 2. **Store → API keys** → click **Add new key** → name it `sitexray-prod` → **Generate** → copy the value (long string).
    - This goes into the Cloudflare env var `NOWPAYMENTS_API_KEY`.
 3. **Store → IPN settings**:
-   - **IPN callback URL**: `https://yourdomain.com/api/nowpayments-webhook` (or `https://project-4-abc.pages.dev/api/nowpayments-webhook`)
+   - **IPN callback URL**: `https://sitexray.xyz/api/nowpayments-webhook` (fallback: `https://sitexray.pages.dev/api/nowpayments-webhook`)
    - Click **Generate** next to "IPN secret key" → copy the value.
    - This goes into the Cloudflare env var `NOWPAYMENTS_IPN_SECRET`.
    - Save.
@@ -153,7 +164,7 @@ Stops bots from spamming your free-teaser endpoint and burning your Claude credi
 
 1. Cloudflare Dashboard → **Turnstile** → **Add site**
 2. Site name: `SiteX-Ray`
-3. Hostnames: your domain(s) — e.g. `project-4-abc.pages.dev`, `sitexray.com`
+3. Hostnames: `sitexray.xyz`, `www.sitexray.xyz`, `sitexray.pages.dev`
 4. Widget mode: **Managed** (good defaults)
 5. Save → it gives you a **Site Key** (public, goes in HTML) and **Secret Key** (private, goes in env vars)
 
@@ -219,7 +230,7 @@ Run through the **full happy path** once before announcing.
 
 If nothing arrives in 5 minutes:
 - Cloudflare → Pages → your project → **Logs** → look for the most recent invocation of `/api/audit` and read the error
-- Common culprits: missing env var, wrong API key, Resend domain not verified, Claude credit balance is $0
+- Common culprits: missing EMAIL binding, email domain not onboarded, missing AI binding, Claude credit balance is $0
 
 ### Test the paid flow (NOWPayments sandbox)
 1. NOWPayments dashboard → switch to **Sandbox mode** (account-level toggle)
@@ -263,8 +274,9 @@ The local server runs the **same Functions code** that production runs. If somet
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| Free-teaser form submits, no email arrives | Missing AI binding or `RESEND_API_KEY` env var | Pages → Settings → Functions → add Workers AI binding `AI`; check `RESEND_API_KEY` is set; Retry deployment |
-| Email arrives from `onboarding@resend.dev` | Custom Resend domain not verified | Verify domain in Resend, set `RESEND_FROM_EMAIL` env var |
+| Free-teaser form submits, no email arrives | Missing AI or EMAIL binding | Pages → Settings → Bindings → add `AI` and `EMAIL`; onboard `sitexray.xyz` in Email Service; Retry deployment |
+| Email send fails with domain error | `sitexray.xyz` not onboarded for sending | Email Service → Onboard domain → wait for SPF/DKIM verify |
+| sitexray.xyz shows Error 525 | Custom domain not linked to Pages | Pages → sitexray → Custom domains → add `sitexray.xyz` |
 | "Anthropic API 429" in logs | Out of Claude credits | Top up at console.anthropic.com (only relevant if you opted into Anthropic) |
 | "Couldn't create checkout" when clicking $39 button | Missing `NOWPAYMENTS_API_KEY` | Add it in Pages → Settings → env vars; Retry deployment |
 | "Invalid signature" on NOWPayments webhook | IPN secret mismatch between dashboard and env var | Re-copy `NOWPAYMENTS_IPN_SECRET` from NOWPayments → paste fresh into Cloudflare env vars |
@@ -277,19 +289,19 @@ The local server runs the **same Functions code** that production runs. If somet
 
 ### Mode A — pure $0 (Cloudflare AI only, no Anthropic at all)
 
-| Stage | Sales/mo | Free teasers/mo | CF AI | NOWPayments 0.5% | Resend | CF Pages | Total | Revenue | Net |
+| Stage | Sales/mo | Free teasers/mo | CF AI | NOWPayments 0.5% | Email | CF Pages | Total | Revenue | Net |
 |---|---|---|---|---|---|---|---|---|---|
 | Bootstrapping | 0 | 50 | $0 | $0 | $0 | $0 | **$0** | $0 | $0 |
 | 10 sales | 10 | 200 | $0 | ~$2 | $0 | $0 | **$2** | $390 | **+$388** |
 | 50 sales | 50 | 1000 | $0 | ~$10 | $0 | $0 | **$10** | $1,950 | **+$1,940** |
-| 500 sales | 500 | 10k | ~$10 | ~$100 | $20 | $0 | **$130** | $19,500 | **+$19,370** |
+| 500 sales | 500 | 10k | ~$10 | ~$100 | ~$5 | $0 | **$115** | $19,500 | **+$19,385** |
 
 ### Mode B — Anthropic upgrade (Claude for paid audits)
 
-| Stage | Sales/mo | Anthropic | NOWPayments | Resend | CF | Total | Revenue | Net |
+| Stage | Sales/mo | Anthropic | NOWPayments | Email | CF | Total | Revenue | Net |
 |---|---|---|---|---|---|---|---|---|
 | First sales | 10 | $5 prepay + $3 | $2 | $0 | $0 | **$10** | $390 | **+$380** |
 | 50 sales | 50 | $20 | $10 | $0 | $0 | **$30** | $1,950 | **+$1,920** |
-| 500 sales | 500 | $200 | $100 | $20 | $0 | **$320** | $19,500 | **+$19,180** |
+| 500 sales | 500 | $200 | $100 | ~$5 | $0 | **$305** | $19,500 | **+$19,195** |
 
 Both modes profitable from sale #1. NOWPayments' 0.5% fee leaves dramatically more margin than the 7% card processors take — this is the upside of crypto.

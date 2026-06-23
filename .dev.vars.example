@@ -3,9 +3,10 @@
 # Used by `wrangler pages dev` for local development only.
 # Production keys go in Cloudflare Pages → Settings → Environment variables.
 
-# Email delivery (REQUIRED)
-RESEND_API_KEY=re_your-key-here
-RESEND_FROM_EMAIL=SiteX-Ray <onboarding@resend.dev>
+# Email (Cloudflare Email Service — no API key needed)
+# Requires EMAIL binding in wrangler.toml + domain onboarded in Cloudflare dashboard.
+FROM_EMAIL=SiteX-Ray <reports@sitexray.xyz>
+REPLY_TO_EMAIL=support@sitexray.xyz
 
 # Claude — paid $39 tier upgrade (OPTIONAL — leave empty to use free Cloudflare AI for paid too)
 ANTHROPIC_API_KEY=

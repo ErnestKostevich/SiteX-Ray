@@ -30,18 +30,18 @@
 <div class="container">
   <a class="nav-back" href="/">← Back to SiteX-Ray</a>
   <h1>Privacy Policy</h1>
-  <p class="updated">Last updated: 2026-05-25</p>
+  <p class="updated">Last updated: 2026-06-23</p>
 
   <p>This privacy policy explains what data SiteX-Ray collects, why, and how to delete it. We try to keep it short and honest.</p>
 
   <h2>What we collect</h2>
   <table>
     <tr><th>Data</th><th>Why</th><th>Kept how long</th></tr>
-    <tr><td>Your email address</td><td>To deliver your audit report</td><td>Stored by our email provider (Resend) until you ask us to delete it</td></tr>
+    <tr><td>Your email address</td><td>To deliver your audit report</td><td>Processed by Cloudflare Email Service to send the report; not retained on our servers after delivery</td></tr>
     <tr><td>The URL you submitted</td><td>To audit it</td><td>Not stored after the report is generated</td></tr>
     <tr><td>The audit report we generated</td><td>To deliver it to you</td><td>Sent to your email, not retained server-side</td></tr>
     <tr><td>Your IP address</td><td>Bot protection (via Cloudflare)</td><td>~30 days of Cloudflare logs</td></tr>
-    <tr><td>Payment info (only paid customers)</td><td>To process the $39 charge</td><td>Stored by Lemon Squeezy — we never see your card</td></tr>
+    <tr><td>Payment info (only paid customers)</td><td>To process the $39 charge</td><td>Handled by NOWPayments (crypto checkout) — we never see your wallet keys</td></tr>
   </table>
 
   <p>We do <strong>not</strong> use cookies for tracking. The only cookies that may be set are technical ones from Cloudflare Turnstile (anti-bot) — these have no marketing or analytics purpose.</p>
@@ -50,8 +50,8 @@
   <ul>
     <li><strong>Cloudflare</strong> — hosts the site, runs the backend, provides bot protection, and runs the open-weight AI model that generates most audits. The scraped page content is processed in Cloudflare's edge network and not retained after the response. See <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's privacy policy</a> and <a href="https://developers.cloudflare.com/workers-ai/privacy/" target="_blank" rel="noopener">Workers AI privacy notes</a>.</li>
     <li><strong>Anthropic</strong> — for the paid $39 tier, we may send your submitted URL plus the scraped page content to Anthropic's API to generate a higher-quality report. Per <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic's privacy policy</a>, API inputs are not used to train their models.</li>
-    <li><strong>Resend</strong> — we use Resend to deliver your report by email. See <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener">Resend's privacy policy</a>.</li>
-    <li><strong>Lemon Squeezy</strong> — handles payments and is the merchant of record for paid customers. See <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener">Lemon Squeezy's privacy policy</a>.</li>
+    <li><strong>Cloudflare Email Service</strong> — delivers your report by email from our domain. Covered under <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's privacy policy</a>.</li>
+    <li><strong>NOWPayments</strong> — processes crypto payments for paid audits. See <a href="https://nowpayments.io/privacy-policy" target="_blank" rel="noopener">NOWPayments' privacy policy</a>.</li>
   </ul>
 
   <p>We do not sell your data. We do not share it for marketing. We do not have an ad partner.</p>

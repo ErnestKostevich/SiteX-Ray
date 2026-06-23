@@ -2,7 +2,7 @@
 
 After a $39 sale, send these emails over 7 days. Goal: deliver value beyond the report, build the relationship, set up the upsell to "Done-for-you" ($299+).
 
-Use Resend (which you're already using) or just send manually from Gmail for the first 20 customers.
+Use Cloudflare Email Service (reports@sitexray.xyz) or send manually from Gmail for the first 20 customers.
 
 ---
 
