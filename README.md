@@ -38,7 +38,7 @@ Built to run on **truly $0 upfront cost** — every piece sits on a free tier, *
 │       ├── auditFlow.js       # picks the cheapest available backend
 │       ├── normalize.js       # normalizes AI output for the renderer
 │       ├── renderer.js        # HTML report email body
-│       ├── mailer.js          # Resend client
+│       ├── mailer.js          # Cloudflare Email Service client
 │       ├── turnstile.js       # bot check verifier
 │       └── nowpayments.js     # crypto payment processor + HMAC-SHA512
 │
@@ -57,13 +57,13 @@ Built to run on **truly $0 upfront cost** — every piece sits on a free tier, *
 
 ## How it works (the live product)
 
-1. Visitor on `sitexray.com` pastes their URL and email
+1. Visitor on `sitexray.xyz` pastes their URL and email
 2. Cloudflare Pages Function (`functions/api/audit.js`) takes the request
-3. It scrapes the homepage (HTMLRewriter), calls Claude with the auditor prompt, gets back a structured JSON audit
-4. Renders to an HTML email and sends via Resend
+3. It scrapes the homepage (HTMLRewriter), calls AI with the auditor prompt, gets back a structured JSON audit
+4. Renders to an HTML email and sends via Cloudflare Email Service (`reports@sitexray.xyz`)
 5. Visitor opens the report on their phone within 2 minutes
 
-If they want the full report ($39), they click → Lemon Squeezy checkout → on payment, Lemon's webhook hits `/api/lemon-webhook` → the same pipeline runs in `Mode: FULL`, delivers the full audit.
+If they want the full report ($39), they click → NOWPayments crypto checkout → on payment, webhook hits `/api/nowpayments-webhook` → the same pipeline runs in full mode and delivers the audit.
 
 The Python CLI (`audit.py`) does the exact same thing locally. Use it for testing, sales demos, or manual fulfillment of paid orders before you fully automate.
 
@@ -96,7 +96,7 @@ See **[DEPLOY.md](DEPLOY.md)**. First-time setup: ~60 minutes. Costs $0 upfront 
 
 Required accounts (all free tier, no KYC, no card needed):
 - [Cloudflare](https://dash.cloudflare.com) — hosting + backend + free AI inference (unlimited free)
-- [Resend](https://resend.com) — email delivery (3000 free/mo)
+- Cloudflare Email Service — email delivery (included with Cloudflare, no Resend)
 - [NOWPayments](https://nowpayments.io) — accepts crypto payments (0.5% fee, crypto payouts to your wallet, no KYC for non-custodial flow)
 
 Optional (quality upgrade once you have revenue):
@@ -113,7 +113,7 @@ Optional (quality upgrade once you have revenue):
 - [x] Deploy guide
 - [x] Outreach playbook (LinkedIn DMs, cold email, niches)
 - [ ] First 10 sales (manual fulfillment via CLI to validate prompt quality)
-- [ ] Custom Resend domain so emails come from `reports@sitexray.com`
+- [x] Cloudflare Email Service from `reports@sitexray.xyz`
 - [ ] Add multi-page crawl option (currently homepage only)
 - [ ] Add screenshots to the report via headless Chrome
 - [ ] Agency white-label tier ($15/audit wholesale)

@@ -24,7 +24,7 @@ AI website auditor for SMBs in EU & North America. Sells one-shot reports for $3
 | **AI inference — free teaser** | **Cloudflare Workers AI / Llama 3.1 8B** | **$0 (free 10k Neurons/day)** | **~$0.001/teaser past free tier** |
 | AI inference — paid audit (default) | Same Cloudflare Workers AI | $0 | ~$0.005/audit past free tier |
 | AI inference — paid audit (OPTIONAL upgrade) | Anthropic Claude Sonnet | $5 prepay (only if you opt in) | ~$0.30/audit |
-| Email delivery | Resend free tier (3000/mo) | $0 | $20/mo at scale |
+| Email delivery | Cloudflare Email Service | $0 | pay-per-send at scale |
 | Payments | **NOWPayments (crypto)** | 0.5% per sale, $0 upfront, no KYC for crypto-to-wallet payouts | 0.5% per sale |
 | Anti-bot | Cloudflare Turnstile | $0 | $0 |
 
@@ -64,7 +64,7 @@ Mode B requires $5 prepay on Anthropic (refunded by first sale). The trade-off y
 ### Mode B: Automated (after 50+ sales validates demand)
 1. Customer pays → Lemon Squeezy webhook → Cloudflare Worker
 2. Worker calls Claude API → renders HTML → PDF via Puppeteer or browserless free tier
-3. Worker emails PDF via Resend
+3. Worker emails report via Cloudflare Email Service
 4. **Pros:** scales infinitely, founder sleeps
 5. **Cons:** ~1 day of dev work, more moving parts to debug
 
@@ -153,7 +153,7 @@ Sell the Python tool itself on Gumroad for $19 ("audit any website with your own
 | Risk | Mitigation |
 |------|-----------|
 | Claude generates generic advice | Tight prompt with banned phrases, evidence-cited findings, sample reports reviewed before each prompt update |
-| Cloudflare / Lemon Squeezy / Resend changes free-tier limits | Architecture is portable: swap to Vercel / Stripe / Mailgun, all have similar free tiers |
+| Cloudflare / NOWPayments pricing changes | Architecture is portable: swap email/hosting/payments independently |
 | Founder can't fulfill 20 reports/day manually | Hit that limit only after $780/day MRR; automate at that point |
 | Competitors copy the idea | First-mover advantage compounds via SEO + reviews. Prompt is the moat — keep iterating on it. |
 | Customers expect ongoing service | Position clearly as one-shot. Upsell to done-for-you for relationship-style buyers. |

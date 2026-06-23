@@ -72,8 +72,8 @@ export async function notifyFounderOfFailure(env, ctx) {
       toEmail: to,
       subject: `🚨 SiteX-Ray order failed — ${customerEmail || "unknown customer"} (${orderId || "no id"})`,
       html,
-      resendKey: env.RESEND_API_KEY,
-      fromEmail: env.RESEND_FROM_EMAIL,
+      emailBinding: env.EMAIL,
+      fromEmail: env.FROM_EMAIL || env.RESEND_FROM_EMAIL,
     });
   } catch (mailErr) {
     // Last resort — if even THIS email failed, just log it.

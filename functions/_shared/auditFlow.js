@@ -95,8 +95,9 @@ export async function runAuditAndEmail(opts) {
     toEmail: email,
     subject,
     html,
-    resendKey: env.RESEND_API_KEY,
-    fromEmail: env.RESEND_FROM_EMAIL,
+    emailBinding: env.EMAIL,
+    fromEmail: env.FROM_EMAIL || env.RESEND_FROM_EMAIL,
+    replyTo: env.REPLY_TO_EMAIL || "support@sitexray.xyz",
   });
 
   return { domain: siteData.domain, overall_score: report.overall_score };

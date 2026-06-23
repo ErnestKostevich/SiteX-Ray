@@ -67,7 +67,7 @@ export async function onRequestPost(context) {
   // Generate + email asynchronously so we can ACK NOWPayments fast.
   // If the worker dies, NOWPayments retries the webhook.
   //
-  // If the audit pipeline itself fails (AI down, Resend down, scrape blocked,
+  // If the audit pipeline itself fails (AI down, email down, scrape blocked,
   // etc.), we don't want to silently lose a paid order — so the catch handler
   // emails the founder with all the context they need to manually fulfil.
   waitUntil(
