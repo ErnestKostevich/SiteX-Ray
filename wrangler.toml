@@ -18,12 +18,9 @@ pages_build_output_dir = "landing"
 [ai]
 binding = "AI"
 
-# Cloudflare Email Service — sends audit reports (replaces Resend).
-# Domain must be onboarded: wrangler email sending enable sitexray.xyz
-# remote = true lets local `wrangler pages dev` send real emails.
-[[send_email]]
-name = "EMAIL"
-remote = true
+# Email binding (EMAIL) must be added in Cloudflare Dashboard:
+# Pages → sitexray → Settings → Bindings → Add → Email → name: EMAIL
+# Pages wrangler.toml does NOT support [[send_email]] — dashboard only.
 
 # When deploying via wrangler directly (instead of GitHub auto-deploy):
 #   wrangler pages deploy landing --project-name=sitexray
