@@ -74,6 +74,8 @@ export async function notifyFounderOfFailure(env, ctx) {
       html,
       emailBinding: env.EMAIL,
       fromEmail: env.FROM_EMAIL || env.RESEND_FROM_EMAIL,
+      apiToken: env.CLOUDFLARE_API_TOKEN || env.CF_API_TOKEN,
+      accountId: env.CLOUDFLARE_ACCOUNT_ID,
     });
   } catch (mailErr) {
     // Last resort — if even THIS email failed, just log it.

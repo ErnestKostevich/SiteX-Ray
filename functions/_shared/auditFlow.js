@@ -98,6 +98,8 @@ export async function runAuditAndEmail(opts) {
     emailBinding: env.EMAIL,
     fromEmail: env.FROM_EMAIL || env.RESEND_FROM_EMAIL,
     replyTo: env.REPLY_TO_EMAIL || "support@sitexray.xyz",
+    apiToken: env.CLOUDFLARE_API_TOKEN || env.CF_API_TOKEN,
+    accountId: env.CLOUDFLARE_ACCOUNT_ID,
   });
 
   return { domain: siteData.domain, overall_score: report.overall_score };
