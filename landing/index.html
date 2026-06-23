@@ -17,18 +17,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #09090b;
-    --surface: #111114;
-    --surface-2: #18181b;
-    --border: #27272a;
-    --text: #fafafa;
-    --text-2: #d4d4d8;
-    --muted: #71717a;
-    --accent: #6366f1;
-    --accent-2: #818cf8;
-    --green: #22c55e;
-    --red: #ef4444;
-    --radius: 14px;
+    --bg: #f1f5f9;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-2: #334155;
+    --muted: #64748b;
+    --accent: #4f46e5;
+    --accent-2: #6366f1;
+    --accent-soft: #eef2ff;
+    --green: #16a34a;
+    --green-soft: #f0fdf4;
+    --red: #dc2626;
+    --radius: 16px;
+    --shadow: 0 1px 3px rgba(15,23,42,0.06), 0 8px 24px rgba(15,23,42,0.06);
+    --shadow-lg: 0 4px 6px rgba(15,23,42,0.04), 0 20px 48px rgba(15,23,42,0.1);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -40,21 +44,14 @@
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
   }
-  body::before {
-    content: "";
-    position: fixed; inset: 0; z-index: -1;
-    background: radial-gradient(ellipse 70% 50% at 50% -20%, rgba(99,102,241,0.15), transparent);
-    pointer-events: none;
-  }
-  a { color: var(--accent-2); text-decoration: none; }
-  a:hover { color: #a5b4fc; }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-2); }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
   img, svg { max-width: 100%; height: auto; }
 
-  /* Nav */
   nav {
     position: sticky; top: 0; z-index: 50;
-    background: rgba(9,9,11,0.9);
+    background: rgba(255,255,255,0.92);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
   }
@@ -72,11 +69,10 @@
     display: grid; place-items: center; font-size: 15px; font-weight: 800;
   }
   .brand span { color: var(--accent-2); }
-  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 14px; font-weight: 500; }
+  .nav-links { display: flex; gap: 24px; align-items: center; font-size: 14px; font-weight: 500; }
   .nav-links a { color: var(--text-2); }
   .nav-links a:hover { color: var(--text); }
 
-  /* Buttons */
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     padding: 13px 24px; border-radius: 10px; font-weight: 600; font-size: 15px;
@@ -84,15 +80,15 @@
     transition: transform 0.15s, box-shadow 0.15s;
   }
   .btn-primary {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: #fff; box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #fff; box-shadow: 0 4px 16px rgba(79,70,229,0.35);
   }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(99,102,241,0.45); color: #fff; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(79,70,229,0.4); color: #fff; }
   .btn-ghost {
-    background: transparent; color: var(--text);
+    background: var(--surface); color: var(--text);
     border: 1px solid var(--border);
   }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent-2); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
   .btn-sm { padding: 9px 16px; font-size: 13px; }
   .btn-loading { opacity: 0.8; cursor: wait; }
   .btn-loading::before {
@@ -103,69 +99,61 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   /* Hero */
-  .hero { padding: 64px 0 80px; }
+  .hero {
+    padding: 48px 0 64px;
+    background: linear-gradient(180deg, #fff 0%, var(--bg) 100%);
+  }
   .hero-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
   }
   .eyebrow {
     display: inline-flex; align-items: center; gap: 8px;
-    font-size: 13px; font-weight: 500; color: var(--muted);
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    background: var(--accent-soft); padding: 6px 12px; border-radius: 99px;
     margin-bottom: 20px;
   }
   .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
   h1 {
-    font-size: clamp(34px, 4vw, 48px); font-weight: 800;
-    line-height: 1.08; letter-spacing: -0.035em; margin-bottom: 16px;
+    font-size: clamp(32px, 4vw, 44px); font-weight: 800;
+    line-height: 1.1; letter-spacing: -0.035em; margin-bottom: 14px;
   }
-  h1 em { font-style: normal; color: var(--accent-2); }
-  .lead { font-size: 17px; color: var(--muted); max-width: 440px; margin-bottom: 28px; line-height: 1.55; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { font-size: 17px; color: var(--muted); max-width: 420px; margin-bottom: 24px; line-height: 1.55; }
 
   .form-card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 24px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+    box-shadow: var(--shadow-lg);
   }
-  .form-card:focus-within { border-color: var(--accent); box-shadow: 0 8px 40px rgba(0,0,0,0.35), 0 0 0 3px rgba(99,102,241,0.2); }
-  .field { margin-bottom: 14px; }
+  .form-card:focus-within { border-color: var(--accent-2); box-shadow: var(--shadow-lg), 0 0 0 3px rgba(99,102,241,0.15); }
+  .form-title { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+  .field { margin-bottom: 12px; }
   .field label {
-    display: block; font-size: 11px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.07em;
-    color: var(--muted); margin-bottom: 6px;
+    display: block; font-size: 12px; font-weight: 600;
+    color: var(--muted); margin-bottom: 5px;
   }
   .field input {
     width: 100%; padding: 12px 14px; border-radius: 8px;
-    border: 1px solid var(--border); background: var(--bg);
+    border: 1px solid var(--border); background: var(--surface-2);
     color: var(--text); font-size: 16px; font-family: inherit;
   }
-  .no-account {
-    margin-top: 14px; padding: 12px 14px; border-radius: 10px;
-    background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.25);
-    font-size: 13px; color: var(--text-2); line-height: 1.5;
-  }
-  .no-account strong { color: var(--text); }
-  .report-ready-box {
-    margin-top: 16px; padding: 16px; border-radius: 12px;
-    background: var(--surface-2); border: 1px solid var(--border);
-    text-align: left;
-  }
-  .report-ready-box p { font-size: 14px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
-  .mobile-cta {
-    display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
-    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-    background: rgba(9,9,11,0.95); backdrop-filter: blur(12px);
-    border-top: 1px solid var(--border);
-  }
-  .mobile-cta .btn { width: 100%; }
-  .field input:focus { outline: none; border-color: var(--accent); }
-  .field input::placeholder { color: #52525b; }
-  .form-card .btn { width: 100%; margin-top: 4px; }
-  .form-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
-  .form-status { margin-top: 14px; font-size: 14px; min-height: 20px; }
+  .field input:focus { outline: none; border-color: var(--accent); background: #fff; }
+  .field input::placeholder { color: #94a3b8; }
+  .form-card .btn { width: 100%; margin-top: 6px; }
+  .form-note { font-size: 12px; color: var(--muted); margin-top: 10px; text-align: center; }
+  .form-status { margin-top: 12px; font-size: 14px; min-height: 20px; }
   .form-status[data-kind="success"] { color: var(--green); }
   .form-status[data-kind="error"] { color: var(--red); }
 
+  .report-ready-box {
+    margin-top: 14px; padding: 16px; border-radius: 12px;
+    background: var(--green-soft); border: 1px solid #bbf7d0;
+    text-align: left; font-size: 14px; color: var(--text-2);
+  }
+  .report-ready-box strong { color: var(--text); }
+
   .pro-toggle {
-    margin-top: 14px; max-width: 440px;
+    margin-top: 14px;
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 10px; overflow: hidden;
   }
@@ -177,7 +165,7 @@
   .pro-toggle .inner { padding: 0 16px 16px; }
   .pro-toggle input {
     width: 100%; padding: 10px 12px; border-radius: 8px;
-    border: 1px solid var(--border); background: var(--bg);
+    border: 1px solid var(--border); background: var(--surface-2);
     color: var(--text); font-size: 13px; font-family: monospace;
   }
 
@@ -185,112 +173,172 @@
   .preview {
     background: #fff; border-radius: var(--radius);
     border: 1px solid var(--border); overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
-    color: #0f172a;
+    box-shadow: var(--shadow-lg);
+    position: sticky; top: 84px;
   }
-  .preview-bar-top { height: 4px; background: linear-gradient(90deg, #6366f1, #8b5cf6); }
-  .preview-body { padding: 24px; }
+  .preview-bar-top { height: 4px; background: linear-gradient(90deg, #4f46e5, #7c3aed); }
+  .preview-body { padding: 22px; }
   .preview-brand { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
-  .preview-brand span { color: #6366f1; }
-  .preview-domain { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+  .preview-brand span { color: var(--accent); }
+  .preview-domain { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
   .preview-score-row {
-    display: flex; gap: 16px; align-items: center;
-    padding: 16px; background: #f8fafc; border-radius: 10px;
-    border: 1px solid #e2e8f0; margin-bottom: 16px;
+    display: flex; gap: 14px; align-items: center;
+    padding: 14px; background: var(--surface-2); border-radius: 10px;
+    border: 1px solid var(--border); margin-bottom: 14px;
   }
   .preview-score-num {
-    width: 64px; height: 64px; border-radius: 50%;
+    width: 58px; height: 58px; border-radius: 50%;
     background: #dc2626; color: #fff;
     display: grid; place-items: center;
-    font-size: 24px; font-weight: 800; flex-shrink: 0;
+    font-size: 22px; font-weight: 800; flex-shrink: 0;
   }
   .preview-verdict {
-    font-size: 11px; font-weight: 700; color: #fff;
-    background: #dc2626; padding: 3px 10px; border-radius: 99px;
-    display: inline-block; margin-bottom: 6px;
+    font-size: 10px; font-weight: 700; color: #fff;
+    background: #dc2626; padding: 3px 9px; border-radius: 99px;
+    display: inline-block; margin-bottom: 4px;
   }
-  .preview-tldr { font-size: 13px; color: #334155; line-height: 1.5; }
+  .preview-tldr { font-size: 12px; color: var(--text-2); line-height: 1.45; }
   .bar-row {
-    display: grid; grid-template-columns: 56px 1fr 28px; gap: 8px;
-    align-items: center; font-size: 11px; margin-bottom: 8px;
+    display: grid; grid-template-columns: 52px 1fr 26px; gap: 6px;
+    align-items: center; font-size: 11px; margin-bottom: 6px;
   }
-  .bar-row span:first-child { color: #64748b; font-weight: 600; }
-  .bar-track { height: 6px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+  .bar-row span:first-child { color: var(--muted); font-weight: 600; }
+  .bar-track { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 99px; }
   .bar-row span:last-child { font-weight: 800; text-align: right; }
   .preview-finding {
-    font-size: 12px; padding: 10px 12px; background: #fef2f2;
+    font-size: 11px; padding: 9px 11px; background: #fef2f2;
     border-left: 3px solid #dc2626; border-radius: 0 6px 6px 0;
-    color: #334155; line-height: 1.5;
+    color: var(--text-2); line-height: 1.45;
   }
-  .preview-finding strong { color: #0f172a; display: block; margin-bottom: 2px; }
+  .preview-finding strong { color: var(--text); display: block; margin-bottom: 2px; }
   .preview-link {
     display: block; text-align: center; padding: 12px;
-    font-size: 13px; font-weight: 600; color: #6366f1;
-    border-top: 1px solid #e2e8f0; background: #f8fafc;
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    border-top: 1px solid var(--border); background: var(--surface-2);
   }
-  .preview-link:hover { background: #eef2ff; color: #4f46e5; }
+  .preview-link:hover { background: var(--accent-soft); }
 
-  /* Sections */
-  section { padding: 80px 0; }
+  /* Delivery section — the main explainer */
+  #delivery {
+    padding: 72px 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
   .section-label {
     font-size: 12px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.1em; color: var(--accent-2); text-align: center; margin-bottom: 12px;
+    letter-spacing: 0.1em; color: var(--accent); text-align: center; margin-bottom: 10px;
   }
   h2 {
-    font-size: clamp(26px, 3vw, 36px); font-weight: 800;
-    text-align: center; letter-spacing: -0.03em; margin-bottom: 12px;
+    font-size: clamp(24px, 3vw, 32px); font-weight: 800;
+    text-align: center; letter-spacing: -0.03em; margin-bottom: 10px;
   }
   .section-desc {
     text-align: center; color: var(--muted); font-size: 16px;
-    max-width: 520px; margin: 0 auto 48px;
+    max-width: 560px; margin: 0 auto 40px; line-height: 1.55;
   }
 
-  .steps {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  .delivery-highlight {
+    max-width: 720px; margin: 0 auto 40px;
+    padding: 20px 24px; border-radius: 14px;
+    background: var(--accent-soft); border: 1px solid #c7d2fe;
+    text-align: center; font-size: 15px; color: var(--text-2); line-height: 1.55;
   }
-  .step {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 28px 24px;
-  }
-  .step-num {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: var(--accent); color: #fff;
-    display: grid; place-items: center;
-    font-weight: 800; font-size: 14px; margin-bottom: 16px;
-  }
-  .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
-  .step p { font-size: 14px; color: var(--muted); line-height: 1.55; }
+  .delivery-highlight strong { color: var(--text); }
 
+  .delivery-flow {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    max-width: 900px; margin: 0 auto 48px; position: relative;
+  }
+  .delivery-flow::before {
+    content: ""; position: absolute; top: 28px; left: 12%; right: 12%;
+    height: 2px; background: var(--border); z-index: 0;
+  }
+  .flow-step {
+    text-align: center; padding: 0 12px; position: relative; z-index: 1;
+  }
+  .flow-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: var(--surface); border: 2px solid var(--accent);
+    display: grid; place-items: center; margin: 0 auto 14px;
+    font-size: 22px; box-shadow: var(--shadow);
+  }
+  .flow-step h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .flow-step p { font-size: 12px; color: var(--muted); line-height: 1.45; }
+
+  .delivery-cards {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    max-width: 800px; margin: 0 auto;
+  }
+  .delivery-card {
+    padding: 24px; border-radius: var(--radius);
+    border: 1px solid var(--border); background: var(--surface-2);
+  }
+  .delivery-card h4 {
+    font-size: 15px; font-weight: 700; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .delivery-card .tag {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 3px 8px; border-radius: 6px;
+  }
+  .tag-free { background: var(--accent-soft); color: var(--accent); }
+  .tag-paid { background: #fef3c7; color: #b45309; }
+  .delivery-card ol {
+    padding-left: 18px; font-size: 13px; color: var(--text-2); line-height: 1.65;
+  }
+  .delivery-card li { margin-bottom: 6px; }
+  .delivery-card .note {
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--muted); line-height: 1.5;
+  }
+
+  .storage-box {
+    max-width: 800px; margin: 32px auto 0;
+    padding: 20px 24px; border-radius: 12px;
+    background: #fff; border: 1px dashed var(--border);
+    display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start;
+  }
+  .storage-icon { font-size: 28px; line-height: 1; }
+  .storage-box h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .storage-box p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  /* Report contents */
+  section { padding: 72px 0; }
   .features {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
   }
   .feat {
-    padding: 24px; background: var(--surface);
+    padding: 22px; background: var(--surface);
     border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: var(--shadow);
   }
-  .feat h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-  .feat p { font-size: 14px; color: var(--muted); line-height: 1.55; }
+  .feat-icon { font-size: 24px; margin-bottom: 12px; }
+  .feat h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .feat p { font-size: 13px; color: var(--muted); line-height: 1.5; }
 
+  /* Pricing */
+  #pricing { background: var(--surface-2); }
   .pricing {
     display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
     max-width: 720px; margin: 0 auto;
   }
   .plan {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 32px 28px;
-    display: flex; flex-direction: column;
+    border-radius: var(--radius); padding: 28px 24px;
+    display: flex; flex-direction: column; box-shadow: var(--shadow);
   }
   .plan.featured {
     border-color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent), 0 12px 40px rgba(99,102,241,0.2);
+    box-shadow: var(--shadow-lg), 0 0 0 1px var(--accent);
   }
-  .plan-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-2); margin-bottom: 12px; }
-  .plan-price { font-size: 42px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: 4px; }
-  .plan-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
-  .plan ul { list-style: none; flex: 1; margin-bottom: 24px; }
+  .plan-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 10px; }
+  .plan-price { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: 4px; }
+  .plan-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .plan ul { list-style: none; flex: 1; margin-bottom: 20px; }
   .plan li {
-    font-size: 14px; color: var(--text-2); padding: 6px 0;
+    font-size: 14px; color: var(--text-2); padding: 5px 0;
     padding-left: 22px; position: relative;
   }
   .plan li::before {
@@ -301,40 +349,40 @@
   .faq { max-width: 640px; margin: 0 auto; }
   .faq details {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; margin-bottom: 10px; overflow: hidden;
+    border-radius: 10px; margin-bottom: 8px; overflow: hidden;
   }
   .faq summary {
-    padding: 18px 20px; font-weight: 600; font-size: 15px;
+    padding: 16px 18px; font-weight: 600; font-size: 14px;
     cursor: pointer; list-style: none;
   }
   .faq summary::-webkit-details-marker { display: none; }
-  .faq .ans { padding: 0 20px 18px; font-size: 14px; color: var(--muted); line-height: 1.65; }
+  .faq .ans { padding: 0 18px 16px; font-size: 14px; color: var(--muted); line-height: 1.6; }
 
-  .cta-box {
-    text-align: center; padding: 56px 32px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 20px;
+  .mobile-cta {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
   }
-  .cta-box h2 { margin-bottom: 10px; }
-  .cta-box p { color: var(--muted); margin-bottom: 28px; }
+  .mobile-cta .btn { width: 100%; }
 
   footer {
-    border-top: 1px solid var(--border); padding: 32px 0;
-    font-size: 13px; color: var(--muted);
+    border-top: 1px solid var(--border); padding: 28px 0;
+    font-size: 13px; color: var(--muted); background: var(--surface);
   }
   footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
 
   /* Payment modal */
   .pay-overlay {
     position: fixed; inset: 0; z-index: 100;
-    background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+    background: rgba(15,23,42,0.5); backdrop-filter: blur(6px);
     display: none; align-items: center; justify-content: center; padding: 20px;
   }
   .pay-overlay.open { display: flex; }
   .pay-modal {
     width: 100%; max-width: 480px; background: var(--surface);
     border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 28px; position: relative;
+    padding: 28px; position: relative; box-shadow: var(--shadow-lg);
   }
   .pay-close {
     position: absolute; top: 14px; right: 16px;
@@ -346,12 +394,12 @@
   .pay-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
   .pay-tab {
     flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border);
-    background: var(--bg); color: var(--text-2); font-size: 12px; font-weight: 600;
+    background: var(--surface-2); color: var(--text-2); font-size: 12px; font-weight: 600;
     cursor: pointer;
   }
-  .pay-tab.active { border-color: var(--accent); color: var(--text); background: rgba(99,102,241,0.1); }
+  .pay-tab.active { border-color: var(--accent); color: var(--text); background: var(--accent-soft); }
   .pay-box {
-    background: var(--bg); border: 1px solid var(--border);
+    background: var(--surface-2); border: 1px solid var(--border);
     border-radius: 10px; padding: 16px; margin-bottom: 14px;
   }
   .pay-box label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
@@ -361,10 +409,10 @@
     padding: 12px; background: var(--surface); border-radius: 6px;
     color: var(--text-2); margin: 6px 0;
   }
-  .pay-copy { font-size: 12px; color: var(--accent-2); background: none; border: none; cursor: pointer; padding: 0; }
+  .pay-copy { font-size: 12px; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; }
   .pay-modal input[type="text"] {
     width: 100%; padding: 12px 14px; border-radius: 8px;
-    border: 1px solid var(--border); background: var(--bg);
+    border: 1px solid var(--border); background: var(--surface-2);
     color: var(--text); font-size: 14px; margin: 8px 0 16px;
   }
   .pay-actions { display: flex; gap: 10px; }
@@ -375,27 +423,25 @@
 
   @media (max-width: 900px) {
     .nav-links a:not(.btn) { display: none; }
-    .hero { padding: 40px 0 100px; }
-    .hero-grid { grid-template-columns: 1fr; gap: 32px; }
-    .preview { display: none; }
+    .hero { padding: 32px 0 48px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+    .preview { position: static; order: 3; }
     .eyebrow, h1, .lead { text-align: center; }
     .lead { margin-left: auto; margin-right: auto; }
-    .form-card, .pro-toggle, .no-account { max-width: 100%; }
-    section { padding: 56px 0; }
-    .steps, .features, .pricing { grid-template-columns: 1fr; }
-    .cta-box { padding: 40px 20px; }
-    footer .wrap { flex-direction: column; text-align: center; }
+    section, #delivery { padding: 48px 0; }
+    .delivery-flow { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .delivery-flow::before { display: none; }
+    .delivery-cards, .features, .pricing { grid-template-columns: 1fr; }
+    .storage-box { grid-template-columns: 1fr; text-align: center; }
     .mobile-cta { display: block; }
     body { padding-bottom: 72px; }
     .pay-overlay { align-items: flex-end; padding: 0; }
     .pay-modal { max-width: 100%; border-radius: 16px 16px 0 0; max-height: 92vh; overflow-y: auto; }
-    .pay-tab { font-size: 11px; padding: 8px 6px; }
   }
-  @media (max-width: 400px) {
+  @media (max-width: 500px) {
+    .delivery-flow { grid-template-columns: 1fr; }
     .wrap { padding: 0 16px; }
     h1 { font-size: 28px; }
-    .plan { padding: 24px 20px; }
-    .plan-price { font-size: 36px; }
   }
 </style>
 </head>
@@ -408,22 +454,23 @@
       Site<span>X</span>-Ray
     </a>
     <div class="nav-links">
-      <a href="#how">How it works</a>
+      <a href="#delivery">Delivery</a>
       <a href="#pricing">Pricing</a>
       <a href="/sample-report.html" target="_blank" rel="noopener">Sample</a>
-      <a href="#hero-form" class="btn btn-primary btn-sm">Free audit</a>
+      <a href="#audit" class="btn btn-primary btn-sm">Free audit</a>
     </div>
   </div>
 </nav>
 
-<section class="hero" id="hero-form">
+<section class="hero" id="audit">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow"><span class="dot"></span> AI audit · 60 seconds · 50+ signals</div>
+      <div class="eyebrow"><span class="dot"></span> No account · Private link · 7 days</div>
       <h1>See exactly what's wrong with your <em>website</em></h1>
-      <p class="lead">Paste your URL. Get a clean, professional audit with specific fixes — not vague AI advice. Delivered to email and web.</p>
+      <p class="lead">Paste URL + email. Get a professional audit with specific fixes — delivered to this page and your inbox.</p>
 
-      <form class="form-card" novalidate>
+      <form class="form-card" id="audit-form" novalidate>
+        <div class="form-title">Start free audit</div>
         <div class="field">
           <label for="url-input">Website URL</label>
           <input type="url" id="url-input" name="url" placeholder="https://yourwebsite.com" required autocomplete="url">
@@ -433,12 +480,8 @@
           <input type="email" id="email-input" name="email" placeholder="you@company.com" required autocomplete="email">
         </div>
         <button type="submit" class="btn btn-primary" id="submit-btn">Get free report →</button>
-        <p class="form-note">Free teaser · ~2 min · link on this page + email</p>
+        <p class="form-note">~2 min · button appears here + email with link</p>
       </form>
-
-      <div class="no-account">
-        <strong>No account.</strong> We don't save profiles. You get a private link (7 days) + email copy. Nobody else can see your report without the link.
-      </div>
 
       <div id="turnstile-container"></div>
       <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
@@ -467,7 +510,7 @@
         <div class="bar-row"><span>SEO</span><div class="bar-track"><div class="bar-fill" style="width:28%;background:#dc2626"></div></div><span style="color:#dc2626">28</span></div>
         <div class="bar-row"><span>UX</span><div class="bar-track"><div class="bar-fill" style="width:52%;background:#ca8a04"></div></div><span style="color:#ca8a04">52</span></div>
         <div class="bar-row"><span>Convert</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:#dc2626"></div></div><span style="color:#dc2626">22</span></div>
-        <div class="preview-finding" style="margin-top:12px">
+        <div class="preview-finding" style="margin-top:10px">
           <strong>Critical: No meta description</strong>
           Google shows random text. Add a 155-char summary of what you do.
         </div>
@@ -477,46 +520,90 @@
   </div>
 </section>
 
-<section id="how">
+<section id="delivery">
   <div class="wrap">
-    <div class="section-label">How it works</div>
-    <h2>URL → audit → fixes</h2>
-    <p class="section-desc">Three steps. No account. No install.</p>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h3>Enter URL + email</h3>
-        <p>Just your homepage. We scan it live — nothing to install.</p>
+    <div class="section-label">How you get your report</div>
+    <h2>No account. Two ways to open it.</h2>
+    <p class="section-desc">You don't register or log in. We generate a private link — only you get it. Same flow for free and paid.</p>
+
+    <div class="delivery-highlight">
+      <strong>Stay on this page after submitting.</strong> A button appears when ready. We also email you the same link. Bookmark either — it's your only access.
+    </div>
+
+    <div class="delivery-flow">
+      <div class="flow-step">
+        <div class="flow-icon">📝</div>
+        <h3>URL + email</h3>
+        <p>No signup. No password. Just two fields.</p>
       </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h3>AI analyzes 50+ signals</h3>
-        <p>SEO, UX, content, conversion, and technical health scored 0–100.</p>
+      <div class="flow-step">
+        <div class="flow-icon">⚡</div>
+        <h3>AI generates</h3>
+        <p>~2 minutes. Progress shown on page.</p>
       </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h3>Get your report</h3>
-        <p>Clean PDF-style report in your inbox + instant web link as backup.</p>
+      <div class="flow-step">
+        <div class="flow-icon">📬</div>
+        <h3>Email + button</h3>
+        <p>Short email with "Open report" link. Button here too.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">🔒</div>
+        <h3>Private link</h3>
+        <p>Secret URL. Nobody else can guess it. Works 7 days.</p>
+      </div>
+    </div>
+
+    <div class="delivery-cards">
+      <div class="delivery-card">
+        <h4><span class="tag tag-free">Free</span> Teaser report</h4>
+        <ol>
+          <li>Submit URL + email above</li>
+          <li>Wait — "Open your report" button appears</li>
+          <li>Check email — same link inside</li>
+          <li>Open in browser — full HTML report, save or print</li>
+        </ol>
+        <p class="note">Free = 1-page teaser. Upgrade anytime from the report.</p>
+      </div>
+      <div class="delivery-card">
+        <h4><span class="tag tag-paid">Paid</span> Full report ($39 USDT)</h4>
+        <ol>
+          <li>Enter URL + email, click Pay 39 USDT</li>
+          <li>Send USDT, paste transaction hash</li>
+          <li>Redirected to success page — button + email</li>
+          <li>10–15 page report with every fix detailed</li>
+        </ol>
+        <p class="note">Payment verified on-chain. No manual approval needed.</p>
+      </div>
+    </div>
+
+    <div class="storage-box">
+      <div class="storage-icon">🗄️</div>
+      <div>
+        <h4>Where is it stored?</h4>
+        <p>Report HTML lives in temporary server cache for <strong>7 days</strong> — so your link keeps working. After that it's auto-deleted. We don't build a customer database, don't store passwords, and don't keep your URLs forever. Each audit is one private link, tied to your email only for delivery.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section id="features">
+<section id="report">
   <div class="wrap">
-    <div class="section-label">What you get</div>
-    <h2>Reports that look professional</h2>
-    <p class="section-desc">Designed like a consultant deliverable — easy to read, easy to act on.</p>
+    <div class="section-label">What's inside</div>
+    <h2>Reports that look like a consultant wrote them</h2>
+    <p class="section-desc">Not a generic AI wall of text — scored dimensions, ranked fixes, copy you can paste.</p>
     <div class="features">
       <div class="feat">
-        <h4>Score breakdown</h4>
-        <p>5 dimensions with color-coded bars so you know where to focus first.</p>
+        <div class="feat-icon">📊</div>
+        <h4>5-dimension scores</h4>
+        <p>SEO, UX, content, conversion, tech — color bars show where to focus first.</p>
       </div>
       <div class="feat">
-        <h4>Specific fixes</h4>
-        <p>Exact copy rewrites and structural changes — not "improve your SEO."</p>
+        <div class="feat-icon">✏️</div>
+        <h4>Exact copy fixes</h4>
+        <p>Rewritten headlines, meta descriptions, CTA text — not "improve your SEO."</p>
       </div>
       <div class="feat">
+        <div class="feat-icon">🎯</div>
         <h4>Quick wins ranked</h4>
         <p>Changes you can ship today, labeled by effort and impact.</p>
       </div>
@@ -527,20 +614,20 @@
 <section id="pricing">
   <div class="wrap">
     <div class="section-label">Pricing</div>
-    <h2>Simple, one-time payment</h2>
-    <p class="section-desc">Free teaser or full report. Pay with USDT — no subscription.</p>
+    <h2>One-time payment, no subscription</h2>
+    <p class="section-desc">Both tiers deliver the same way — private link + email.</p>
     <div class="pricing">
       <div class="plan">
         <div class="plan-tag">Free</div>
         <div class="plan-price">$0</div>
         <div class="plan-sub">1-page teaser</div>
         <ul>
-          <li>Overall score</li>
+          <li>Overall score + verdict</li>
           <li>Top 3 quick wins</li>
           <li>#1 critical issue + fix</li>
-          <li>Email + web link</li>
+          <li>Web link + email</li>
         </ul>
-        <a href="#hero-form" class="btn btn-ghost">Get free report</a>
+        <a href="#audit" class="btn btn-ghost">Get free report</a>
       </div>
       <div class="plan featured">
         <div class="plan-tag">Full audit</div>
@@ -551,7 +638,7 @@
           <li>All 5 dimensions analyzed</li>
           <li>Every critical issue + fixes</li>
           <li>90-day strategic plan</li>
-          <li>7-day refund guarantee</li>
+          <li>Same delivery: link + email</li>
         </ul>
         <a href="#" class="btn btn-primary" onclick="return goToCheckout(event)">Pay 39 USDT</a>
       </div>
@@ -564,41 +651,27 @@
   <div class="wrap">
     <div class="section-label">FAQ</div>
     <h2>Common questions</h2>
-    <div class="faq" style="margin-top:40px">
-      <details>
-        <summary>How is this different from PageSpeed?</summary>
-        <div class="ans">PageSpeed gives you a performance number. SiteX-Ray reads your actual copy, CTAs, and structure — and tells you exactly what to change.</div>
+    <div class="faq" style="margin-top:32px">
+      <details open>
+        <summary>How do I access my report without an account?</summary>
+        <div class="ans">After you submit, stay on the page — a button appears when ready. We also email you the same private link. No login, no dashboard. The link is a long random key only you receive. It works for 7 days, then auto-deletes.</div>
       </details>
       <details>
-        <summary>Is the AI output generic?</summary>
-        <div class="ans">No. Every finding cites evidence from your real homepage — your title, your CTAs, your meta tags. Vague advice is banned in our prompt.</div>
+        <summary>What if email doesn't arrive?</summary>
+        <div class="ans">Check spam. The report is always available via the button on this page (free) or the success page (paid). If email fails, we show an error and the web link still works.</div>
+      </details>
+      <details>
+        <summary>How is this different from PageSpeed?</summary>
+        <div class="ans">PageSpeed gives a performance number. SiteX-Ray reads your actual copy, CTAs, and structure — and tells you exactly what to change.</div>
       </details>
       <details>
         <summary>How do I pay with USDT?</summary>
-        <div class="ans">Click Pay 39 USDT, send exactly 39 USDT via TRC-20 or ERC-20, paste your tx hash. We verify on-chain and deliver automatically.</div>
+        <div class="ans">Enter URL + email first, click Pay 39 USDT, send exactly 39 USDT via TRC-20 or ERC-20, paste your tx hash. We verify on-chain and deliver automatically.</div>
       </details>
       <details>
-        <summary>What if I don't like the report?</summary>
+        <summary>What if I don't like the full report?</summary>
         <div class="ans">Full refund within 7 days, no questions. Email us.</div>
       </details>
-      <details>
-        <summary>Do I need an account?</summary>
-        <div class="ans"><strong>No.</strong> Enter URL + email, get a secret report link on this page and in your inbox. The link works for 7 days. We don't create logins or save user profiles — each audit is one-time, tied only to that private link.</div>
-      </details>
-      <details>
-        <summary>Do you store my data?</summary>
-        <div class="ans">Reports live in temporary cache for 7 days (so your link works), then auto-delete. We don't build a database of customers or URLs.</div>
-      </details>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="cta-box">
-      <h2>Run your free audit now</h2>
-      <p>Takes 60 seconds. No credit card.</p>
-      <a href="#hero-form" class="btn btn-primary">Get free report →</a>
     </div>
   </div>
 </section>
@@ -607,7 +680,7 @@
   <div class="pay-modal">
     <button type="button" class="pay-close" id="pay-close" aria-label="Close">&times;</button>
     <h2>Full audit — 39 USDT</h2>
-    <p class="pay-sub">On-chain verify → report to email + web download</p>
+    <p class="pay-sub">On-chain verify → report to email + success page link</p>
     <div class="pay-tabs">
       <button type="button" class="pay-tab active" data-network="trc20">TRC-20 (TRON)</button>
       <button type="button" class="pay-tab" data-network="erc20">ERC-20 (Ethereum)</button>
@@ -630,7 +703,7 @@
 </div>
 
 <div class="mobile-cta">
-  <a href="#hero-form" class="btn btn-primary">Get free report →</a>
+  <a href="#audit" class="btn btn-primary">Get free report →</a>
 </div>
 
 <footer>
@@ -653,7 +726,7 @@ const PAY_NETWORKS = {
 };
 
 (function () {
-  const form = document.getElementById("hero-form");
+  const form = document.getElementById("audit-form");
   const urlInput = document.getElementById("url-input");
   const emailInput = document.getElementById("email-input");
   const byokInput = document.getElementById("anthropic-key-input");
@@ -665,7 +738,7 @@ const PAY_NETWORKS = {
     const w = document.createElement("div");
     w.className = "cf-turnstile";
     w.setAttribute("data-sitekey", TURNSTILE_SITE_KEY);
-    w.setAttribute("data-theme", "dark");
+    w.setAttribute("data-theme", "light");
     turnstileContainer.appendChild(w);
   }
 
@@ -706,10 +779,7 @@ const PAY_NETWORKS = {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.ok) {
-        setStatus("Generating your report…", "success");
-        form.style.display = "none";
-        const pro = document.getElementById("pro-section");
-        if (pro) pro.style.display = "none";
+        setStatus("Generating your report… stay on this page.", "success");
         if (data.reportKey) pollFreeReport(data.reportKey);
       } else {
         setStatus(data.error || "Something went wrong.", "error");
@@ -805,7 +875,7 @@ const PAY_NETWORKS = {
             a.style.display = "inline-flex";
             a.target = "_blank";
             a.rel = "noopener";
-            a.textContent = "Open your full report →";
+            a.textContent = "Open your report →";
             statusEl.after(a);
           }
           a.href = reportHref;
@@ -813,24 +883,24 @@ const PAY_NETWORKS = {
           if (box) {
             box.style.display = "block";
             if (status.emailSent) {
-              box.innerHTML = "<strong style=\"color:var(--text)\">✓ Report ready</strong><p>Email sent with a link. <strong>Save this page link too</strong> — no account, this is your private access for 7 days.</p>";
-              setStatus("Done! Open report below or check email.", "success");
+              box.innerHTML = "<strong>✓ Report ready</strong><p>Email sent with your private link. <strong>Save this page too</strong> — button above works for 7 days. No account needed.</p>";
+              setStatus("Done! Open report or check email.", "success");
             } else if (status.emailError) {
-              box.innerHTML = "<strong style=\"color:var(--red)\">Email failed</strong><p>Use the button below — your report is ready. Error: " + (status.emailError || "unknown") + "</p>";
+              box.innerHTML = "<strong style=\"color:var(--red)\">Email failed</strong><p>Use the button above — your report is ready. (" + (status.emailError || "unknown") + ")</p>";
               setStatus("Report ready on web — email did not send.", "error");
             } else {
-              box.innerHTML = "<strong style=\"color:var(--text)\">✓ Report ready</strong><p>Open below. Bookmark this link — no account needed.</p>";
-              setStatus("Report ready — open below.", "success");
+              box.innerHTML = "<strong>✓ Report ready</strong><p>Open with the button above. Bookmark it — private access for 7 days.</p>";
+              setStatus("Report ready — open above.", "success");
             }
           }
           return;
         }
       } catch (_) {}
       if (tries < 60) {
-        setStatus("Generating report… (" + tries + ")", null);
+        setStatus("Generating… (" + tries + ") — stay on this page.", null);
         setTimeout(poll, 4000);
       } else {
-        setStatus("Taking longer than usual — try again soon.", "error");
+        setStatus("Taking longer than usual — refresh and try again.", "error");
       }
     };
     poll();
@@ -841,7 +911,7 @@ const PAY_NETWORKS = {
     const url = urlInput.value.trim();
     const email = emailInput.value.trim();
     if (!url || !email) {
-      document.getElementById("hero-form").scrollIntoView({ behavior: "smooth" });
+      document.getElementById("audit").scrollIntoView({ behavior: "smooth" });
       setStatus(!url ? "Enter your URL first." : "Enter your email first.", "error");
       return false;
     }
