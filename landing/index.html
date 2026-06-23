@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SiteX-Ray v2 — USDT crypto audit · AI report in 60s</title>
+<title>SiteX-Ray — Private website intelligence</title>
 <meta name="description" content="Get a pro-grade audit of your website in 60 seconds. AI analyzes SEO, UX, conversion, content, and tech. Specific fixes, not vague advice. Free teaser, full report $39.">
 <meta property="og:title" content="SiteX-Ray — AI audit your website in 60 seconds">
 <meta property="og:description" content="Pro-grade website audit, powered by AI. Free teaser, full report $39.">
@@ -15,44 +15,50 @@
 <meta property="og:url" content="https://sitexray.xyz/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --bg: #04060a;
-    --bg-elev: #0a0d14;
-    --bg-card: #0f131c;
-    --bg-card-hover: #141a25;
-    --border: #1e2a3d;
-    --border-subtle: #151c28;
-    --ink: #f4f8ff;
-    --ink-soft: #b8c5d9;
-    --muted: #7b8ba3;
-    --muted-2: #5a6b82;
-    --accent-1: #7c8cff;
-    --accent-2: #b794f6;
-    --accent-3: #f472b6;
-    --gold: #f5c451;
-    --gold-soft: #fcd34d;
-    --green: #34d399;
-    --red: #f87171;
-    --yellow: #fbbf24;
-    --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 45%, #ec4899 100%);
-    --gradient-gold: linear-gradient(135deg, #f5c451 0%, #f59e0b 50%, #fcd34d 100%);
-    --gradient-soft: linear-gradient(135deg, rgba(99,102,241,0.18), rgba(168,85,247,0.12));
-    --radius: 16px;
-    --radius-sm: 10px;
-    --shadow-glow: 0 0 50px rgba(99, 102, 241, 0.4);
-    --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --bg: #050506;
+    --bg-elev: #0c0c0e;
+    --bg-card: #111113;
+    --bg-card-hover: #161618;
+    --border: rgba(255,255,255,0.08);
+    --border-subtle: rgba(255,255,255,0.05);
+    --ink: #f7f5f2;
+    --ink-soft: #c8c4bc;
+    --muted: #8a8680;
+    --muted-2: #5c5954;
+    --accent-1: #c9b896;
+    --accent-2: #e8dcc8;
+    --accent-3: #9a8b72;
+    --gold: #c9a962;
+    --gold-soft: #e2d4a8;
+    --gold-deep: #8b7340;
+    --green: #6b9e7a;
+    --red: #c97a7a;
+    --yellow: #c9a962;
+    --gradient: linear-gradient(135deg, #c9a962 0%, #e8dcc8 50%, #9a8b72 100%);
+    --gradient-gold: linear-gradient(135deg, #8b7340 0%, #c9a962 40%, #e2d4a8 100%);
+    --gradient-soft: linear-gradient(180deg, rgba(201,169,98,0.06), transparent);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow-glow: 0 32px 80px rgba(0,0,0,0.55);
+    --easing: cubic-bezier(0.22, 1, 0.36, 1);
+    --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --font-body: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-body);
     background: var(--bg);
     color: var(--ink);
-    line-height: 1.55;
+    line-height: 1.6;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -74,9 +80,9 @@
     opacity: 0.5;
     animation: drift 24s ease-in-out infinite;
   }
-  .mesh-blob.a { width: 540px; height: 540px; background: #818cf8; top: -120px; left: -120px; animation-delay: 0s; }
-  .mesh-blob.b { width: 440px; height: 440px; background: #c084fc; top: 30%; right: -100px; animation-delay: -8s; }
-  .mesh-blob.c { width: 380px; height: 380px; background: #f472b6; bottom: -80px; left: 25%; animation-delay: -16s; opacity: 0.3; }
+  .mesh-blob.a { width: 480px; height: 480px; background: #1a1814; top: -120px; left: -120px; animation-delay: 0s; opacity: 0.35; }
+  .mesh-blob.b { width: 360px; height: 360px; background: #14120f; top: 30%; right: -100px; animation-delay: -8s; opacity: 0.3; }
+  .mesh-blob.c { width: 320px; height: 320px; background: #c9a962; bottom: -80px; left: 25%; animation-delay: -16s; opacity: 0.04; }
   @keyframes drift {
     0%, 100% { transform: translate(0, 0) scale(1); }
     33%      { transform: translate(40px, -30px) scale(1.06); }
@@ -103,9 +109,9 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(7, 9, 13, 0.7);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    background: rgba(5, 5, 6, 0.82);
+    backdrop-filter: blur(24px) saturate(120%);
+    -webkit-backdrop-filter: blur(24px) saturate(120%);
     border-bottom: 1px solid var(--border-subtle);
   }
   nav .container {
@@ -118,18 +124,20 @@
   .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 17px;
-    letter-spacing: -0.01em;
+    gap: 12px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
   .logo-mark {
-    width: 28px; height: 28px;
-    background: var(--gradient);
-    border-radius: 8px;
+    width: 26px; height: 26px;
+    background: transparent;
+    border: 1px solid rgba(201,169,98,0.5);
+    border-radius: 4px;
     display: grid;
     place-items: center;
-    box-shadow: 0 4px 16px rgba(129, 140, 248, 0.4);
   }
   .logo-mark svg { width: 16px; height: 16px; }
   .nav-links {
@@ -162,27 +170,32 @@
   }
   .btn:active { transform: translateY(0); }
   .btn-primary {
-    background: var(--gradient);
-    background-size: 200% 200%;
-    background-position: 0% 50%;
-    color: white;
-    box-shadow: 0 4px 24px rgba(129, 140, 248, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+    background: var(--ink);
+    color: var(--bg);
+    box-shadow: none;
+    letter-spacing: 0.04em;
+    font-weight: 500;
   }
   .btn-primary:hover {
     transform: translateY(-1px);
-    background-position: 100% 50%;
-    box-shadow: 0 8px 32px rgba(129, 140, 248, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
-    color: white;
+    background: var(--gold-soft);
+    color: var(--bg);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
   }
-  .btn-primary::after {
-    content: "";
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-    transition: left 0.6s var(--easing);
+  .btn-gold {
+    background: transparent;
+    color: var(--gold-soft);
+    border: 1px solid rgba(201,169,98,0.55);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 500;
   }
-  .btn-primary:hover::after { left: 100%; }
+  .btn-gold:hover {
+    background: rgba(201,169,98,0.08);
+    border-color: var(--gold);
+    color: var(--ink);
+  }
   .btn-secondary {
     background: transparent;
     color: var(--ink);
@@ -195,58 +208,30 @@
   }
   .btn-sm { padding: 10px 18px; font-size: 14px; }
 
-  /* ──────── LAUNCH BANNER + AURORA ──────── */
-  .launch-banner {
-    position: sticky;
-    top: 0;
-    z-index: 110;
-    background: linear-gradient(90deg, rgba(99,102,241,0.25), rgba(245,196,81,0.2), rgba(168,85,247,0.25));
-    border-bottom: 1px solid rgba(245,196,81,0.35);
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink-soft);
-    letter-spacing: 0.02em;
-    backdrop-filter: blur(16px);
-  }
-  .launch-badge {
-    display: inline-block;
-    background: var(--gradient-gold);
-    color: #1a1200;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 3px 8px;
-    border-radius: 6px;
-    margin-right: 8px;
-    vertical-align: middle;
-    letter-spacing: 0.08em;
-  }
+  /* ──────── PREMIUM ATMOSPHERE ──────── */
   .cosmic-aurora {
     position: fixed;
     inset: 0;
     z-index: -2;
     pointer-events: none;
     background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99,102,241,0.35), transparent 55%),
-      radial-gradient(ellipse 60% 40% at 90% 40%, rgba(245,196,81,0.12), transparent 50%),
-      radial-gradient(ellipse 50% 35% at 10% 70%, rgba(236,72,153,0.15), transparent 45%);
-    animation: aurora-pulse 18s ease-in-out infinite alternate;
+      radial-gradient(ellipse 70% 45% at 50% 0%, rgba(201,169,98,0.07), transparent 60%),
+      radial-gradient(ellipse 40% 30% at 100% 50%, rgba(255,255,255,0.02), transparent 50%);
   }
-  @keyframes aurora-pulse {
-    0% { opacity: 0.85; transform: scale(1); }
-    100% { opacity: 1; transform: scale(1.03); }
+  .vip-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,169,98,0.45), transparent);
   }
   .nav-chip {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: rgba(245,196,81,0.15);
-    border: 1px solid rgba(245,196,81,0.45);
-    color: var(--gold-soft);
-    letter-spacing: 0.06em;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 2px;
+    border: 1px solid rgba(201,169,98,0.35);
+    color: var(--gold);
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+    font-family: var(--font-body);
   }
 
   /* ──────── HERO ──────── */
@@ -265,119 +250,119 @@
   .hero-right { position: relative; z-index: 1; }
 
   .usdt-hero-card {
-    background: linear-gradient(145deg, rgba(15,19,28,0.95), rgba(20,26,38,0.88));
-    border: 1px solid rgba(245,196,81,0.35);
-    border-radius: 20px;
-    padding: 28px 26px;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 0 40px rgba(245,196,81,0.12);
+    background: linear-gradient(165deg, #0e0e10 0%, #080809 100%);
+    border: 1px solid rgba(201,169,98,0.22);
+    border-radius: 4px;
+    padding: 36px 32px;
+    box-shadow: var(--shadow-glow);
     position: relative;
     overflow: hidden;
   }
   .usdt-hero-card::before {
     content: "";
     position: absolute;
-    top: -50%; right: -30%;
-    width: 200px; height: 200px;
-    background: radial-gradient(circle, rgba(245,196,81,0.25), transparent 70%);
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,169,98,0.04) 0%, transparent 50%);
     pointer-events: none;
   }
+  .usdt-hero-card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 32px; right: 32px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,169,98,0.5), transparent);
+  }
   .usdt-hero-card .uh-label {
-    font-size: 11px;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.2em;
     color: var(--gold);
-    font-weight: 700;
-    margin-bottom: 8px;
+    font-weight: 500;
+    margin-bottom: 20px;
   }
   .usdt-hero-card .uh-price {
-    font-size: 42px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    background: var(--gradient-gold);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    font-family: var(--font-display);
+    font-size: 52px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--ink);
     line-height: 1;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
-  .usdt-hero-card .uh-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
-  .usdt-networks {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 18px;
+  .usdt-hero-card .uh-price span {
+    font-size: 18px;
+    color: var(--gold);
+    font-family: var(--font-body);
+    letter-spacing: 0.12em;
+    vertical-align: middle;
+    margin-left: 8px;
   }
-  .usdt-net {
-    padding: 12px 14px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,0.02);
-    font-size: 12px;
+  .usdt-hero-card .uh-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    line-height: 1.65;
+    max-width: 280px;
+  }
+  .usdt-features {
+    list-style: none;
+    margin-bottom: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .usdt-features li {
+    font-size: 13px;
     color: var(--ink-soft);
-    line-height: 1.4;
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: 0.02em;
   }
-  .usdt-net strong { display: block; color: var(--ink); font-size: 13px; margin-bottom: 4px; }
-  .usdt-net code {
-    display: block;
-    font-size: 10px;
-    color: var(--gold-soft);
-    word-break: break-all;
-    margin-top: 6px;
-    opacity: 0.9;
+  .usdt-features li::before {
+    content: "";
+    width: 4px; height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
   }
   .usdt-hero-card .btn { width: 100%; }
-  .usdt-steps {
+  .usdt-note {
     margin-top: 16px;
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.55;
+    font-size: 11px;
+    color: var(--muted-2);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
   }
-  .usdt-steps strong { color: var(--ink-soft); }
   .pill {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 7px 16px;
-    background: rgba(18, 22, 29, 0.7);
-    border: 1px solid var(--border);
-    backdrop-filter: blur(12px);
-    border-radius: 999px;
-    font-size: 13px;
-    color: var(--ink-soft);
-    margin-bottom: 28px;
-    transition: border-color 0.3s var(--easing), transform 0.3s var(--easing);
+    padding: 0;
+    background: none;
+    border: none;
+    font-size: 11px;
+    color: var(--gold);
+    margin-bottom: 32px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
   }
-  .pill:hover { border-color: var(--accent-1); transform: translateY(-1px); }
-  .pulse-dot {
-    width: 6px; height: 6px;
-    background: var(--green);
-    border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
-    70%  { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
-  }
+  .pulse-dot { display: none; }
 
+  h1, h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+  }
   h1 {
-    font-size: clamp(40px, 6.5vw, 76px);
-    line-height: 1.02;
-    letter-spacing: -0.04em;
-    font-weight: 700;
-    margin-bottom: 22px;
+    font-size: clamp(44px, 5.5vw, 72px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
   }
   h1 .grad {
-    background: var(--gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    background-size: 200% auto;
-    animation: shimmer 4s linear infinite;
-  }
-  @keyframes shimmer {
-    to { background-position: 200% center; }
+    font-style: italic;
+    color: var(--gold-soft);
   }
 
   .hero-sub {
@@ -403,8 +388,8 @@
     transition: border-color 0.3s var(--easing), box-shadow 0.3s var(--easing);
   }
   .hero-form:focus-within {
-    border-color: var(--accent-1);
-    box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.15), 0 12px 40px rgba(129, 140, 248, 0.2);
+    border-color: rgba(201,169,98,0.35);
+    box-shadow: none;
   }
   .hero-form input {
     background: transparent;
@@ -694,20 +679,20 @@
   section { padding: 100px 0; position: relative; }
   .section-eyebrow {
     text-align: center;
-    color: var(--accent-1);
-    font-size: 13px;
-    font-weight: 600;
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-bottom: 14px;
+    letter-spacing: 0.2em;
+    margin-bottom: 16px;
   }
   h2 {
     text-align: center;
-    font-size: clamp(30px, 4.2vw, 48px);
-    letter-spacing: -0.025em;
+    font-size: clamp(32px, 4vw, 48px);
+    letter-spacing: 0.01em;
     margin-bottom: 18px;
-    line-height: 1.1;
-    font-weight: 700;
+    line-height: 1.15;
+    font-weight: 500;
   }
   .section-sub {
     text-align: center;
@@ -973,15 +958,15 @@
     position: absolute;
     top: -12px; left: 50%;
     transform: translateX(-50%);
-    background: var(--gradient);
-    color: white;
-    font-size: 11px;
-    font-weight: 700;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid rgba(201,169,98,0.4);
+    font-size: 9px;
+    font-weight: 500;
     padding: 5px 14px;
-    border-radius: 999px;
+    border-radius: 2px;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    box-shadow: 0 4px 16px rgba(129, 140, 248, 0.45);
+    letter-spacing: 0.14em;
   }
 
   /* ──────── FAQ ──────── */
@@ -1011,7 +996,7 @@
       radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.2), transparent);
     background-size: 200% 200%;
     animation: stars-drift 120s linear infinite;
-    opacity: 0.6;
+    opacity: 0.15;
   }
   @keyframes stars-drift {
     0% { background-position: 0% 0%; }
@@ -1020,26 +1005,27 @@
 
   .pay-overlay {
     position: fixed; inset: 0; z-index: 200;
-    background: rgba(3, 5, 10, 0.82);
-    backdrop-filter: blur(12px);
+    background: rgba(5, 5, 6, 0.88);
+    backdrop-filter: blur(20px);
     display: none; align-items: center; justify-content: center;
     padding: 20px;
   }
   .pay-overlay.open { display: flex; }
   .pay-modal {
-    width: 100%; max-width: 560px;
-    background: rgba(14, 17, 23, 0.95);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 32px 28px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(129,140,248,0.12);
+    width: 100%; max-width: 520px;
+    background: #0c0c0e;
+    border: 1px solid rgba(201,169,98,0.2);
+    border-radius: 4px;
+    padding: 40px 36px;
+    box-shadow: var(--shadow-glow);
     max-height: 90vh; overflow-y: auto;
   }
   .pay-modal h2 {
-    font-size: 22px; margin-bottom: 6px;
-    background: var(--gradient);
-    -webkit-background-clip: text; background-clip: text;
-    color: transparent;
+    font-family: var(--font-display);
+    font-size: 28px; margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.02em;
   }
   .pay-modal .pay-sub { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
   .pay-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
@@ -1050,8 +1036,8 @@
     cursor: pointer; text-align: center; transition: all 0.2s var(--easing);
   }
   .pay-tab.active {
-    border-color: var(--accent-1);
-    background: linear-gradient(135deg, rgba(129,140,248,0.15), rgba(192,132,252,0.08));
+    border-color: rgba(201,169,98,0.45);
+    background: rgba(201,169,98,0.06);
     color: var(--ink);
   }
   .pay-box {
@@ -1059,12 +1045,12 @@
     border-radius: 12px; padding: 16px 18px; margin-bottom: 14px;
   }
   .pay-box label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
-  .pay-amount { font-size: 28px; font-weight: 800; color: var(--green); margin-bottom: 10px; }
+  .pay-amount { font-family: var(--font-display); font-size: 32px; font-weight: 500; color: var(--gold-soft); margin-bottom: 10px; }
   .pay-address {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 12.5px; word-break: break-all;
-    background: #0a0d12; border: 1px solid var(--border-subtle);
-    padding: 12px; border-radius: 8px; color: var(--accent-1);
+    font-size: 12px; word-break: break-all;
+    background: #080809; border: 1px solid var(--border-subtle);
+    padding: 14px; border-radius: 2px; color: var(--ink-soft);
     margin-bottom: 8px;
   }
   .pay-copy {
@@ -1214,10 +1200,7 @@
 <div class="grain" aria-hidden="true"></div>
 <div class="stars" aria-hidden="true"></div>
 
-<div class="launch-banner">
-  <span class="launch-badge">V2 LIVE</span>
-  Pay with <strong style="color:var(--gold-soft)">39 USDT</strong> — TRC-20 (TRON) or ERC-20 (Ethereum) · On-chain verify · Auto email delivery
-</div>
+<div class="vip-line" aria-hidden="true"></div>
 
 <nav>
   <div class="container">
@@ -1225,7 +1208,7 @@
       <span class="logo-mark">
         <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><line x1="7" y1="7" x2="13" y2="13" stroke-width="1.2" opacity="0.55"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
       </span>
-      SiteX-Ray <span class="nav-chip">USDT · v2</span>
+      SiteX-Ray <span class="nav-chip">Private</span>
     </a>
     <div class="nav-links">
       <a href="#how">How it works</a>
@@ -1241,15 +1224,12 @@
 <section class="hero">
   <div class="container hero-grid">
     <div class="hero-left">
-    <div class="pill">
-      <span class="pulse-dot"></span>
-      Cosmic AI audit · 50+ signals · crypto checkout
-    </div>
+    <div class="pill">Website intelligence · by invitation</div>
 
-    <h1>Find where your site<br>leaks <span class="grad">revenue</span>.</h1>
+    <h1>Where your site<br>loses <span class="grad">revenue</span></h1>
 
     <p class="hero-sub">
-      Pro-grade audit in 60 seconds. Free teaser to your inbox — or unlock the full 10–15 page report with <strong style="color:var(--gold-soft)">39 USDT</strong> (no cards, no subscriptions).
+      A consultant-grade audit in sixty seconds. Complimentary preview — or the complete strategic report, settled in USDT.
     </p>
 
     <form class="hero-form" id="hero-form" novalidate>
@@ -1295,30 +1275,19 @@
 
     <div class="hero-right reveal">
       <div class="usdt-hero-card">
-        <div class="uh-label">Full audit · Crypto checkout</div>
-        <div class="uh-price">39 USDT</div>
-        <div class="uh-sub">Exact amount · tx hash verify · 24h window · auto delivery</div>
-        <div class="usdt-networks">
-          <div class="usdt-net">
-            <strong>TRC-20 · TRON</strong>
-            Low fees, fast
-            <code>TV1EBHTyvpP98jZGerz6sRmZvipn15LqDA</code>
-          </div>
-          <div class="usdt-net">
-            <strong>ERC-20 · Ethereum</strong>
-            Widely supported
-            <code>0x9339686861079c781e0249ee64a509F893E2367c</code>
-          </div>
-        </div>
-        <a href="#" onclick="return goToCheckout(event)" class="btn btn-primary" style="background:var(--gradient-gold);color:#1a1200;box-shadow:0 8px 32px rgba(245,196,81,0.35);">
-          Pay 39 USDT — get full audit
+        <div class="uh-label">Full strategic report</div>
+        <div class="uh-price">39 <span>USDT</span></div>
+        <div class="uh-sub">One-time settlement. TRC-20 or ERC-20. Verified on-chain. Delivered privately to your inbox.</div>
+        <ul class="usdt-features">
+          <li>10–15 page executive brief</li>
+          <li>Five dimensions · fifty signals</li>
+          <li>On-chain verification · 24h window</li>
+          <li>Instant web archive + email</li>
+        </ul>
+        <a href="#" onclick="return goToCheckout(event)" class="btn btn-gold">
+          Proceed to settlement
         </a>
-        <p class="usdt-steps">
-          <strong>1.</strong> Enter URL + email (left) ·
-          <strong>2.</strong> Send 39 USDT ·
-          <strong>3.</strong> Paste tx hash ·
-          <strong>4.</strong> Report in inbox + web backup
-        </p>
+        <p class="usdt-note">Enter your URL and email first. Wallet address shown at checkout.</p>
       </div>
     </div>
   </div>
@@ -1560,7 +1529,7 @@
       </div>
 
       <div class="price-card featured">
-        <span class="badge-pop">Most popular</span>
+        <span class="badge-pop">Recommended</span>
         <div class="name">Full audit</div>
         <div class="price">$39</div>
         <div class="price-sub">39 USDT · TRC-20 or ERC-20 · instant verify</div>
@@ -1664,12 +1633,12 @@
   <div class="pay-modal-wrap">
     <button type="button" class="pay-close" id="pay-close" aria-label="Close">&times;</button>
     <div class="pay-modal">
-      <h2 id="pay-title">Full audit — 39 USDT</h2>
-      <p class="pay-sub">On-chain verification · automatic delivery to your email</p>
+      <h2 id="pay-title">Settlement</h2>
+      <p class="pay-sub">39 USDT · verified on-chain · delivered privately</p>
 
       <div class="pay-tabs">
-        <button type="button" class="pay-tab active" data-network="trc20">USDT · TRON (TRC-20)</button>
-        <button type="button" class="pay-tab" data-network="erc20">USDT · Ethereum (ERC-20)</button>
+        <button type="button" class="pay-tab active" data-network="trc20">TRC-20 · TRON</button>
+        <button type="button" class="pay-tab" data-network="erc20">ERC-20 · Ethereum</button>
       </div>
 
       <div class="pay-box">
@@ -1689,7 +1658,7 @@
 
       <div class="pay-actions">
         <button type="button" class="btn btn-secondary" id="pay-cancel">Cancel</button>
-        <button type="button" class="btn btn-primary" id="pay-submit">Verify payment &amp; deliver report</button>
+        <button type="button" class="btn btn-primary" id="pay-submit">Confirm settlement</button>
       </div>
       <div class="pay-status" id="pay-status" role="status" aria-live="polite"></div>
     </div>
