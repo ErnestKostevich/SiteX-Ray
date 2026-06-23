@@ -3,14 +3,14 @@
 // Verifies on-chain USDT payment and delivers full audit by email.
 
 import { verifyTurnstile } from "../_shared/turnstile.js";
-import { runAuditAndEmail } from "../_shared/auditFlow.js";
+import { putJob } from "../_shared/reportCache.js";
 import {
   verifyUsdtPayment,
   markTxUsed,
   PRICE_USDT,
   NETWORKS,
 } from "../_shared/usdtVerify.js";
-import { notifyFounderOfFailure } from "../_shared/notifyFounder.js";
+
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -28,7 +28,7 @@ export const onRequestOptions = () =>
   new Response(null, { status: 204, headers: corsHeaders });
 
 export async function onRequestPost(context) {
-  const { request, env, waitUntil } = context;
+  const { request, env } = context;
 
   let body;
   try {
@@ -79,26 +79,16 @@ export async function onRequestPost(context) {
 
   await markTxUsed(payment.network, payment.txHash);
 
-  waitUntil(
-    runAuditAndEmail({
-      url,
-      email,
-      free: false,
-      env,
-      ctaUrl: null,
-      cacheKey: payment.txHash,
-    }).catch(async (err) => {
-      await notifyFounderOfFailure(env, {
-        orderId: payment.txHash,
-        paymentId: `${payment.network}:${payment.txHash}`,
-        customerEmail: email,
-        customerUrl: url,
-        error: err && err.message ? err.message : String(err),
-        extra: { network: payment.network, amount: payment.amount },
-      });
-      throw err;
-    })
-  );
+  await putJob("paid", payment.txHash, {
+    status: "pending",
+    url,
+    email,
+    free: false,
+    ctaUrl: null,
+    createdAt: Date.now(),
+    network: payment.network,
+    amount: payment.amount,
+  });
 
   return json(200, {
     ok: true,

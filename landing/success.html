@@ -288,6 +288,10 @@
     tries++;
     try {
       const res = await fetch("/api/report?kind=paid&key=" + encodeURIComponent(key));
+      if (res.status === 202) {
+        if (tries < maxTries) setTimeout(poll, 5000);
+        return;
+      }
       if (res.ok) {
         dl.href = "/api/report?kind=paid&key=" + encodeURIComponent(key);
         dl.style.display = "inline-flex";
