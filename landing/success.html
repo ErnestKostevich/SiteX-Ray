@@ -101,9 +101,20 @@
   const poll = async () => {
     tries++;
     try {
+      const reportRes = await fetch("/api/report?kind=paid&key=" + encodeURIComponent(key));
+      const ctype = reportRes.headers.get("content-type") || "";
+      if (reportRes.status === 500) {
+        const err = await reportRes.json().catch(() => ({}));
+        timingText.textContent = err.error || "Generation failed.";
+        return;
+      }
       const st = await fetch("/api/report-status?kind=paid&key=" + encodeURIComponent(key));
       const status = st.ok ? await st.json() : {};
-      if (status.ready) {
+      if (status.error) {
+        timingText.textContent = status.error;
+        return;
+      }
+      if (status.ready || (reportRes.ok && ctype.includes("text/html"))) {
         dl.href = "/api/report?kind=paid&key=" + encodeURIComponent(key);
         dl.style.display = "inline-flex";
         timingText.textContent = status.emailSent
