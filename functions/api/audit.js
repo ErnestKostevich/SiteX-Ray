@@ -1,6 +1,6 @@
 // POST /api/audit
-// Free: URL + email → Llama teaser
-// Full: lifetime unlock + BYOK Anthropic key → Claude Sonnet 4.6 full audit
+// Free (no unlock): URL + email → Llama teaser
+// Licensed (unlock): always full audit — Llama by default, Claude Sonnet 4.6 if BYOK key pasted
 
 import { verifyTurnstile } from "../_shared/turnstile.js";
 import { putJob } from "../_shared/reportCache.js";
@@ -52,20 +52,26 @@ export async function onRequestPost(context) {
     return jsonResponse(403, {
       ok: false,
       error:
-        "Full Claude audits require lifetime unlock ($39 USDT). Free tier is Llama teaser only.",
+        "Claude BYOK requires lifetime unlock ($39 USDT). Free tier is Llama teaser only.",
       needsUnlock: true,
     });
   }
 
-  if (unlockToken && !byokKeyRaw) {
-    return jsonResponse(400, {
-      ok: false,
-      error: "Paste your Anthropic API key for full audits (BYOK).",
-      needsKey: true,
-    });
+  let licensed = false;
+  if (unlockToken) {
+    const valid = await verifyLicense(email, unlockToken);
+    if (!valid) {
+      return jsonResponse(403, {
+        ok: false,
+        error:
+          "Invalid unlock code for this email. Use the code from your payment email, or pay 39 USDT.",
+        needsUnlock: true,
+      });
+    }
+    licensed = true;
   }
 
-  let licensedFull = false;
+  let useClaude = false;
   if (byokKeyRaw) {
     if (!/^sk-ant-[A-Za-z0-9_\-]{20,}$/.test(byokKeyRaw)) {
       return jsonResponse(400, {
@@ -74,15 +80,7 @@ export async function onRequestPost(context) {
           "Anthropic API key looks invalid. Get one at console.anthropic.com.",
       });
     }
-    const valid = await verifyLicense(email, unlockToken);
-    if (!valid) {
-      return jsonResponse(403, {
-        ok: false,
-        error: "Invalid unlock code for this email. Pay 39 USDT or use the code from your unlock email.",
-        needsUnlock: true,
-      });
-    }
-    licensedFull = true;
+    useClaude = true;
   }
 
   if (env.TURNSTILE_SECRET) {
@@ -101,7 +99,7 @@ export async function onRequestPost(context) {
 
   const origin = new URL(request.url).origin;
   const ctaUrl = `${origin}/#pricing`;
-  const reportKind = licensedFull ? "full" : "free";
+  const reportKind = licensed ? "full" : "free";
 
   const reportKey = await crypto.subtle
     .digest("SHA-256", new TextEncoder().encode(`${email}|${url}|${Date.now()}`))
@@ -112,7 +110,7 @@ export async function onRequestPost(context) {
         .slice(0, 32)
     );
 
-  if (licensedFull) {
+  if (useClaude) {
     await stashByokKey(reportKey, byokKeyRaw);
   }
 
@@ -120,19 +118,27 @@ export async function onRequestPost(context) {
     status: "pending",
     url,
     email,
-    free: !licensedFull,
-    licensedFull,
+    free: !licensed,
+    licensedFull: licensed,
+    engine: licensed ? (useClaude ? "claude" : "llama") : "llama-teaser",
     ctaUrl,
     createdAt: Date.now(),
   });
+
+  const engineLabel = useClaude
+    ? "Claude Sonnet 4.6"
+    : licensed
+      ? "Llama (full report)"
+      : "Llama (teaser)";
 
   return jsonResponse(200, {
     ok: true,
     reportKey,
     kind: reportKind,
-    full: licensedFull,
-    message: licensedFull
-      ? "Generating full Claude audit — stay on this page. Private link + email when ready."
-      : "Generating free Llama teaser — stay on this page. Private link + email when ready.",
+    full: licensed,
+    engine: useClaude ? "claude" : licensed ? "llama" : "teaser",
+    message: licensed
+      ? `Generating full audit (${engineLabel}) — stay on this page. Link + email when ready.`
+      : "Generating free Llama teaser — stay on this page. Link + email when ready.",
   });
 }
