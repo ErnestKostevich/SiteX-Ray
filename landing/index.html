@@ -4,1763 +4,793 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SiteX-Ray — AI website audit in 60 seconds</title>
-<meta name="description" content="Get a pro-grade audit of your website in 60 seconds. AI analyzes SEO, UX, conversion, content, and tech. Specific fixes, not vague advice. Free teaser, full report $39.">
-<meta property="og:title" content="SiteX-Ray — AI audit your website in 60 seconds">
-<meta property="og:description" content="Pro-grade website audit, powered by AI. Free teaser, full report $39.">
+<meta name="description" content="Pro-grade AI website audit. SEO, UX, conversion, tech — specific fixes in 60 seconds. Free teaser or full report $39 USDT.">
+<meta property="og:title" content="SiteX-Ray — AI website audit">
+<meta property="og:description" content="Specific fixes, not vague scores. Free teaser or full report $39.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="/og-image.svg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="/og-image.svg">
-<link rel="canonical" href="https://sitexray.xyz/">
 <meta property="og:url" content="https://sitexray.xyz/">
+<link rel="canonical" href="https://sitexray.xyz/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #050608;
-    --bg-elev: #0c0f14;
-    --bg-card: #11151c;
-    --bg-card-hover: #151a22;
-    --border: #252b36;
-    --border-subtle: #1a1f28;
-    --ink: #f8fafc;
-    --ink-soft: #e2e8f0;
-    --muted: #94a3b8;
+    --bg: #09090b;
+    --surface: #111114;
+    --surface-2: #18181b;
+    --border: #27272a;
+    --text: #fafafa;
+    --text-2: #d4d4d8;
+    --muted: #71717a;
     --accent: #6366f1;
-    --accent-light: #818cf8;
-    --accent-glow: rgba(99, 102, 241, 0.35);
+    --accent-2: #818cf8;
     --green: #22c55e;
     --red: #ef4444;
-    --yellow: #eab308;
-    --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    --radius: 16px;
-    --easing: cubic-bezier(0.22, 1, 0.36, 1);
+    --radius: 14px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-
+  html { scroll-behavior: smooth; }
   body {
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Inter", system-ui, sans-serif;
     background: var(--bg);
-    color: var(--ink);
+    color: var(--text);
     line-height: 1.6;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
   }
-
   body::before {
     content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99,102,241,0.18), transparent),
-      radial-gradient(ellipse 50% 40% at 100% 50%, rgba(139,92,246,0.08), transparent);
+    position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(ellipse 70% 50% at 50% -20%, rgba(99,102,241,0.15), transparent);
     pointer-events: none;
   }
-
-  /* Background mesh — animated gradient blobs */
-  .mesh-bg {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
-    pointer-events: none;
-  }
-  .mesh-blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.5;
-    animation: drift 24s ease-in-out infinite;
-  }
-  .mesh-blob.a { width: 540px; height: 540px; background: #818cf8; top: -120px; left: -120px; animation-delay: 0s; opacity: 0.22; }
-  .mesh-blob.b { width: 440px; height: 440px; background: #a78bfa; top: 30%; right: -100px; animation-delay: -8s; opacity: 0.18; }
-  .mesh-blob.c { width: 380px; height: 380px; background: #c084fc; bottom: -80px; left: 25%; animation-delay: -16s; opacity: 0.12; }
-  @keyframes drift {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33%      { transform: translate(40px, -30px) scale(1.06); }
-    66%      { transform: translate(-30px, 40px) scale(0.96); }
-  }
-
-  /* Grain overlay for premium feel */
-  .grain {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0.025;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  }
-
-  a { color: var(--accent-light); text-decoration: none; transition: color 0.2s var(--easing); }
+  a { color: var(--accent-2); text-decoration: none; }
   a:hover { color: #a5b4fc; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
 
-  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; }
-
-  /* ──────── NAV ──────── */
+  /* Nav */
   nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(7, 9, 13, 0.85);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border-bottom: 1px solid var(--border-subtle);
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(9,9,11,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
   }
-  nav .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 16px;
-    padding-bottom: 16px;
+  nav .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
   }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 17px;
-    letter-spacing: -0.01em;
-    color: var(--ink);
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 800; font-size: 17px; color: var(--text);
   }
-  .logo-mark {
-    width: 28px; height: 28px;
-    background: var(--gradient);
-    border-radius: 8px;
-    display: grid;
-    place-items: center;
-    box-shadow: 0 4px 14px rgba(129, 140, 248, 0.35);
+  .brand-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--accent); color: #fff;
+    display: grid; place-items: center; font-size: 15px; font-weight: 800;
   }
-  .logo-mark svg { width: 16px; height: 16px; }
-  .nav-links {
-    display: flex;
-    gap: 28px;
-    align-items: center;
-    font-size: 14px;
-  }
-  .nav-links a { color: var(--ink-soft); transition: color 0.2s var(--easing); }
-  .nav-links a:hover { color: var(--ink); }
+  .brand span { color: var(--accent-2); }
+  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 14px; font-weight: 500; }
+  .nav-links a { color: var(--text-2); }
+  .nav-links a:hover { color: var(--text); }
 
-  /* ──────── BUTTONS ──────── */
+  /* Buttons */
   .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 14px 26px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 15px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: transform 0.2s var(--easing), box-shadow 0.2s var(--easing), background 0.2s var(--easing);
-    text-decoration: none;
-    line-height: 1;
-    font-family: inherit;
-    position: relative;
-    overflow: hidden;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 24px; border-radius: 10px; font-weight: 600; font-size: 15px;
+    border: none; cursor: pointer; font-family: inherit; text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
   }
-  .btn:active { transform: translateY(0); }
   .btn-primary {
-    background: var(--gradient);
-    color: #fff;
-    box-shadow: 0 4px 20px var(--accent-glow);
-    font-weight: 600;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff; box-shadow: 0 4px 20px rgba(99,102,241,0.35);
   }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 28px var(--accent-glow);
-    color: #fff;
-  }
-  .btn-secondary {
-    background: transparent;
-    color: var(--ink);
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(99,102,241,0.45); color: #fff; }
+  .btn-ghost {
+    background: transparent; color: var(--text);
     border: 1px solid var(--border);
   }
-  .btn-secondary:hover {
-    border-color: var(--accent-1);
-    color: var(--accent-1);
-    background: rgba(129, 140, 248, 0.05);
-  }
-  .btn-sm { padding: 10px 18px; font-size: 14px; }
-
-  /* ──────── HERO ──────── */
-  .hero {
-    padding: 56px 0 80px;
-    position: relative;
-  }
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    align-items: center;
-  }
-  .hero-content { text-align: left; }
-  .hero-preview { position: relative; }
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 7px 16px;
-    background: rgba(18, 22, 29, 0.8);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    font-size: 13px;
-    color: var(--ink-soft);
-    margin-bottom: 28px;
-  }
-  .pulse-dot {
-    width: 6px; height: 6px;
-    background: var(--green);
-    border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6); }
-    70%  { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
-  }
-  h1 {
-    font-size: clamp(32px, 4.5vw, 52px);
-    line-height: 1.08;
-    letter-spacing: -0.035em;
-    font-weight: 800;
-    margin-bottom: 18px;
-  }
-  h1 .grad {
-    background: var(--gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .hero-sub {
-    font-size: 18px;
-    color: var(--muted);
-    max-width: 480px;
-    margin-bottom: 28px;
-    line-height: 1.55;
-  }
-
-  /* Hero form */
-  .hero-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-width: 440px;
-    margin-bottom: 16px;
-    padding: 20px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    transition: border-color 0.3s var(--easing), box-shadow 0.3s var(--easing);
-  }
-  .hero-form:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 3px var(--accent-glow);
-  }
-  .form-field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 6px;
-  }
-  .hero-form input {
-    width: 100%;
-    background: var(--bg-elev);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 13px 14px;
-    color: var(--ink);
-    font-size: 15px;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .hero-form input:focus { border-color: var(--accent); }
-  .hero-form input::placeholder { color: #64748b; }
-  .hero-form .btn { width: 100%; padding: 15px 22px; margin-top: 4px; }
-
-  /* Report preview card */
-  .preview-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-  }
-  .preview-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-  .preview-brand { font-weight: 700; font-size: 14px; color: var(--ink-soft); }
-  .preview-domain { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .preview-score {
-    font-size: 36px;
-    font-weight: 800;
-    color: var(--red);
-    line-height: 1;
-  }
-  .preview-bars {
-    display: grid;
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-  .preview-bar-row {
-    display: grid;
-    grid-template-columns: 72px 1fr 32px;
-    gap: 10px;
-    align-items: center;
-    font-size: 12px;
-  }
-  .preview-bar-row span:first-child { color: var(--muted); font-weight: 500; }
-  .preview-bar {
-    height: 6px;
-    background: var(--bg-elev);
-    border-radius: 99px;
-    overflow: hidden;
-  }
-  .preview-bar-fill { height: 100%; border-radius: 99px; }
-  .preview-bar-row span:last-child { font-weight: 700; text-align: right; }
-  .preview-finding {
-    background: rgba(239,68,68,0.08);
-    border-left: 3px solid var(--red);
-    padding: 12px 14px;
-    border-radius: 0 8px 8px 0;
-    font-size: 13px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-  }
-  .preview-finding strong { color: var(--ink); display: block; margin-bottom: 4px; font-size: 13px; }
-
-  .hero-tiny {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 14px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .hero-tiny span { display: inline-flex; align-items: center; gap: 6px; }
-  .hero-tiny svg { width: 14px; height: 14px; color: var(--green); }
-
-  .hero-secondary-row {
-    margin-top: 24px;
-    font-size: 14px;
-    color: var(--muted);
-  }
-  .hero-secondary-row a {
-    color: var(--accent-1);
-    border-bottom: 1px dashed transparent;
-    transition: border-color 0.2s var(--easing);
-  }
-  .hero-secondary-row a:hover { border-bottom-color: var(--accent-1); }
-
-  #turnstile-container { margin-top: 18px; display: flex; justify-content: center; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent-2); }
+  .btn-sm { padding: 9px 16px; font-size: 13px; }
+  .btn-loading { opacity: 0.8; cursor: wait; }
   .btn-loading::before {
-    content: "";
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border: 2px solid currentColor;
-    border-right-color: transparent;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    margin-right: 8px;
+    content: ""; width: 14px; height: 14px; margin-right: 6px;
+    border: 2px solid currentColor; border-right-color: transparent;
+    border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
   }
-  .btn-loading { opacity: 0.85; cursor: progress; }
-  .form-status {
-    margin-top: 14px;
-    font-size: 14px;
-    text-align: left;
-    min-height: 20px;
-    transition: color 0.3s var(--easing);
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Hero */
+  .hero { padding: 64px 0 80px; }
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;
   }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 500; color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  h1 {
+    font-size: clamp(34px, 4vw, 48px); font-weight: 800;
+    line-height: 1.08; letter-spacing: -0.035em; margin-bottom: 16px;
+  }
+  h1 em { font-style: normal; color: var(--accent-2); }
+  .lead { font-size: 17px; color: var(--muted); max-width: 440px; margin-bottom: 28px; line-height: 1.55; }
+
+  .form-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+  }
+  .form-card:focus-within { border-color: var(--accent); box-shadow: 0 8px 40px rgba(0,0,0,0.35), 0 0 0 3px rgba(99,102,241,0.2); }
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%; padding: 12px 14px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--text); font-size: 15px; font-family: inherit;
+  }
+  .field input:focus { outline: none; border-color: var(--accent); }
+  .field input::placeholder { color: #52525b; }
+  .form-card .btn { width: 100%; margin-top: 4px; }
+  .form-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
+  .form-status { margin-top: 14px; font-size: 14px; min-height: 20px; }
   .form-status[data-kind="success"] { color: var(--green); }
   .form-status[data-kind="error"] { color: var(--red); }
 
-  /* BYOK / Pro section under the form */
-  .pro-section {
-    max-width: 720px;
-    margin: 16px auto 0;
-    background: rgba(18, 22, 29, 0.5);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    text-align: left;
-    transition: border-color 0.3s var(--easing);
+  .pro-toggle {
+    margin-top: 14px; max-width: 440px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
   }
-  .pro-section[open] { border-color: var(--accent-1); }
-  .pro-section summary {
-    padding: 14px 20px;
-    font-size: 13.5px;
-    color: var(--ink-soft);
-    cursor: pointer;
-    list-style: none;
-    user-select: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+  .pro-toggle summary {
+    padding: 12px 16px; font-size: 13px; color: var(--text-2);
+    cursor: pointer; list-style: none;
   }
-  .pro-section summary::-webkit-details-marker { display: none; }
-  .pro-section summary::after {
-    content: "+";
-    color: var(--accent-1);
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-  .pro-section[open] summary::after { content: "−"; }
-  .pro-section .pro-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    background: var(--gradient-soft);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--accent-1);
-    letter-spacing: 0.04em;
-    margin-right: 8px;
-  }
-  .pro-section .pro-body {
-    padding: 0 20px 18px;
-  }
-  .pro-section input[type=password] {
-    width: 100%;
-    padding: 12px 14px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--ink);
-    border-radius: 10px;
-    font-size: 13px;
-    font-family: "SFMono-Regular", Menlo, Consolas, monospace;
-    transition: border-color 0.2s var(--easing);
-  }
-  .pro-section input[type=password]:focus {
-    outline: none;
-    border-color: var(--accent-1);
-  }
-  .pro-section .pro-note {
-    margin-top: 10px;
-    font-size: 12.5px;
-    color: var(--muted);
-    line-height: 1.55;
-  }
-  .pro-section .pro-note a {
-    color: var(--accent-1);
-    border-bottom: 1px dashed transparent;
-  }
-  .pro-section .pro-note a:hover { border-bottom-color: var(--accent-1); }
-
-  /* Hero floating mockup */
-  .hero-mockup {
-    margin-top: 72px;
-    position: relative;
-    max-width: 920px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .mockup-card {
-    background: linear-gradient(180deg, var(--bg-card), var(--bg-elev));
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 32px;
-    text-align: left;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(129, 140, 248, 0.1);
-    position: relative;
-    overflow: hidden;
-    animation: float 6s ease-in-out infinite;
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-8px); }
-  }
-  .mockup-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(129,140,248,0.4), transparent, rgba(192,132,252,0.4));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-            mask-composite: exclude;
-    pointer-events: none;
-  }
-  .mockup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-  .mockup-header .left { display: flex; align-items: center; gap: 12px; }
-  .mockup-header .left .title { font-weight: 600; font-size: 17px; }
-  .mockup-header .left .url { color: var(--muted); font-size: 12px; margin-top: 2px; }
-  .mockup-score {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .mockup-score-num {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--red);
-    line-height: 1;
-  }
-  .mockup-verdict {
-    background: rgba(248, 113, 113, 0.15);
-    color: var(--red);
-    border: 1px solid rgba(248, 113, 113, 0.3);
-    padding: 5px 11px;
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .mockup-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin-bottom: 22px;
-  }
-  .mockup-cell {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--border-subtle);
-    border-radius: 10px;
-    padding: 14px 10px;
-    text-align: center;
-    transition: background 0.3s var(--easing), border-color 0.3s var(--easing);
-  }
-  .mockup-cell:hover { background: rgba(255, 255, 255, 0.04); border-color: var(--border); }
-  .mockup-cell .label { font-size: 10px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.06em; }
-  .mockup-cell .val { font-size: 22px; font-weight: 700; }
-  .mockup-finding {
-    background: rgba(248, 113, 113, 0.08);
-    border-left: 3px solid var(--red);
-    padding: 12px 14px;
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 10px;
-    font-size: 13.5px;
-    color: var(--ink);
-  }
-  .mockup-finding.warning {
-    background: rgba(251, 191, 36, 0.06);
-    border-left-color: var(--yellow);
-  }
-  .mockup-finding .sev {
-    display: inline-block;
-    background: var(--red);
-    color: white;
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-right: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .mockup-finding.warning .sev { background: var(--yellow); color: #422006; }
-  .mockup-finding strong { color: var(--ink); }
-
-  /* ──────── STATS BAR ──────── */
-  .stats {
-    border-top: 1px solid var(--border-subtle);
-    border-bottom: 1px solid var(--border-subtle);
-    background: rgba(14, 17, 23, 0.5);
-    padding: 28px 0;
-    margin-top: 80px;
-  }
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
-    text-align: center;
-  }
-  .stat .num {
-    font-size: 36px;
-    font-weight: 700;
-    background: var(--gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    letter-spacing: -0.02em;
-    line-height: 1;
-  }
-  .stat .label {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+  .pro-toggle summary::-webkit-details-marker { display: none; }
+  .pro-toggle .inner { padding: 0 16px 16px; }
+  .pro-toggle input {
+    width: 100%; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--text); font-size: 13px; font-family: monospace;
   }
 
-  /* ──────── SECTIONS ──────── */
-  section { padding: 100px 0; position: relative; }
-  .section-eyebrow {
-    text-align: center;
-    color: var(--accent-1);
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 14px;
+  /* Report preview */
+  .preview {
+    background: #fff; border-radius: var(--radius);
+    border: 1px solid var(--border); overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+    color: #0f172a;
+  }
+  .preview-bar-top { height: 4px; background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+  .preview-body { padding: 24px; }
+  .preview-brand { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+  .preview-brand span { color: #6366f1; }
+  .preview-domain { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+  .preview-score-row {
+    display: flex; gap: 16px; align-items: center;
+    padding: 16px; background: #f8fafc; border-radius: 10px;
+    border: 1px solid #e2e8f0; margin-bottom: 16px;
+  }
+  .preview-score-num {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: #dc2626; color: #fff;
+    display: grid; place-items: center;
+    font-size: 24px; font-weight: 800; flex-shrink: 0;
+  }
+  .preview-verdict {
+    font-size: 11px; font-weight: 700; color: #fff;
+    background: #dc2626; padding: 3px 10px; border-radius: 99px;
+    display: inline-block; margin-bottom: 6px;
+  }
+  .preview-tldr { font-size: 13px; color: #334155; line-height: 1.5; }
+  .bar-row {
+    display: grid; grid-template-columns: 56px 1fr 28px; gap: 8px;
+    align-items: center; font-size: 11px; margin-bottom: 8px;
+  }
+  .bar-row span:first-child { color: #64748b; font-weight: 600; }
+  .bar-track { height: 6px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 99px; }
+  .bar-row span:last-child { font-weight: 800; text-align: right; }
+  .preview-finding {
+    font-size: 12px; padding: 10px 12px; background: #fef2f2;
+    border-left: 3px solid #dc2626; border-radius: 0 6px 6px 0;
+    color: #334155; line-height: 1.5;
+  }
+  .preview-finding strong { color: #0f172a; display: block; margin-bottom: 2px; }
+  .preview-link {
+    display: block; text-align: center; padding: 12px;
+    font-size: 13px; font-weight: 600; color: #6366f1;
+    border-top: 1px solid #e2e8f0; background: #f8fafc;
+  }
+  .preview-link:hover { background: #eef2ff; color: #4f46e5; }
+
+  /* Sections */
+  section { padding: 80px 0; }
+  .section-label {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--accent-2); text-align: center; margin-bottom: 12px;
   }
   h2 {
-    text-align: center;
-    font-size: clamp(28px, 4vw, 44px);
-    letter-spacing: -0.02em;
-    margin-bottom: 18px;
-    line-height: 1.12;
-    font-weight: 700;
+    font-size: clamp(26px, 3vw, 36px); font-weight: 800;
+    text-align: center; letter-spacing: -0.03em; margin-bottom: 12px;
   }
-  .section-sub {
-    text-align: center;
-    color: var(--ink-soft);
-    font-size: 17px;
-    max-width: 620px;
-    margin: 0 auto 64px;
-    line-height: 1.55;
+  .section-desc {
+    text-align: center; color: var(--muted); font-size: 16px;
+    max-width: 520px; margin: 0 auto 48px;
   }
 
-  /* ──────── REVEAL ANIMATION ──────── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s var(--easing), transform 0.7s var(--easing);
-  }
-  .reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .reveal-stagger > * {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.6s var(--easing), transform 0.6s var(--easing);
-  }
-  .reveal-stagger.is-visible > *:nth-child(1) { transition-delay: 0.05s; }
-  .reveal-stagger.is-visible > *:nth-child(2) { transition-delay: 0.15s; }
-  .reveal-stagger.is-visible > *:nth-child(3) { transition-delay: 0.25s; }
-  .reveal-stagger.is-visible > *:nth-child(4) { transition-delay: 0.35s; }
-  .reveal-stagger.is-visible > *:nth-child(5) { transition-delay: 0.45s; }
-  .reveal-stagger.is-visible > *:nth-child(6) { transition-delay: 0.55s; }
-  .reveal-stagger.is-visible > * { opacity: 1; transform: translateY(0); }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-    .mesh-blob { animation: none; }
-    .mockup-card { animation: none; }
-  }
-
-  /* ──────── CARDS / GRIDS ──────── */
-  .pain-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-  }
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 32px 28px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s var(--easing), border-color 0.3s var(--easing), background 0.3s var(--easing);
-  }
-  .card:hover {
-    transform: translateY(-3px);
-    border-color: var(--accent-1);
-    background: var(--bg-card-hover);
-  }
-  .card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top right, rgba(129,140,248,0.08), transparent 60%);
-    opacity: 0;
-    transition: opacity 0.4s var(--easing);
-    pointer-events: none;
-  }
-  .card:hover::before { opacity: 1; }
-  .card h3 { font-size: 19px; margin-bottom: 10px; letter-spacing: -0.01em; }
-  .card p { color: var(--ink-soft); font-size: 15px; }
-
-  .icon-box {
-    width: 48px; height: 48px;
-    background: var(--gradient-soft);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    margin-bottom: 20px;
-    transition: transform 0.3s var(--easing);
-  }
-  .card:hover .icon-box { transform: scale(1.05) rotate(-3deg); }
-  .icon-box svg { width: 22px; height: 22px; color: var(--accent-1); }
-
-  /* ──────── STEPS ──────── */
   .steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    position: relative;
-  }
-  .steps::before {
-    content: "";
-    position: absolute;
-    top: 56px;
-    left: 16.66%;
-    right: 16.66%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), var(--border), transparent);
-    z-index: 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
   }
   .step {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 32px 28px;
-    position: relative;
-    z-index: 1;
-    transition: transform 0.3s var(--easing), border-color 0.3s var(--easing);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px 24px;
   }
-  .step:hover { transform: translateY(-3px); border-color: var(--accent-1); }
   .step-num {
-    width: 40px; height: 40px;
-    background: var(--gradient);
-    color: white;
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    font-weight: 700;
-    font-size: 17px;
-    margin-bottom: 18px;
-    box-shadow: 0 4px 16px rgba(129, 140, 248, 0.35);
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--accent); color: #fff;
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 14px; margin-bottom: 16px;
   }
-  .step h3 { font-size: 19px; margin-bottom: 10px; }
-  .step p { color: var(--ink-soft); font-size: 15px; }
+  .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .step p { font-size: 14px; color: var(--muted); line-height: 1.55; }
 
-  /* ──────── FEATURES GRID ──────── */
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+  .features {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
   }
-  .feature {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 28px 24px;
-    transition: transform 0.3s var(--easing), border-color 0.3s var(--easing);
-    position: relative;
+  .feat {
+    padding: 24px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
   }
-  .feature:hover { transform: translateY(-3px); border-color: var(--accent-1); }
-  .feature h4 { font-size: 17px; margin-bottom: 8px; letter-spacing: -0.005em; }
-  .feature p { color: var(--ink-soft); font-size: 14.5px; line-height: 1.55; }
-  .feature .icon-sm {
-    width: 36px; height: 36px;
-    background: var(--gradient-soft);
-    border-radius: 10px;
-    display: grid;
-    place-items: center;
-    margin-bottom: 16px;
-  }
-  .feature .icon-sm svg { width: 18px; height: 18px; color: var(--accent-1); }
+  .feat h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .feat p { font-size: 14px; color: var(--muted); line-height: 1.55; }
 
-  /* ──────── COMPARE TABLE ──────── */
-  .compare {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
+  .pricing {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    max-width: 720px; margin: 0 auto;
   }
-  .compare table {
-    width: 100%;
-    border-collapse: collapse;
+  .plan {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px 28px;
+    display: flex; flex-direction: column;
   }
-  .compare th, .compare td {
-    padding: 18px 22px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-subtle);
-    font-size: 14.5px;
+  .plan.featured {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 12px 40px rgba(99,102,241,0.2);
   }
-  .compare th {
-    background: var(--bg-elev);
-    color: var(--ink);
-    font-weight: 600;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--muted);
+  .plan-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-2); margin-bottom: 12px; }
+  .plan-price { font-size: 42px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: 4px; }
+  .plan-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  .plan ul { list-style: none; flex: 1; margin-bottom: 24px; }
+  .plan li {
+    font-size: 14px; color: var(--text-2); padding: 6px 0;
+    padding-left: 22px; position: relative;
   }
-  .compare th:nth-child(2) {
-    color: var(--accent-1);
-    background: linear-gradient(180deg, rgba(129,140,248,0.08), transparent);
+  .plan li::before {
+    content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 700;
   }
-  .compare td:nth-child(2) {
-    background: linear-gradient(180deg, rgba(129,140,248,0.04), transparent);
-    font-weight: 600;
-  }
-  .compare tr:last-child td { border-bottom: none; }
-  .compare .yes { color: var(--green); }
-  .compare .no { color: var(--muted-2); }
+  .plan .btn { width: 100%; }
 
-  /* ──────── PRICING ──────── */
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    align-items: stretch;
+  .faq { max-width: 640px; margin: 0 auto; }
+  .faq details {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; margin-bottom: 10px; overflow: hidden;
   }
-  .price-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 36px 32px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    transition: transform 0.3s var(--easing), border-color 0.3s var(--easing);
+  .faq summary {
+    padding: 18px 20px; font-weight: 600; font-size: 15px;
+    cursor: pointer; list-style: none;
   }
-  .price-card:hover { transform: translateY(-3px); }
-  .price-card.featured {
-    border-color: var(--accent-1);
-    background: linear-gradient(180deg, rgba(129,140,248,0.12), rgba(192,132,252,0.04), var(--bg-card));
-    transform: scale(1.04);
-    box-shadow: 0 20px 60px rgba(129, 140, 248, 0.22), 0 0 80px rgba(192,132,252,0.08);
-    animation: card-glow 6s ease-in-out infinite;
-  }
-  @keyframes card-glow {
-    0%, 100% { box-shadow: 0 20px 60px rgba(129,140,248,0.22), 0 0 60px rgba(192,132,252,0.06); }
-    50% { box-shadow: 0 24px 70px rgba(129,140,248,0.32), 0 0 100px rgba(244,114,182,0.1); }
-  }
-  .price-card.featured:hover { transform: scale(1.04) translateY(-3px); }
-  .price-card .name {
-    font-size: 13px;
-    color: var(--accent-1);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 600;
-    margin-bottom: 14px;
-  }
-  .price-card .price {
-    font-size: 48px;
-    font-weight: 700;
-    margin-bottom: 4px;
-    letter-spacing: -0.025em;
-    line-height: 1;
-  }
-  .price-card .price-sub {
-    color: var(--muted);
-    font-size: 14px;
-    margin-bottom: 26px;
-  }
-  .price-card ul {
-    list-style: none;
-    margin-bottom: 30px;
-    flex: 1;
-  }
-  .price-card li {
-    padding: 8px 0;
-    font-size: 14.5px;
-    color: var(--ink-soft);
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .price-card li svg {
-    flex-shrink: 0;
-    width: 16px; height: 16px;
-    color: var(--green);
-    margin-top: 3px;
-  }
-  .price-card .btn { width: 100%; text-align: center; }
-  .price-card .badge-pop {
-    position: absolute;
-    top: -12px; left: 50%;
-    transform: translateX(-50%);
-    background: var(--gradient);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 5px 14px;
-    border-radius: 999px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq .ans { padding: 0 20px 18px; font-size: 14px; color: var(--muted); line-height: 1.65; }
 
-  /* ──────── FAQ ──────── */
-  .faq {
-    max-width: 760px;
-    margin: 0 auto;
+  .cta-box {
+    text-align: center; padding: 56px 32px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px;
   }
-  .faq-item {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 12px;
-    overflow: hidden;
-    transition: border-color 0.3s var(--easing);
-  }
-  .faq-item:hover { border-color: var(--border); }
-  .faq-item[open] { border-color: var(--accent-1); }
+  .cta-box h2 { margin-bottom: 10px; }
+  .cta-box p { color: var(--muted); margin-bottom: 28px; }
 
-  /* ──────── STARFIELD + PAYMENT MODAL ──────── */
-  .stars {
-    position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    background-image:
-      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.35), transparent),
-      radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.25), transparent),
-      radial-gradient(1.5px 1.5px at 80% 20%, rgba(129,140,248,0.5), transparent),
-      radial-gradient(1px 1px at 40% 80%, rgba(192,132,252,0.4), transparent),
-      radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.2), transparent);
-    background-size: 200% 200%;
-    animation: stars-drift 120s linear infinite;
-    opacity: 0.35;
+  footer {
+    border-top: 1px solid var(--border); padding: 32px 0;
+    font-size: 13px; color: var(--muted);
   }
-  @keyframes stars-drift {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 100% 100%; }
-  }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
 
+  /* Payment modal */
   .pay-overlay {
-    position: fixed; inset: 0; z-index: 200;
-    background: rgba(5, 5, 6, 0.88);
-    backdrop-filter: blur(20px);
-    display: none; align-items: center; justify-content: center;
-    padding: 20px;
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
   }
   .pay-overlay.open { display: flex; }
   .pay-modal {
-    width: 100%; max-width: 540px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px 28px;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
-    max-height: 90vh; overflow-y: auto;
+    width: 100%; max-width: 480px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 28px; position: relative;
   }
-  .pay-modal h2 {
-    font-size: 22px; margin-bottom: 6px;
-    font-weight: 700;
-    color: var(--ink);
+  .pay-close {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; color: var(--muted);
+    font-size: 24px; cursor: pointer;
   }
-  .pay-modal .pay-sub { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
-  .pay-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+  .pay-modal h2 { font-size: 20px; font-weight: 800; margin-bottom: 6px; text-align: left; }
+  .pay-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .pay-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
   .pay-tab {
-    flex: 1; padding: 10px 12px; border-radius: 10px;
-    border: 1px solid var(--border); background: var(--bg-card);
-    color: var(--ink-soft); font-size: 13px; font-weight: 600;
-    cursor: pointer; text-align: center; transition: all 0.2s var(--easing);
+    flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--text-2); font-size: 12px; font-weight: 600;
+    cursor: pointer;
   }
-  .pay-tab.active {
-    border-color: var(--accent-1);
-    background: rgba(129,140,248,0.12);
-    color: var(--ink);
-  }
+  .pay-tab.active { border-color: var(--accent); color: var(--text); background: rgba(99,102,241,0.1); }
   .pay-box {
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px 18px; margin-bottom: 14px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; margin-bottom: 14px;
   }
-  .pay-box label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
-  .pay-amount { font-size: 28px; font-weight: 700; color: var(--green); margin-bottom: 10px; }
+  .pay-box label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .pay-amount { font-size: 26px; font-weight: 800; color: var(--green); margin: 4px 0 12px; }
   .pay-address {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 12px; word-break: break-all;
-    background: #080809; border: 1px solid var(--border-subtle);
-    padding: 14px; border-radius: 2px; color: var(--ink-soft);
-    margin-bottom: 8px;
+    font-family: monospace; font-size: 11px; word-break: break-all;
+    padding: 12px; background: var(--surface); border-radius: 6px;
+    color: var(--text-2); margin: 6px 0;
   }
-  .pay-copy {
-    font-size: 12px; color: var(--accent-2); cursor: pointer; border: none; background: none; padding: 0;
-  }
-  .pay-copy:hover { text-decoration: underline; }
-  .pay-note { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin-bottom: 16px; }
+  .pay-copy { font-size: 12px; color: var(--accent-2); background: none; border: none; cursor: pointer; padding: 0; }
   .pay-modal input[type="text"] {
-    width: 100%; padding: 14px 16px; border-radius: 10px;
-    border: 1px solid var(--border); background: var(--bg-elev);
-    color: var(--ink); font-size: 14px; font-family: inherit;
-    margin-bottom: 12px;
+    width: 100%; padding: 12px 14px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--text); font-size: 14px; margin: 8px 0 16px;
   }
-  .pay-modal input:focus { outline: none; border-color: var(--accent-1); box-shadow: 0 0 0 3px rgba(129,140,248,0.15); }
-  .pay-actions { display: flex; gap: 10px; margin-top: 8px; }
+  .pay-actions { display: flex; gap: 10px; }
   .pay-actions .btn { flex: 1; }
   .pay-status { font-size: 13px; margin-top: 12px; min-height: 1.2em; }
-  .pay-status[data-kind="error"] { color: #f87171; }
+  .pay-status[data-kind="error"] { color: var(--red); }
   .pay-status[data-kind="success"] { color: var(--green); }
-  .pay-close {
-    position: absolute; top: 16px; right: 16px;
-    background: none; border: none; color: var(--muted);
-    font-size: 24px; cursor: pointer; line-height: 1;
-  }
-  .pay-modal-wrap { position: relative; width: 100%; max-width: 560px; }
-  .faq-q {
-    padding: 20px 26px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 15.5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    list-style: none;
-    user-select: none;
-  }
-  .faq-q::-webkit-details-marker { display: none; }
-  .faq-q::after {
-    content: "";
-    width: 20px; height: 20px;
-    background: var(--bg-elev);
-    border-radius: 50%;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23818cf8' stroke-width='3' stroke-linecap='round'><line x1='12' y1='5' x2='12' y2='19'/><line x1='5' y1='12' x2='19' y2='12'/></svg>");
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: transform 0.3s var(--easing), background-color 0.3s var(--easing);
-    flex-shrink: 0;
-    margin-left: 16px;
-  }
-  details[open] .faq-q::after {
-    transform: rotate(45deg);
-    background-color: rgba(129, 140, 248, 0.15);
-  }
-  .faq-a {
-    padding: 0 26px 22px;
-    color: var(--ink-soft);
-    font-size: 15px;
-    line-height: 1.65;
-  }
 
-  /* ──────── FINAL CTA ──────── */
-  .final-cta {
-    text-align: center;
-    background: linear-gradient(135deg, rgba(129,140,248,0.1), rgba(192,132,252,0.1));
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 72px 40px;
-    margin: 40px 0;
-    position: relative;
-    overflow: hidden;
-  }
-  .final-cta::before {
-    content: "";
-    position: absolute;
-    top: -50%; left: 50%;
-    transform: translateX(-50%);
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(129,140,248,0.15), transparent 60%);
-    pointer-events: none;
-  }
-  .final-cta h2 { margin-bottom: 14px; position: relative; }
-  .final-cta p {
-    color: var(--ink-soft);
-    margin-bottom: 36px;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 17px;
-    position: relative;
-  }
-  .final-cta .btn { position: relative; }
-
-  /* ──────── FOOTER ──────── */
-  footer {
-    border-top: 1px solid var(--border-subtle);
-    padding: 36px 0;
-    color: var(--muted);
-    font-size: 13px;
-  }
-  footer .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  footer .logo { font-size: 14px; }
-  footer .footer-links a { color: var(--muted); margin-left: 20px; transition: color 0.2s var(--easing); }
-  footer .footer-links a:hover { color: var(--ink); }
-
-  /* ──────── MOBILE ──────── */
-  @media (max-width: 880px) {
+  @media (max-width: 860px) {
     .nav-links a:not(.btn) { display: none; }
     .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-    .hero-content { text-align: center; }
-    .hero-sub { margin-left: auto; margin-right: auto; }
-    .hero-form { margin-left: auto; margin-right: auto; max-width: 100%; }
-    .hero-tiny { justify-content: center; }
-    .hero-secondary-row { text-align: center; }
-    .hero-preview { order: -1; max-width: 400px; margin: 0 auto; }
-    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
-    .steps { grid-template-columns: 1fr; }
-    .steps::before { display: none; }
-    .features-grid { grid-template-columns: 1fr; }
-    .pricing-grid { grid-template-columns: 1fr; }
-    .price-card.featured { transform: scale(1); }
-    .price-card.featured:hover { transform: translateY(-3px); }
-    section { padding: 72px 0; }
-    .mockup-grid { gap: 6px; }
-    .mockup-cell { padding: 10px 4px; }
-    .mockup-cell .val { font-size: 17px; }
-    .mockup-card { padding: 22px 18px; }
-    .compare { overflow-x: auto; }
-    .compare table { min-width: 520px; }
-    .final-cta { padding: 56px 24px; }
+    .preview { order: -1; max-width: 400px; margin: 0 auto; }
+    .steps, .features, .pricing { grid-template-columns: 1fr; }
+    h1, .lead { text-align: center; margin-left: auto; margin-right: auto; }
+    .form-card, .pro-toggle { max-width: 100%; }
   }
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="container">
-    <a class="logo" href="/">
-      <span class="logo-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><line x1="7" y1="7" x2="13" y2="13" stroke-width="1.2" opacity="0.55"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
-      </span>
-      SiteX-Ray
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand-icon">X</span>
+      Site<span>X</span>-Ray
     </a>
     <div class="nav-links">
       <a href="#how">How it works</a>
-      <a href="#features">Features</a>
       <a href="#pricing">Pricing</a>
-      <a href="#faq">FAQ</a>
+      <a href="/sample-report.html" target="_blank" rel="noopener">Sample</a>
       <a href="#hero-form" class="btn btn-primary btn-sm">Free audit</a>
     </div>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="container hero-grid">
-    <div class="hero-content">
-      <div class="pill">
-        <span class="pulse-dot"></span>
-        AI website audit · 60 seconds
-      </div>
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> AI audit · 60 seconds · 50+ signals</div>
+      <h1>See exactly what's wrong with your <em>website</em></h1>
+      <p class="lead">Paste your URL. Get a clean, professional audit with specific fixes — not vague AI advice. Delivered to email and web.</p>
 
-      <h1>Find what's broken<br>on your <span class="grad">website</span></h1>
-
-      <p class="hero-sub">
-        Paste your URL — get a pro audit with specific fixes for SEO, UX, conversion, and tech. Free teaser or full report for $39 USDT.
-      </p>
-
-      <form class="hero-form" id="hero-form" novalidate>
-        <div class="form-field">
+      <form class="form-card" id="hero-form" novalidate>
+        <div class="field">
           <label for="url-input">Website URL</label>
-          <input type="url" name="url" id="url-input" placeholder="https://yourwebsite.com" required autocomplete="url">
+          <input type="url" id="url-input" name="url" placeholder="https://yourwebsite.com" required autocomplete="url">
         </div>
-        <div class="form-field">
-          <label for="email-input">Email for report</label>
-          <input type="email" name="email" id="email-input" placeholder="you@company.com" required autocomplete="email">
+        <div class="field">
+          <label for="email-input">Your email</label>
+          <input type="email" id="email-input" name="email" placeholder="you@company.com" required autocomplete="email">
         </div>
-        <button type="submit" class="btn btn-primary" id="submit-btn">
-          Get free report
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </button>
+        <button type="submit" class="btn btn-primary" id="submit-btn">Get free report →</button>
+        <p class="form-note">Free 1-page teaser · no signup · report in ~2 min</p>
       </form>
 
       <div id="turnstile-container"></div>
       <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
 
-      <p class="hero-tiny">
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Free · No signup</span>
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Email + web link</span>
-      </p>
-
-      <p class="hero-secondary-row">
-        Need the full report? <a href="#" onclick="return goToCheckout(event)">Pay 39 USDT</a>
-        · <a href="/sample-report.html" target="_blank" rel="noopener">Sample report</a>
-      </p>
-
-      <details class="pro-section" id="pro-section" style="max-width:440px;margin-top:16px;">
-        <summary>
-          <span><span class="pro-badge">PRO</span>Have a Claude API key? Get full report free</span>
-        </summary>
-        <div class="pro-body">
+      <details class="pro-toggle" id="pro-section">
+        <summary>Have a Claude API key? Get the full report free</summary>
+        <div class="inner">
           <input type="password" id="anthropic-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false">
-          <p class="pro-note">Paste your Anthropic key for a full 10–15 page audit. Used once, never stored. <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">Get a key</a></p>
         </div>
       </details>
     </div>
 
-    <div class="hero-preview">
-      <div class="preview-card">
-        <div class="preview-head">
+    <div class="preview">
+      <div class="preview-bar-top"></div>
+      <div class="preview-body">
+        <div class="preview-brand">Site<span>X</span>-Ray</div>
+        <div class="preview-domain">acmedental.com</div>
+        <div class="preview-score-row">
+          <div class="preview-score-num">34</div>
           <div>
-            <div class="preview-brand">SiteX-Ray Report</div>
-            <div class="preview-domain">yourwebsite.com</div>
+            <span class="preview-verdict">Critical</span>
+            <p class="preview-tldr">Homepage hides your value prop. CTA buried. SEO basics missing.</p>
           </div>
-          <div class="preview-score">34</div>
         </div>
-        <div class="preview-bars">
-          <div class="preview-bar-row"><span>SEO</span><div class="preview-bar"><div class="preview-bar-fill" style="width:28%;background:var(--red);"></div></div><span style="color:var(--red)">28</span></div>
-          <div class="preview-bar-row"><span>UX</span><div class="preview-bar"><div class="preview-bar-fill" style="width:52%;background:var(--yellow);"></div></div><span style="color:var(--yellow)">52</span></div>
-          <div class="preview-bar-row"><span>Convert</span><div class="preview-bar"><div class="preview-bar-fill" style="width:22%;background:var(--red);"></div></div><span style="color:var(--red)">22</span></div>
-          <div class="preview-bar-row"><span>Tech</span><div class="preview-bar"><div class="preview-bar-fill" style="width:61%;background:var(--yellow);"></div></div><span style="color:var(--yellow)">61</span></div>
-        </div>
-        <div class="preview-finding">
+        <div class="bar-row"><span>SEO</span><div class="bar-track"><div class="bar-fill" style="width:28%;background:#dc2626"></div></div><span style="color:#dc2626">28</span></div>
+        <div class="bar-row"><span>UX</span><div class="bar-track"><div class="bar-fill" style="width:52%;background:#ca8a04"></div></div><span style="color:#ca8a04">52</span></div>
+        <div class="bar-row"><span>Convert</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:#dc2626"></div></div><span style="color:#dc2626">22</span></div>
+        <div class="preview-finding" style="margin-top:12px">
           <strong>Critical: No meta description</strong>
-          Google shows random text instead of your pitch. Replace with a 155-char summary of what you do.
+          Google shows random text. Add a 155-char summary of what you do.
         </div>
       </div>
+      <a class="preview-link" href="/sample-report.html" target="_blank" rel="noopener">View full sample report →</a>
     </div>
   </div>
 </section>
 
-<!-- HOW -->
 <section id="how">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-eyebrow">How it works</div>
-      <h2>Three steps. That's it.</h2>
-      <p class="section-sub">URL → AI scan → report in your inbox and on the web.</p>
-    </div>
-
-    <div class="steps reveal-stagger">
+  <div class="wrap">
+    <div class="section-label">How it works</div>
+    <h2>URL → audit → fixes</h2>
+    <p class="section-desc">Three steps. No account. No install.</p>
+    <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
-        <h3>Enter your URL</h3>
-        <p>Just your homepage. We handle the rest — no signup, no card, no install.</p>
+        <h3>Enter URL + email</h3>
+        <p>Just your homepage. We scan it live — nothing to install.</p>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <h3>AI scans 50+ signals</h3>
-        <p>SEO, UX, content, conversion, technical. Our auditor prompt is built from real consultant playbooks.</p>
+        <h3>AI analyzes 50+ signals</h3>
+        <p>SEO, UX, content, conversion, and technical health scored 0–100.</p>
       </div>
       <div class="step">
         <div class="step-num">3</div>
         <h3>Get your report</h3>
-        <p>Beautifully formatted in your inbox. Quick wins for today, critical issues, and a 90-day plan.</p>
+        <p>Clean PDF-style report in your inbox + instant web link as backup.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
 <section id="features">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-eyebrow">What you get</div>
-      <h2>What lands in your inbox</h2>
-      <p class="section-sub">Not generic AI fluff — specific fixes pulled from your actual homepage.</p>
-    </div>
-
-    <div class="features-grid reveal-stagger" style="grid-template-columns: repeat(3, 1fr);">
-      <div class="feature">
-        <div class="icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-        <h4>5 scores, 0–100</h4>
-        <p>SEO, UX, Content, Conversion, Technical — see exactly where you're weak.</p>
+  <div class="wrap">
+    <div class="section-label">What you get</div>
+    <h2>Reports that look professional</h2>
+    <p class="section-desc">Designed like a consultant deliverable — easy to read, easy to act on.</p>
+    <div class="features">
+      <div class="feat">
+        <h4>Score breakdown</h4>
+        <p>5 dimensions with color-coded bars so you know where to focus first.</p>
       </div>
-      <div class="feature">
-        <div class="icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-        <h4>Actionable fixes</h4>
-        <p>"Change your title to X" — not "improve SEO." Copy-paste ready for your dev.</p>
+      <div class="feat">
+        <h4>Specific fixes</h4>
+        <p>Exact copy rewrites and structural changes — not "improve your SEO."</p>
       </div>
-      <div class="feature">
-        <div class="icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-        <h4>Quick wins first</h4>
-        <p>Changes you can ship today, ranked by effort and impact.</p>
+      <div class="feat">
+        <h4>Quick wins ranked</h4>
+        <p>Changes you can ship today, labeled by effort and impact.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRICING -->
 <section id="pricing">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-eyebrow">Pricing</div>
-      <h2>Simple. No subscriptions.</h2>
-      <p class="section-sub">Pay once in USDT (TRC-20 or ERC-20). On-chain verification · auto delivery · 7-day refund.</p>
-    </div>
-
-    <div class="pricing-grid reveal-stagger" style="grid-template-columns: repeat(2, 1fr); max-width: 820px; margin: 0 auto;">
-
-      <div class="price-card">
-        <div class="name">Free</div>
-        <div class="price">$0</div>
-        <div class="price-sub">1-page teaser · email + web link</div>
+  <div class="wrap">
+    <div class="section-label">Pricing</div>
+    <h2>Simple, one-time payment</h2>
+    <p class="section-desc">Free teaser or full report. Pay with USDT — no subscription.</p>
+    <div class="pricing">
+      <div class="plan">
+        <div class="plan-tag">Free</div>
+        <div class="plan-price">$0</div>
+        <div class="plan-sub">1-page teaser</div>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Overall score (0–100)</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Top 3 quick wins</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>#1 critical issue with fix</li>
+          <li>Overall score</li>
+          <li>Top 3 quick wins</li>
+          <li>#1 critical issue + fix</li>
+          <li>Email + web link</li>
         </ul>
-        <a href="#hero-form" class="btn btn-secondary">Get free report</a>
+        <a href="#hero-form" class="btn btn-ghost">Get free report</a>
       </div>
-
-      <div class="price-card featured">
-        <span class="badge-pop">Full report</span>
-        <div class="name">Full audit</div>
-        <div class="price">$39</div>
-        <div class="price-sub">39 USDT · TRC-20 or ERC-20</div>
+      <div class="plan featured">
+        <div class="plan-tag">Full audit</div>
+        <div class="plan-price">$39</div>
+        <div class="plan-sub">39 USDT · TRC-20 or ERC-20</div>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>10–15 page full report</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>5 dimensions · 50+ signals</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>All issues + 90-day plan</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>7-day refund guarantee</li>
+          <li>10–15 page full report</li>
+          <li>All 5 dimensions analyzed</li>
+          <li>Every critical issue + fixes</li>
+          <li>90-day strategic plan</li>
+          <li>7-day refund guarantee</li>
         </ul>
-        <a href="#" onclick="return goToCheckout(event)" class="btn btn-primary">Pay 39 USDT</a>
+        <a href="#" class="btn btn-primary" onclick="return goToCheckout(event)">Pay 39 USDT</a>
       </div>
-
     </div>
-    <p style="text-align:center;margin-top:28px;color:var(--muted);font-size:14px;">Need us to implement fixes? <a href="mailto:ernest2011kostevich@gmail.com?subject=Done-for-you%20audit">Email for a quote</a> from $299.</p>
+    <p style="text-align:center;margin-top:24px;font-size:14px;color:var(--muted)">Want us to implement fixes? <a href="mailto:ernest2011kostevich@gmail.com">Email for a quote</a></p>
   </div>
 </section>
 
-<!-- FAQ -->
 <section id="faq">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-eyebrow">FAQ</div>
-      <h2>Questions, honestly answered</h2>
-      <p class="section-sub">Still curious? Email <a href="mailto:ernest2011kostevich@gmail.com">ernest2011kostevich@gmail.com</a>.</p>
-    </div>
-
-    <div class="faq reveal">
-      <details class="faq-item">
-        <summary class="faq-q">How is this different from PageSpeed Insights?</summary>
-        <div class="faq-a">PageSpeed gives you a Performance number and tells you to "minify CSS." SiteX-Ray reads your actual content, your CTAs, your value proposition, and gives you specific rewrites and structural changes a human consultant would. Think of PageSpeed as a doctor saying "your blood pressure is 145." SiteX-Ray is the doctor saying "stop drinking coffee at 4pm and walk 20 minutes a day."</div>
+  <div class="wrap">
+    <div class="section-label">FAQ</div>
+    <h2>Common questions</h2>
+    <div class="faq" style="margin-top:40px">
+      <details>
+        <summary>How is this different from PageSpeed?</summary>
+        <div class="ans">PageSpeed gives you a performance number. SiteX-Ray reads your actual copy, CTAs, and structure — and tells you exactly what to change.</div>
       </details>
-      <details class="faq-item">
-        <summary class="faq-q">Is the AI actually any good, or generic fluff?</summary>
-        <div class="faq-a">We run frontier large language models against a custom 200-line auditor prompt built from real conversion-audit checklists. Every finding cites evidence from your actual site — your real title, your real CTAs, your real meta tags. Vague advice like "improve your content" is explicitly banned in the prompt. If you ever get a report that feels generic, reply to the email and we'll re-run it for free.</div>
+      <details>
+        <summary>Is the AI output generic?</summary>
+        <div class="ans">No. Every finding cites evidence from your real homepage — your title, your CTAs, your meta tags. Vague advice is banned in our prompt.</div>
       </details>
-      <details class="faq-item">
-        <summary class="faq-q">What if I don't like the report?</summary>
-        <div class="faq-a">Full refund within 7 days, no questions asked. Just email us. We'd rather have you happy than your $39.</div>
+      <details>
+        <summary>How do I pay with USDT?</summary>
+        <div class="ans">Click Pay 39 USDT, send exactly 39 USDT via TRC-20 or ERC-20, paste your tx hash. We verify on-chain and deliver automatically.</div>
       </details>
-      <details class="faq-item">
-        <summary class="faq-q">Do you store my data?</summary>
-        <div class="faq-a">We process your URL through our AI provider to generate the report, then email it to you. We don't store URLs or reports. USDT payments are verified on-chain via public blockchain APIs — we never see your wallet keys.</div>
+      <details>
+        <summary>What if I don't like the report?</summary>
+        <div class="ans">Full refund within 7 days, no questions. Email us.</div>
       </details>
-      <details class="faq-item">
-        <summary class="faq-q">How do I pay with USDT?</summary>
-        <div class="faq-a">Click "Get full audit — $39", choose <strong>TRC-20 (TRON)</strong> or <strong>ERC-20 (Ethereum)</strong>, send exactly <strong>39 USDT</strong> to the address shown, then paste your transaction hash. We verify on-chain (must be within 24 hours) and email your full report automatically.</div>
-      </details>
-      <details class="faq-item">
-        <summary class="faq-q">How fresh is the audit? Will it work next month?</summary>
-        <div class="faq-a">Every audit is generated live from your current homepage. If you change your site, run a new audit. We recommend re-running quarterly after big content updates.</div>
-      </details>
-      <details class="faq-item">
-        <summary class="faq-q">Can you audit pages other than the homepage?</summary>
-        <div class="faq-a">MVP is homepage-only — that's where 80% of conversion issues live. Multi-page audits are on the roadmap. Email us if you need a specific page audited and we'll do it manually.</div>
-      </details>
-      <details class="faq-item">
-        <summary class="faq-q">I'm a web agency — can I resell this?</summary>
-        <div class="faq-a">Yes. We're piloting a partnership program: wholesale audits + your branding. Email us with "Partnership" in the subject.</div>
-      </details>
-      <details class="faq-item">
-        <summary class="faq-q">I have my own Claude API key — can I use it?</summary>
-        <div class="faq-a">Yes. Open the "PRO · BYOK Claude" panel under the form and paste a key starting with <code>sk-ant-</code>. With your own key we deliver the <strong>full 10–15 page Claude Sonnet audit</strong> (not the 1-page teaser), and you skip the $39 paid tier entirely — you pay your own Anthropic bill instead (a few cents per audit). Your key is used once for that single audit and never stored. Useful for agencies and devs running many audits.</div>
+      <details>
+        <summary>Do you store my data?</summary>
+        <div class="ans">We generate the report and email it. We don't keep your URL or report on file.</div>
       </details>
     </div>
   </div>
 </section>
 
-<!-- FINAL CTA -->
 <section>
-  <div class="container">
-    <div class="final-cta reveal">
-      <h2>Find out what your site is hiding</h2>
-      <p>Free 1-page teaser in your inbox in ~2 minutes. No signup. No credit card.</p>
-      <a href="#hero-form" class="btn btn-primary" style="padding: 16px 32px; font-size: 16px;">
-        Get my free report
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </a>
+  <div class="wrap">
+    <div class="cta-box">
+      <h2>Run your free audit now</h2>
+      <p>Takes 60 seconds. No credit card.</p>
+      <a href="#hero-form" class="btn btn-primary">Get free report →</a>
     </div>
   </div>
 </section>
 
-<!-- USDT PAYMENT MODAL -->
-<div class="pay-overlay" id="pay-overlay" role="dialog" aria-modal="true" aria-labelledby="pay-title">
-  <div class="pay-modal-wrap">
+<div class="pay-overlay" id="pay-overlay" role="dialog" aria-modal="true">
+  <div class="pay-modal">
     <button type="button" class="pay-close" id="pay-close" aria-label="Close">&times;</button>
-    <div class="pay-modal">
-      <h2 id="pay-title">Full audit — 39 USDT</h2>
-      <p class="pay-sub">On-chain verification · report to your email + instant download</p>
-
-      <div class="pay-tabs">
-        <button type="button" class="pay-tab active" data-network="trc20">USDT · TRON (TRC-20)</button>
-        <button type="button" class="pay-tab" data-network="erc20">USDT · Ethereum (ERC-20)</button>
-      </div>
-
-      <div class="pay-box">
-        <label>Send exactly</label>
-        <div class="pay-amount">39 USDT</div>
-        <label>To this address</label>
-        <div class="pay-address" id="pay-address">TV1EBHTyvpP98jZGerz6sRmZvipn15LqDA</div>
-        <button type="button" class="pay-copy" id="pay-copy">Copy address</button>
-      </div>
-
-      <p class="pay-note" id="pay-note">
-        Transfer must be within the <strong>last 24 hours</strong>. After sending, paste your transaction hash below — we verify on-chain and deliver your full report automatically.
-      </p>
-
-      <label for="pay-txhash" style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink-soft);">Transaction hash (tx hash)</label>
-      <input type="text" id="pay-txhash" placeholder="Paste tx hash after payment" autocomplete="off" spellcheck="false">
-
-      <div class="pay-actions">
-        <button type="button" class="btn btn-secondary" id="pay-cancel">Cancel</button>
-        <button type="button" class="btn btn-primary" id="pay-submit">Verify payment &amp; deliver report</button>
-      </div>
-      <div class="pay-status" id="pay-status" role="status" aria-live="polite"></div>
+    <h2>Full audit — 39 USDT</h2>
+    <p class="pay-sub">On-chain verify → report to email + web download</p>
+    <div class="pay-tabs">
+      <button type="button" class="pay-tab active" data-network="trc20">TRC-20 (TRON)</button>
+      <button type="button" class="pay-tab" data-network="erc20">ERC-20 (Ethereum)</button>
     </div>
+    <div class="pay-box">
+      <label>Send exactly</label>
+      <div class="pay-amount">39 USDT</div>
+      <label>To address</label>
+      <div class="pay-address" id="pay-address">TV1EBHTyvpP98jZGerz6sRmZvipn15LqDA</div>
+      <button type="button" class="pay-copy" id="pay-copy">Copy address</button>
+    </div>
+    <label for="pay-txhash" style="font-size:12px;font-weight:600;color:var(--text-2)">Transaction hash</label>
+    <input type="text" id="pay-txhash" placeholder="Paste after payment" autocomplete="off">
+    <div class="pay-actions">
+      <button type="button" class="btn btn-ghost" id="pay-cancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="pay-submit">Verify &amp; deliver</button>
+    </div>
+    <div class="pay-status" id="pay-status" role="status"></div>
   </div>
 </div>
 
 <footer>
-  <div class="container">
-    <div class="logo">
-      <span class="logo-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><line x1="7" y1="7" x2="13" y2="13" stroke-width="1.2" opacity="0.55"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
-      </span>
-      © 2026 SiteX-Ray
-    </div>
-    <div class="footer-links">
-      <a href="mailto:ernest2011kostevich@gmail.com">Contact</a>
-      <a href="/terms.html">Terms</a>
-      <a href="/privacy.html">Privacy</a>
+  <div class="wrap">
+    <div class="brand" style="font-size:14px"><span class="brand-icon" style="width:24px;height:24px;font-size:12px">X</span> © 2026 SiteX-Ray</div>
+    <div>
+      <a href="mailto:ernest2011kostevich@gmail.com" style="margin-right:20px;color:var(--muted)">Contact</a>
+      <a href="/terms.html" style="margin-right:20px;color:var(--muted)">Terms</a>
+      <a href="/privacy.html" style="color:var(--muted)">Privacy</a>
     </div>
   </div>
 </footer>
 
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
-  // ============================================================
-  // Customer-facing config — only TURNSTILE_SITE_KEY needs editing.
-  // Paid checkout: direct USDT (TRC-20 / ERC-20) + on-chain tx hash verification.
-  // ============================================================
-  const TURNSTILE_SITE_KEY = "";   // public site key from Cloudflare Turnstile (optional but recommended)
-  const PAY_NETWORKS = {
-    trc20: { address: "TV1EBHTyvpP98jZGerz6sRmZvipn15LqDA", placeholder: "64-char TRON tx hash" },
-    erc20: { address: "0x9339686861079c781e0249ee64a509F893E2367c", placeholder: "0x… Ethereum tx hash" },
-  };
+const TURNSTILE_SITE_KEY = "";
+const PAY_NETWORKS = {
+  trc20: { address: "TV1EBHTyvpP98jZGerz6sRmZvipn15LqDA", placeholder: "64-char TRON tx hash" },
+  erc20: { address: "0x9339686861079c781e0249ee64a509F893E2367c", placeholder: "0x… Ethereum tx hash" },
+};
 
-  // ── Form & checkout logic ────────────────────────────────────
-  (function () {
-    const form = document.getElementById("hero-form");
-    const urlInput = document.getElementById("url-input");
-    const emailInput = document.getElementById("email-input");
-    const byokInput = document.getElementById("anthropic-key-input");
-    const submitBtn = document.getElementById("submit-btn");
-    const statusEl = document.getElementById("form-status");
-    const turnstileContainer = document.getElementById("turnstile-container");
+(function () {
+  const form = document.getElementById("hero-form");
+  const urlInput = document.getElementById("url-input");
+  const emailInput = document.getElementById("email-input");
+  const byokInput = document.getElementById("anthropic-key-input");
+  const submitBtn = document.getElementById("submit-btn");
+  const statusEl = document.getElementById("form-status");
+  const turnstileContainer = document.getElementById("turnstile-container");
 
-    if (TURNSTILE_SITE_KEY && turnstileContainer) {
-      const w = document.createElement("div");
-      w.className = "cf-turnstile";
-      w.setAttribute("data-sitekey", TURNSTILE_SITE_KEY);
-      w.setAttribute("data-theme", "dark");
-      turnstileContainer.appendChild(w);
-    }
+  if (TURNSTILE_SITE_KEY && turnstileContainer) {
+    const w = document.createElement("div");
+    w.className = "cf-turnstile";
+    w.setAttribute("data-sitekey", TURNSTILE_SITE_KEY);
+    w.setAttribute("data-theme", "dark");
+    turnstileContainer.appendChild(w);
+  }
 
-    function setStatus(text, kind) {
-      statusEl.textContent = text || "";
-      if (kind) statusEl.setAttribute("data-kind", kind);
-      else statusEl.removeAttribute("data-kind");
-    }
+  function setStatus(text, kind) {
+    statusEl.textContent = text || "";
+    if (kind) statusEl.setAttribute("data-kind", kind);
+    else statusEl.removeAttribute("data-kind");
+  }
 
-    function getTurnstileToken() {
-      if (!TURNSTILE_SITE_KEY) return null;
-      const input = document.querySelector('input[name="cf-turnstile-response"]');
-      return input ? input.value : null;
-    }
+  function getTurnstileToken() {
+    if (!TURNSTILE_SITE_KEY) return null;
+    const input = document.querySelector('input[name="cf-turnstile-response"]');
+    return input ? input.value : null;
+  }
 
-    form.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const url = urlInput.value.trim();
-      const email = emailInput.value.trim();
-      if (!url || !email) {
-        setStatus("Please enter both a URL and an email.", "error");
-        return;
-      }
-      if (TURNSTILE_SITE_KEY && !getTurnstileToken()) {
-        setStatus("Please complete the bot check first.", "error");
-        return;
-      }
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const url = urlInput.value.trim();
+    const email = emailInput.value.trim();
+    if (!url || !email) { setStatus("Enter URL and email.", "error"); return; }
+    if (TURNSTILE_SITE_KEY && !getTurnstileToken()) { setStatus("Complete the bot check.", "error"); return; }
 
-      submitBtn.disabled = true;
-      const originalHTML = submitBtn.innerHTML;
-      submitBtn.textContent = "Sending…";
-      submitBtn.classList.add("btn-loading");
-      setStatus("", null);
+    submitBtn.disabled = true;
+    const orig = submitBtn.innerHTML;
+    submitBtn.textContent = "Starting…";
+    submitBtn.classList.add("btn-loading");
+    setStatus("", null);
 
-      const anthropicApiKey = byokInput ? byokInput.value.trim() : "";
-
-      try {
-        const response = await fetch("/api/audit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            url: url,
-            email: email,
-            turnstileToken: getTurnstileToken(),
-            anthropicApiKey: anthropicApiKey || undefined,
-          }),
-        });
-        const data = await response.json().catch(() => ({}));
-        if (response.ok && data.ok) {
-          setStatus(data.message || "Generating your report…", "success");
-          form.style.display = "none";
-          const proSection = document.getElementById("pro-section");
-          if (proSection) proSection.style.display = "none";
-          if (data.reportKey) pollFreeReport(data.reportKey);
-        } else {
-          setStatus(data.error || "Something went wrong. Please try again.", "error");
-        }
-      } catch (e) {
-        setStatus("Couldn't reach the server. Please try again in a moment.", "error");
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalHTML;
-        submitBtn.classList.remove("btn-loading");
-      }
-    });
-
-    // ── USDT payment modal ─────────────────────────────────────
-    const payOverlay = document.getElementById("pay-overlay");
-    const payAddress = document.getElementById("pay-address");
-    const payTxInput = document.getElementById("pay-txhash");
-    const payStatus = document.getElementById("pay-status");
-    const paySubmit = document.getElementById("pay-submit");
-    let payNetwork = "trc20";
-
-    function setPayStatus(text, kind) {
-      payStatus.textContent = text || "";
-      if (kind) payStatus.setAttribute("data-kind", kind);
-      else payStatus.removeAttribute("data-kind");
-    }
-
-    function selectPayNetwork(net) {
-      payNetwork = net;
-      document.querySelectorAll(".pay-tab").forEach((t) => {
-        t.classList.toggle("active", t.getAttribute("data-network") === net);
+    try {
+      const res = await fetch("/api/audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url, email,
+          turnstileToken: getTurnstileToken(),
+          anthropicApiKey: byokInput?.value.trim() || undefined,
+        }),
       });
-      const cfg = PAY_NETWORKS[net];
-      if (cfg && payAddress) payAddress.textContent = cfg.address;
-      if (cfg && payTxInput) payTxInput.placeholder = cfg.placeholder;
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        setStatus("Generating your report…", "success");
+        form.style.display = "none";
+        const pro = document.getElementById("pro-section");
+        if (pro) pro.style.display = "none";
+        if (data.reportKey) pollFreeReport(data.reportKey);
+      } else {
+        setStatus(data.error || "Something went wrong.", "error");
+      }
+    } catch {
+      setStatus("Server unreachable. Try again.", "error");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = orig;
+      submitBtn.classList.remove("btn-loading");
     }
+  });
 
-    document.querySelectorAll(".pay-tab").forEach((tab) => {
-      tab.addEventListener("click", () => selectPayNetwork(tab.getAttribute("data-network")));
-    });
+  const payOverlay = document.getElementById("pay-overlay");
+  const payAddress = document.getElementById("pay-address");
+  const payTxInput = document.getElementById("pay-txhash");
+  const payStatus = document.getElementById("pay-status");
+  const paySubmit = document.getElementById("pay-submit");
+  let payNetwork = "trc20";
 
-    document.getElementById("pay-close")?.addEventListener("click", () => payOverlay.classList.remove("open"));
-    document.getElementById("pay-cancel")?.addEventListener("click", () => payOverlay.classList.remove("open"));
-    payOverlay?.addEventListener("click", (e) => { if (e.target === payOverlay) payOverlay.classList.remove("open"); });
+  function setPayStatus(text, kind) {
+    payStatus.textContent = text || "";
+    if (kind) payStatus.setAttribute("data-kind", kind);
+    else payStatus.removeAttribute("data-kind");
+  }
 
-    document.getElementById("pay-copy")?.addEventListener("click", async () => {
-      const addr = payAddress?.textContent || "";
+  function selectPayNetwork(net) {
+    payNetwork = net;
+    document.querySelectorAll(".pay-tab").forEach(t =>
+      t.classList.toggle("active", t.getAttribute("data-network") === net));
+    const cfg = PAY_NETWORKS[net];
+    if (cfg && payAddress) payAddress.textContent = cfg.address;
+    if (cfg && payTxInput) payTxInput.placeholder = cfg.placeholder;
+  }
+
+  document.querySelectorAll(".pay-tab").forEach(tab =>
+    tab.addEventListener("click", () => selectPayNetwork(tab.getAttribute("data-network"))));
+
+  document.getElementById("pay-close")?.addEventListener("click", () => payOverlay.classList.remove("open"));
+  document.getElementById("pay-cancel")?.addEventListener("click", () => payOverlay.classList.remove("open"));
+  payOverlay?.addEventListener("click", e => { if (e.target === payOverlay) payOverlay.classList.remove("open"); });
+
+  document.getElementById("pay-copy")?.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(payAddress?.textContent || "");
+      setPayStatus("Copied!", "success");
+      setTimeout(() => setPayStatus(""), 2000);
+    } catch { setPayStatus("Copy manually", "error"); }
+  });
+
+  paySubmit?.addEventListener("click", async () => {
+    const txHash = (payTxInput.value || "").trim();
+    if (!txHash) { setPayStatus("Paste tx hash after payment.", "error"); return; }
+    paySubmit.disabled = true;
+    setPayStatus("Verifying…", null);
+    try {
+      const res = await fetch("/api/verify-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: urlInput.value.trim(), email: emailInput.value.trim(),
+          network: payNetwork, txHash, turnstileToken: getTurnstileToken(),
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        setPayStatus("Verified! Redirecting…", "success");
+        setTimeout(() => {
+          window.location.href = "/success.html?key=" + encodeURIComponent(data.reportKey || txHash);
+        }, 1200);
+      } else {
+        setPayStatus(data.error || "Verification failed.", "error");
+      }
+    } catch { setPayStatus("Server error.", "error"); }
+    finally { paySubmit.disabled = false; }
+  });
+
+  function pollFreeReport(key) {
+    let tries = 0;
+    const poll = async () => {
+      tries++;
       try {
-        await navigator.clipboard.writeText(addr);
-        setPayStatus("Address copied!", "success");
-        setTimeout(() => setPayStatus(""), 2000);
-      } catch {
-        setPayStatus("Copy failed — select and copy manually", "error");
-      }
-    });
-
-    paySubmit?.addEventListener("click", async () => {
-      const url = (urlInput.value || "").trim();
-      const email = (emailInput.value || "").trim();
-      const txHash = (payTxInput.value || "").trim();
-      if (!txHash) {
-        setPayStatus("Paste your transaction hash after sending USDT.", "error");
-        return;
-      }
-      paySubmit.disabled = true;
-      setPayStatus("Verifying on-chain…", null);
-      try {
-        const response = await fetch("/api/verify-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            url, email, network: payNetwork, txHash,
-            turnstileToken: getTurnstileToken(),
-          }),
-        });
-        const data = await response.json().catch(() => ({}));
-        if (response.ok && data.ok) {
-          setPayStatus(data.message || "Verified! Check your inbox.", "success");
-          const rk = data.reportKey || txHash;
-          setTimeout(() => {
-            window.location.href = "/success.html?key=" + encodeURIComponent(rk);
-          }, 1500);
-        } else {
-          setPayStatus(data.error || "Verification failed. Check amount, address, and tx hash.", "error");
-        }
-      } catch {
-        setPayStatus("Couldn't reach the server. Try again.", "error");
-      } finally {
-        paySubmit.disabled = false;
-      }
-    });
-
-    function pollFreeReport(key) {
-      let tries = 0;
-      const maxTries = 60;
-      const linkId = "report-ready-link";
-      const poll = async () => {
-        tries++;
-        try {
-          const st = await fetch("/api/report-status?kind=free&key=" + encodeURIComponent(key));
-          const status = st.ok ? await st.json() : {};
-          if (status.ready) {
-            let a = document.getElementById(linkId);
-            if (!a) {
-              a = document.createElement("a");
-              a.id = linkId;
-              a.className = "btn btn-primary";
-              a.style.marginTop = "16px";
-              a.target = "_blank";
-              a.rel = "noopener";
-              a.textContent = "Open your SiteX-Ray report →";
-              statusEl.parentNode.insertBefore(a, statusEl.nextSibling);
-            }
-            a.href = "/api/report?kind=free&key=" + encodeURIComponent(key);
-            if (status.emailSent) {
-              setStatus("Done! Check inbox (and Promotions tab in Gmail) — or open below.", "success");
-            } else if (status.emailError) {
-              setStatus("Report ready (button below). Email delivery failed — we're fixing this.", "error");
-            } else {
-              setStatus("Report ready — open below.", "success");
-            }
-            return;
+        const st = await fetch("/api/report-status?kind=free&key=" + encodeURIComponent(key));
+        const status = st.ok ? await st.json() : {};
+        if (status.ready) {
+          let a = document.getElementById("report-ready-link");
+          if (!a) {
+            a = document.createElement("a");
+            a.id = "report-ready-link";
+            a.className = "btn btn-primary";
+            a.style.marginTop = "14px";
+            a.target = "_blank";
+            a.rel = "noopener";
+            a.textContent = "Open your report →";
+            statusEl.after(a);
           }
-        } catch (_) {}
-        if (tries < maxTries) {
-          setStatus("Generating your SiteX-Ray report… (" + tries + ")", null);
-          setTimeout(poll, 4000);
-        } else {
-          setStatus("Taking longer than usual — try again in a minute.", "error");
+          a.href = "/api/report?kind=free&key=" + encodeURIComponent(key);
+          setStatus(status.emailSent
+            ? "Done! Check email or open report below."
+            : "Report ready — open below.", "success");
+          return;
         }
-      };
-      poll();
-    }
-
-    window.goToCheckout = function (event) {
-      if (event) event.preventDefault();
-
-      const url = (urlInput.value || "").trim();
-      const email = (emailInput.value || "").trim();
-
-      if (!url || !email) {
-        const heroForm = document.getElementById("hero-form");
-        if (heroForm) {
-          heroForm.scrollIntoView({ behavior: "smooth", block: "center" });
-          setTimeout(() => {
-            if (!url) urlInput.focus();
-            else emailInput.focus();
-          }, 600);
-        }
-        setStatus(
-          !url
-            ? "👆 Enter your website URL above, then click \"Get full audit — $39\" again."
-            : "👆 Enter your email above, then click \"Get full audit — $39\" again.",
-          "error"
-        );
-        return false;
+      } catch (_) {}
+      if (tries < 60) {
+        setStatus("Generating report… (" + tries + ")", null);
+        setTimeout(poll, 4000);
+      } else {
+        setStatus("Taking longer than usual — try again soon.", "error");
       }
+    };
+    poll();
+  }
 
-      try {
-        new URL(/^https?:\/\//i.test(url) ? url : "https://" + url);
-      } catch {
-        urlInput.focus();
-        setStatus("That URL doesn't look right. Try something like https://yourbusiness.com", "error");
-        return false;
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        emailInput.focus();
-        setStatus("That email doesn't look right.", "error");
-        return false;
-      }
-
-      setStatus("", null);
-      setPayStatus("", null);
-      payTxInput.value = "";
-      selectPayNetwork("trc20");
-      payOverlay.classList.add("open");
-      payTxInput.focus();
+  window.goToCheckout = function (event) {
+    if (event) event.preventDefault();
+    const url = urlInput.value.trim();
+    const email = emailInput.value.trim();
+    if (!url || !email) {
+      document.getElementById("hero-form").scrollIntoView({ behavior: "smooth" });
+      setStatus(!url ? "Enter your URL first." : "Enter your email first.", "error");
       return false;
-    };
-  })();
-
-  // ── Scroll-triggered reveal animations ──────────────────────
-  (function () {
-    if (!("IntersectionObserver" in window)) {
-      // Fallback: show everything immediately
-      document.querySelectorAll(".reveal, .reveal-stagger").forEach(el => el.classList.add("is-visible"));
-      return;
     }
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -60px 0px" });
-    document.querySelectorAll(".reveal, .reveal-stagger").forEach(el => io.observe(el));
-  })();
-
-  // ── Animated stat counters ──────────────────────────────────
-  (function () {
-    if (!("IntersectionObserver" in window)) return;
-    const counters = document.querySelectorAll(".stat .num");
-    const animate = (el) => {
-      const text = el.textContent.trim();
-      const match = text.match(/^(\d+)(.*)$/);
-      if (!match) return;
-      const target = parseInt(match[1], 10);
-      const suffix = match[2];
-      const duration = 1000;
-      const start = performance.now();
-      const tick = (now) => {
-        const t = Math.min((now - start) / duration, 1);
-        const eased = 1 - Math.pow(1 - t, 3);
-        const v = Math.round(target * eased);
-        el.textContent = v + suffix;
-        if (t < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    };
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          animate(entry.target);
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.5 });
-    counters.forEach(el => {
-      // Preserve "$" prefix counters like "$39" — only animate digit-leading
-      if (/^\d/.test(el.textContent.trim())) {
-        io.observe(el);
-      }
-    });
-  })();
+    setStatus("", null);
+    setPayStatus("", null);
+    payTxInput.value = "";
+    selectPayNetwork("trc20");
+    payOverlay.classList.add("open");
+    return false;
+  };
+})();
 </script>
-
 </body>
 </html>
