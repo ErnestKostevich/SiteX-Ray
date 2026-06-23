@@ -58,27 +58,33 @@ function findingHtml(f) {
 
 function quickWinHtml(qw) {
   if (!qw) return "";
-  return `<div style="border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:12px;">
-  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-    <strong style="font-size:16px;">${esc(qw.title)}</strong>
-    <span style="font-size:12px; color:#64748b;">
-      <span style="display:inline-block; padding:2px 8px; background:#f8fafc; border-radius:999px;">⏱ ${esc(qw.effort)}</span>
-      <span style="display:inline-block; padding:2px 8px; background:#f8fafc; border-radius:999px; margin-left:6px;">📈 ${esc(qw.impact)}</span>
-    </span>
-  </div>
-  <div style="font-size:14px; line-height:1.55;">${esc(qw.how)}</div>
-</div>`;
+  return `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid #e2e8f0; border-radius:10px; margin-bottom:12px; border-collapse:separate;">
+  <tr><td style="padding:16px;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+      <td style="font-size:16px; font-weight:700; vertical-align:top;">${esc(qw.title)}</td>
+      <td align="right" style="font-size:12px; color:#64748b; white-space:nowrap; vertical-align:top; padding-left:12px;">
+        <span style="padding:2px 8px; background:#f8fafc; border-radius:999px;">${esc(qw.effort)}</span>
+        <span style="padding:2px 8px; background:#f8fafc; border-radius:999px; margin-left:4px;">${esc(qw.impact)} impact</span>
+      </td>
+    </tr></table>
+    <div style="font-size:14px; line-height:1.55; margin-top:8px;">${esc(qw.how)}</div>
+  </td></tr>
+</table>`;
 }
 
 function recommendationHtml(r) {
   if (!r) return "";
-  return `<div style="border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:12px;">
-  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-    <strong style="font-size:16px;">${esc(r.title)}</strong>
-    <span style="display:inline-block; padding:2px 8px; background:#f8fafc; border-radius:999px; font-size:12px; color:#64748b;">⏱ ${esc(r.estimated_effort)}</span>
-  </div>
-  <div style="font-size:14px; line-height:1.55;">${esc(r.rationale)}</div>
-</div>`;
+  return `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid #e2e8f0; border-radius:10px; margin-bottom:12px; border-collapse:separate;">
+  <tr><td style="padding:16px;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+      <td style="font-size:16px; font-weight:700; vertical-align:top;">${esc(r.title)}</td>
+      <td align="right" style="font-size:12px; color:#64748b; white-space:nowrap; vertical-align:top; padding-left:12px;">
+        <span style="padding:2px 8px; background:#f8fafc; border-radius:999px;">${esc(r.estimated_effort)}</span>
+      </td>
+    </tr></table>
+    <div style="font-size:14px; line-height:1.55; margin-top:8px;">${esc(r.rationale)}</div>
+  </td></tr>
+</table>`;
 }
 
 const SECTION_LABELS = {
@@ -112,11 +118,13 @@ export function renderReport(report, opts = {}) {
     .join("");
 
   const upsell = free
-    ? `<div style="margin:40px 0; padding:24px; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; border-radius:12px; text-align:center;">
-        <h2 style="color:#fff; border:none; margin:0 0 8px; font-size:22px;">This was the free teaser</h2>
-        <p style="margin:0 0 16px; opacity:.95;">In the full report: deep dives on all 5 dimensions, 5–7 quick wins, every critical issue, and a 90-day strategic plan. 10–15 pages.</p>
-        ${ctaUrl ? `<a href="${esc(ctaUrl)}" style="display:inline-block; padding:12px 24px; background:#fff; color:#6366f1; border-radius:8px; font-weight:600; text-decoration:none;">Get the full audit — $39</a>` : ""}
-      </div>`
+    ? `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:40px 0; border-collapse:separate; border-radius:12px; background:#6366f1;">
+        <tr><td style="padding:28px 24px; text-align:center; color:#fff;">
+          <h2 style="color:#fff; border:none; margin:0 0 8px; font-size:22px;">This was the free teaser</h2>
+          <p style="margin:0 0 16px; color:#e0e7ff; font-size:15px; line-height:1.5;">The full report adds deep dives on all 5 dimensions, 5–7 quick wins, every critical issue, and a 90-day strategic plan.</p>
+          ${ctaUrl ? `<a href="${esc(ctaUrl)}" style="display:inline-block; padding:12px 24px; background:#fff; color:#6366f1; border-radius:8px; font-weight:600; text-decoration:none;">Get the full audit — $39</a>` : ""}
+        </td></tr>
+      </table>`
     : "";
 
   const sectionBlocks = !free
@@ -144,31 +152,41 @@ export function renderReport(report, opts = {}) {
   const verdictBgColor = verdictColor(report.verdict);
 
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Site audit — ${esc(report.domain)}</title>
 </head>
-<body style="margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif; color:#0f172a; background:#fff; line-height:1.55; font-size:15px;">
-<div style="max-width:820px; margin:0 auto; padding:48px 28px;">
+<body style="margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif; color:#0f172a; background:#f1f5f9; line-height:1.55; font-size:15px; -webkit-text-size-adjust:100%;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f1f5f9;"><tr><td align="center" style="padding:24px 12px;">
+<table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px; width:100%; background:#ffffff; border-radius:12px; border:1px solid #e2e8f0;">
+<tr><td style="padding:40px 28px;">
 
-  <div style="font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:#64748b; margin-bottom:8px;">AI Site Audit</div>
-  <h1 style="font-size:32px; margin:0 0 8px; letter-spacing:-.02em;">${esc(report.domain)}</h1>
-  <div style="color:#64748b; font-size:14px; margin-bottom:32px; word-break:break-all;"><a href="${esc(report.url)}" style="color:#6366f1; text-decoration:none;">${esc(report.url)}</a></div>
+  <div style="font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:#6366f1; font-weight:600; margin-bottom:8px;">SiteX-Ray</div>
+  <h1 style="font-size:28px; margin:0 0 8px; letter-spacing:-.02em; line-height:1.2;">${esc(report.domain)}</h1>
+  <div style="color:#64748b; font-size:14px; margin-bottom:28px; word-break:break-all;"><a href="${esc(report.url)}" style="color:#6366f1; text-decoration:none;">${esc(report.url)}</a></div>
 
-  <div style="display:flex; gap:24px; align-items:stretch; padding:24px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:32px;">
-    <div style="flex:0 0 140px; height:140px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; background:${headerColor};">
-      <div style="font-size:48px; font-weight:700; line-height:1;">${esc(report.overall_score)}</div>
-      <div style="font-size:13px; opacity:.8; margin-top:4px;">out of 100</div>
-    </div>
-    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
-      <span style="display:inline-block; padding:4px 12px; border-radius:999px; color:#fff; font-size:13px; font-weight:600; margin-bottom:12px; align-self:flex-start; background:${verdictBgColor};">${esc(report.verdict)}</span>
-      <p style="font-size:17px; line-height:1.5; margin:0 0 8px;">${esc(report.tldr)}</p>
-      ${report.headline_finding ? `<p style="color:#64748b; font-size:14px; margin:0;">→ ${esc(report.headline_finding)}</p>` : ""}
-    </div>
-  </div>
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:28px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; border-collapse:separate;">
+    <tr>
+      <td width="120" align="center" valign="middle" style="padding:20px 12px;">
+        <table cellpadding="0" cellspacing="0" border="0" width="100" height="100" style="border-radius:50%; background:${headerColor};">
+          <tr><td align="center" valign="middle" style="color:#fff; padding:16px 0;">
+            <div style="font-size:42px; font-weight:700; line-height:1;">${esc(report.overall_score)}</div>
+            <div style="font-size:11px; margin-top:4px; color:#ffffff;">/ 100</div>
+          </td></tr>
+        </table>
+      </td>
+      <td valign="middle" style="padding:20px 16px 20px 0;">
+        <span style="display:inline-block; padding:4px 12px; border-radius:999px; color:#fff; font-size:12px; font-weight:600; margin-bottom:10px; background:${verdictBgColor};">${esc(report.verdict)}</span>
+        <p style="font-size:16px; line-height:1.5; margin:0 0 8px; color:#0f172a;">${esc(report.tldr)}</p>
+        ${report.headline_finding ? `<p style="color:#64748b; font-size:14px; margin:0; line-height:1.5;">${esc(report.headline_finding)}</p>` : ""}
+      </td>
+    </tr>
+  </table>
 
-  <table cellpadding="0" cellspacing="0" border="0" style="width:100%; margin-bottom:40px; border-collapse:separate; border-spacing:6px 0;">
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:32px; border-collapse:separate; border-spacing:4px 0;">
     <tr>${sectionsGrid}</tr>
   </table>
 
@@ -198,11 +216,16 @@ export function renderReport(report, opts = {}) {
       : ""
   }
 
-  <div style="margin-top:56px; padding-top:24px; border-top:1px solid #e2e8f0; color:#64748b; font-size:12px; text-align:center;">
-    SiteX-Ray · AI audit generated ${new Date().toUTCString()}
-  </div>
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:40px; border-top:1px solid #e2e8f0;">
+    <tr><td style="padding-top:20px; color:#64748b; font-size:12px; text-align:center; line-height:1.5;">
+      SiteX-Ray · AI-powered website audit<br>
+      <span style="color:#94a3b8;">${new Date().toUTCString()}</span>
+    </td></tr>
+  </table>
 
-</div>
+</td></tr>
+</table>
+</td></tr></table>
 </body>
 </html>`;
 }
