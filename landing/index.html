@@ -781,44 +781,68 @@ const PAY_NETWORKS = {
     finally { paySubmit.disabled = false; }
   });
 
+  function showReportReady(key, status) {
+    const reportHref = "/api/report?kind=free&key=" + encodeURIComponent(key);
+    let a = document.getElementById("report-ready-link");
+    if (!a) {
+      a = document.createElement("a");
+      a.id = "report-ready-link";
+      a.className = "btn btn-primary";
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent = "Open your report";
+      statusEl.insertAdjacentElement("afterend", a);
+    }
+    a.href = reportHref;
+    const box = document.getElementById("report-ready-box");
+    if (box) {
+      box.style.display = "block";
+      if (status.emailSent) {
+        box.innerHTML = "<strong>Report ready</strong><p>Email sent with your private link. Save this page — button works for 7 days.</p>";
+        setStatus("Done. Open report or check email.", "success");
+      } else if (status.emailError) {
+        box.innerHTML = "<strong style=\"color:var(--red)\">Email failed</strong><p>Report is ready — use the button above. (" + (status.emailError || "unknown") + ")</p>";
+        setStatus("Report ready on web.", "error");
+      } else {
+        box.innerHTML = "<strong>Report ready</strong><p>Open with the button above. Private link — 7 days.</p>";
+        setStatus("Report ready.", "success");
+      }
+    }
+  }
+
   function pollFreeReport(key) {
     let tries = 0;
     const poll = async () => {
       tries++;
       try {
+        const reportRes = await fetch("/api/report?kind=free&key=" + encodeURIComponent(key));
+        const ctype = reportRes.headers.get("content-type") || "";
+
+        if (reportRes.ok && ctype.includes("text/html")) {
+          const st = await fetch("/api/report-status?kind=free&key=" + encodeURIComponent(key));
+          const status = st.ok ? await st.json() : {};
+          showReportReady(key, status);
+          return;
+        }
+
+        if (reportRes.status === 500) {
+          const err = await reportRes.json().catch(() => ({}));
+          setStatus(err.error || "Generation failed.", "error");
+          return;
+        }
+
         const st = await fetch("/api/report-status?kind=free&key=" + encodeURIComponent(key));
         const status = st.ok ? await st.json() : {};
+        if (status.error) {
+          setStatus(status.error, "error");
+          return;
+        }
         if (status.ready) {
-          const reportHref = "/api/report?kind=free&key=" + encodeURIComponent(key);
-          let a = document.getElementById("report-ready-link");
-          if (!a) {
-            a = document.createElement("a");
-            a.id = "report-ready-link";
-            a.className = "btn btn-primary";
-            a.target = "_blank";
-            a.rel = "noopener";
-            a.textContent = "Open your report";
-            statusEl.insertAdjacentElement("afterend", a);
-          }
-          a.href = reportHref;
-          const box = document.getElementById("report-ready-box");
-          if (box) {
-            box.style.display = "block";
-            if (status.emailSent) {
-              box.innerHTML = "<strong>Report ready</strong><p>Email sent with your private link. Save this page — button works for 7 days.</p>";
-              setStatus("Done. Open report or check email.", "success");
-            } else if (status.emailError) {
-              box.innerHTML = "<strong style=\"color:var(--red)\">Email failed</strong><p>Report is ready — use the button above. (" + (status.emailError || "unknown") + ")</p>";
-              setStatus("Report ready on web.", "error");
-            } else {
-              box.innerHTML = "<strong>Report ready</strong><p>Open with the button above. Private link — 7 days.</p>";
-              setStatus("Report ready.", "success");
-            }
-          }
+          showReportReady(key, status);
           return;
         }
       } catch (_) {}
-      if (tries < 60) {
+      if (tries < 45) {
         setStatus("Generating… (" + tries + ") — stay on this page.", null);
         setTimeout(poll, 4000);
       } else {
