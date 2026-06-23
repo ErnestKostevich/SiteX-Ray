@@ -19,7 +19,7 @@ CLOUDFLARE_ACCOUNT_ID=6609012adc88f397f50eba13ea2c242f
 ANTHROPIC_API_KEY=
 ANTHROPIC_MODEL=claude-sonnet-4-5
 
-# Cloudflare AI model override (OPTIONAL — defaults to llama-3.1-8b-instruct)
+# Cloudflare AI model override (OPTIONAL — defaults to llama-3.1-8b-instruct-fast)
 CF_AI_MODEL=
 
 # USDT payments are verified on-chain — no payment processor keys needed.
