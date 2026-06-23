@@ -93,10 +93,10 @@ export async function runAuditAndEmail(opts) {
   }
 
   const subject = free
-    ? `Your free site audit — ${siteData.domain}`
+    ? `Your audit is ready — open report (${siteData.domain})`
     : byokAnthropicKey
-      ? `Your full SiteX-Ray audit (Claude · BYOK) — ${siteData.domain}`
-      : `Your full SiteX-Ray report — ${siteData.domain}`;
+      ? `Your full audit is ready — open report (${siteData.domain})`
+      : `Your full audit is ready — open report (${siteData.domain})`;
 
   let emailSent = false;
   let emailError = null;

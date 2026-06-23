@@ -12,16 +12,16 @@ function esc(str) {
 }
 
 const C = {
-  outer: "#eef2f7",
-  card: "#ffffff",
-  soft: "#f8fafc",
-  ink: "#0f172a",
-  inkSoft: "#334155",
-  muted: "#64748b",
-  border: "#e2e8f0",
-  accent: "#6366f1",
-  accentSoft: "#eef2ff",
-  accentDark: "#4f46e5",
+  outer: "#08050f",
+  card: "#110a1c",
+  soft: "#160f24",
+  ink: "#f3eeff",
+  inkSoft: "#c4b5e0",
+  muted: "#7c6b9e",
+  border: "#2a1f42",
+  accent: "#8b5cf6",
+  accentSoft: "#1e1535",
+  accentDark: "#a78bfa",
 };
 
 function scoreColor(score) {
@@ -51,9 +51,9 @@ function severityColor(sev) {
 
 function brandHeader(free) {
   const badge = free ? "Free preview" : "Full report";
-  const badgeBg = free ? C.accentSoft : "#f0fdf4";
-  const badgeColor = free ? C.accentDark : "#166534";
-  const badgeBorder = free ? "#c7d2fe" : "#bbf7d0";
+  const badgeBg = free ? C.accentSoft : "#14261f";
+  const badgeColor = free ? C.accentDark : "#34d399";
+  const badgeBorder = free ? "#3b2d66" : "#1f4d3a";
 
   return `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:28px;">
     <tr>
@@ -192,7 +192,7 @@ export function renderEmailNotification(report, opts = {}) {
   <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td align="center">
     <a href="${esc(reportUrl)}" style="display:inline-block;padding:16px 32px;background:${C.accent};color:#fff;border-radius:10px;font-weight:700;font-size:16px;text-decoration:none;">Open your full report →</a>
   </td></tr></table>
-  <p style="font-size:12px;color:${C.muted};text-align:center;margin:16px 0 0;line-height:1.5;">No account needed — this link is yours for 7 days.<br>Bookmark it if email is slow.</p>
+  <p style="font-size:12px;color:${C.muted};text-align:center;margin:16px 0 0;line-height:1.5;">The full report opens in your browser — not attached to this email.<br>No account needed — link works 7 days. Check Spam if you don't see this.</p>
   ${free && ctaUrl ? `<p style="text-align:center;margin-top:20px;font-size:13px;"><a href="${esc(ctaUrl)}" style="color:${C.accent};font-weight:600;">Upgrade to full audit — $39 USDT</a></p>` : ""}
   <p style="font-size:11px;color:${C.muted};text-align:center;margin-top:24px;border-top:1px solid ${C.border};padding-top:16px;">SiteX-Ray · sitexray.xyz</p>
 </td></tr></table>
@@ -251,8 +251,8 @@ export function renderReport(report, opts = {}) {
 
   const paidRibbon = premium
     ? `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:20px;">
-        <tr><td style="padding:12px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;text-align:center;">
-          <span style="color:#166534;font-size:13px;font-weight:600;">✓ Full audit report — all dimensions, issues, and 90-day plan included</span>
+        <tr><td style="padding:12px 16px;background:#14261f;border:1px solid #1f4d3a;border-radius:10px;text-align:center;">
+          <span style="color:#34d399;font-size:13px;font-weight:600;">✓ Full audit report — all dimensions, issues, and 90-day plan included</span>
         </td></tr>
       </table>`
     : "";
@@ -318,7 +318,7 @@ export function renderReport(report, opts = {}) {
   @media screen {
     body { margin: 0; padding: 24px 16px; background: ${C.outer}; }
   }
-  @media print { body { background: #fff; padding: 0; } }
+  @media print { body { background: ${C.outer}; padding: 0; } }
   @media (max-width: 600px) {
     body { padding: 12px 8px !important; }
     .report-card { border-radius: 12px !important; }
