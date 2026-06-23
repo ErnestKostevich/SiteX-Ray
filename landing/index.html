@@ -15,43 +15,53 @@
 <meta property="og:url" content="https://sitexray.xyz/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #07090d;
-    --bg-elev: #0e1117;
-    --bg-card: #12161d;
-    --bg-card-hover: #161b22;
-    --border: #2a3140;
-    --border-subtle: #1a1f27;
-    --ink: #f0f6fc;
-    --ink-soft: #d0d7e2;
-    --muted: #9aa4b2;
-    --muted-2: #6b7280;
-    --accent-1: #818cf8;
-    --accent-2: #a78bfa;
-    --accent-3: #c084fc;
-    --green: #34d399;
-    --red: #f87171;
-    --yellow: #fbbf24;
-    --gradient: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #c084fc 100%);
-    --gradient-soft: linear-gradient(135deg, rgba(129,140,248,0.14), rgba(167,139,250,0.08));
-    --radius: 14px;
-    --radius-sm: 10px;
-    --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --bg: #050608;
+    --bg-elev: #0c0f14;
+    --bg-card: #11151c;
+    --bg-card-hover: #151a22;
+    --border: #252b36;
+    --border-subtle: #1a1f28;
+    --ink: #f8fafc;
+    --ink-soft: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #6366f1;
+    --accent-light: #818cf8;
+    --accent-glow: rgba(99, 102, 241, 0.35);
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    --radius: 16px;
+    --easing: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: var(--bg);
     color: var(--ink);
-    line-height: 1.55;
+    line-height: 1.6;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99,102,241,0.18), transparent),
+      radial-gradient(ellipse 50% 40% at 100% 50%, rgba(139,92,246,0.08), transparent);
+    pointer-events: none;
   }
 
   /* Background mesh — animated gradient blobs */
@@ -88,10 +98,10 @@
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
 
-  a { color: var(--accent-1); text-decoration: none; transition: color 0.2s var(--easing); }
-  a:hover { color: var(--accent-2); }
+  a { color: var(--accent-light); text-decoration: none; transition: color 0.2s var(--easing); }
+  a:hover { color: #a5b4fc; }
 
-  .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; position: relative; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; }
 
   /* ──────── NAV ──────── */
   nav {
@@ -160,12 +170,12 @@
   .btn-primary {
     background: var(--gradient);
     color: #fff;
-    box-shadow: 0 4px 20px rgba(129, 140, 248, 0.35);
+    box-shadow: 0 4px 20px var(--accent-glow);
     font-weight: 600;
   }
   .btn-primary:hover {
     transform: translateY(-1px);
-    box-shadow: 0 8px 28px rgba(129, 140, 248, 0.45);
+    box-shadow: 0 8px 28px var(--accent-glow);
     color: #fff;
   }
   .btn-secondary {
@@ -182,10 +192,17 @@
 
   /* ──────── HERO ──────── */
   .hero {
-    padding: 72px 0 48px;
-    text-align: center;
+    padding: 56px 0 80px;
     position: relative;
   }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .hero-content { text-align: left; }
+  .hero-preview { position: relative; }
   .pill {
     display: inline-flex;
     align-items: center;
@@ -211,11 +228,11 @@
     100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
   }
   h1 {
-    font-size: clamp(36px, 5.5vw, 64px);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    font-weight: 700;
-    margin-bottom: 20px;
+    font-size: clamp(32px, 4.5vw, 52px);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+    margin-bottom: 18px;
   }
   h1 .grad {
     background: var(--gradient);
@@ -225,53 +242,120 @@
   }
 
   .hero-sub {
-    font-size: clamp(17px, 1.6vw, 20px);
-    color: var(--ink-soft);
-    max-width: 620px;
-    margin: 0 auto 36px;
-    line-height: 1.5;
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 480px;
+    margin-bottom: 28px;
+    line-height: 1.55;
   }
 
   /* Hero form */
   .hero-form {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr auto;
-    gap: 10px;
-    max-width: 720px;
-    margin: 0 auto 14px;
-    padding: 8px;
-    background: rgba(18, 22, 29, 0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 440px;
+    margin-bottom: 16px;
+    padding: 20px;
+    background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    backdrop-filter: blur(20px);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     transition: border-color 0.3s var(--easing), box-shadow 0.3s var(--easing);
   }
   .hero-form:focus-within {
-    border-color: var(--accent-1);
-    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+    border-color: var(--accent);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 3px var(--accent-glow);
+  }
+  .form-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
   }
   .hero-form input {
-    background: transparent;
-    border: none;
-    padding: 14px 16px;
+    width: 100%;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 14px;
     color: var(--ink);
     font-size: 15px;
     font-family: inherit;
     outline: none;
-    min-width: 0;
+    transition: border-color 0.2s;
   }
-  .hero-form input::placeholder { color: var(--muted); }
-  .hero-form .btn { padding: 14px 22px; white-space: nowrap; }
+  .hero-form input:focus { border-color: var(--accent); }
+  .hero-form input::placeholder { color: #64748b; }
+  .hero-form .btn { width: 100%; padding: 15px 22px; margin-top: 4px; }
+
+  /* Report preview card */
+  .preview-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+  .preview-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .preview-brand { font-weight: 700; font-size: 14px; color: var(--ink-soft); }
+  .preview-domain { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .preview-score {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--red);
+    line-height: 1;
+  }
+  .preview-bars {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .preview-bar-row {
+    display: grid;
+    grid-template-columns: 72px 1fr 32px;
+    gap: 10px;
+    align-items: center;
+    font-size: 12px;
+  }
+  .preview-bar-row span:first-child { color: var(--muted); font-weight: 500; }
+  .preview-bar {
+    height: 6px;
+    background: var(--bg-elev);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .preview-bar-fill { height: 100%; border-radius: 99px; }
+  .preview-bar-row span:last-child { font-weight: 700; text-align: right; }
+  .preview-finding {
+    background: rgba(239,68,68,0.08);
+    border-left: 3px solid var(--red);
+    padding: 12px 14px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .preview-finding strong { color: var(--ink); display: block; margin-bottom: 4px; font-size: 13px; }
 
   .hero-tiny {
     font-size: 13px;
     color: var(--muted);
     margin-top: 14px;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
     flex-wrap: wrap;
-    justify-content: center;
   }
   .hero-tiny span { display: inline-flex; align-items: center; gap: 6px; }
   .hero-tiny svg { width: 14px; height: 14px; color: var(--green); }
@@ -305,7 +389,7 @@
   .form-status {
     margin-top: 14px;
     font-size: 14px;
-    text-align: center;
+    text-align: left;
     min-height: 20px;
     transition: color 0.3s var(--easing);
   }
@@ -1021,9 +1105,13 @@
   /* ──────── MOBILE ──────── */
   @media (max-width: 880px) {
     .nav-links a:not(.btn) { display: none; }
-
-    .hero-form { grid-template-columns: 1fr; gap: 8px; padding: 10px; }
-    .hero-form .btn { width: 100%; }
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-content { text-align: center; }
+    .hero-sub { margin-left: auto; margin-right: auto; }
+    .hero-form { margin-left: auto; margin-right: auto; max-width: 100%; }
+    .hero-tiny { justify-content: center; }
+    .hero-secondary-row { text-align: center; }
+    .hero-preview { order: -1; max-width: 400px; margin: 0 auto; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
     .steps { grid-template-columns: 1fr; }
     .steps::before { display: none; }
@@ -1064,60 +1152,79 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="container">
-    <div class="pill">
-      <span class="pulse-dot"></span>
-      SiteX-Ray · AI audit · 50+ signals · 60 seconds
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <div class="pill">
+        <span class="pulse-dot"></span>
+        AI website audit · 60 seconds
+      </div>
+
+      <h1>Find what's broken<br>on your <span class="grad">website</span></h1>
+
+      <p class="hero-sub">
+        Paste your URL — get a pro audit with specific fixes for SEO, UX, conversion, and tech. Free teaser or full report for $39 USDT.
+      </p>
+
+      <form class="hero-form" id="hero-form" novalidate>
+        <div class="form-field">
+          <label for="url-input">Website URL</label>
+          <input type="url" name="url" id="url-input" placeholder="https://yourwebsite.com" required autocomplete="url">
+        </div>
+        <div class="form-field">
+          <label for="email-input">Email for report</label>
+          <input type="email" name="email" id="email-input" placeholder="you@company.com" required autocomplete="email">
+        </div>
+        <button type="submit" class="btn btn-primary" id="submit-btn">
+          Get free report
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+
+      <div id="turnstile-container"></div>
+      <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
+
+      <p class="hero-tiny">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Free · No signup</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Email + web link</span>
+      </p>
+
+      <p class="hero-secondary-row">
+        Need the full report? <a href="#" onclick="return goToCheckout(event)">Pay 39 USDT</a>
+        · <a href="/sample-report.html" target="_blank" rel="noopener">Sample report</a>
+      </p>
+
+      <details class="pro-section" id="pro-section" style="max-width:440px;margin-top:16px;">
+        <summary>
+          <span><span class="pro-badge">PRO</span>Have a Claude API key? Get full report free</span>
+        </summary>
+        <div class="pro-body">
+          <input type="password" id="anthropic-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false">
+          <p class="pro-note">Paste your Anthropic key for a full 10–15 page audit. Used once, never stored. <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">Get a key</a></p>
+        </div>
+      </details>
     </div>
 
-    <h1>AI audit of your website<br>in <span class="grad">60 seconds</span></h1>
-
-    <p class="hero-sub">
-      Enter URL + email. Get specific fixes for SEO, UX, conversion, and tech — not vague scores. Free teaser now, or full report for 39 USDT.
-    </p>
-
-    <form class="hero-form" id="hero-form" novalidate>
-      <input type="url" name="url" id="url-input" placeholder="https://yourwebsite.com" required autocomplete="url">
-      <input type="email" name="email" id="email-input" placeholder="your@email.com" required autocomplete="email">
-      <button type="submit" class="btn btn-primary" id="submit-btn">
-        Get free report
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </button>
-    </form>
-
-    <div id="turnstile-container"></div>
-    <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
-
-    <details class="pro-section" id="pro-section">
-      <summary>
-        <span><span class="pro-badge">PRO</span>BYOK Claude — paste your own key for the full premium report (free)</span>
-      </summary>
-      <div class="pro-body">
-        <input
-          type="password"
-          id="anthropic-key-input"
-          placeholder="sk-ant-api03-..."
-          autocomplete="off"
-          spellcheck="false"
-        >
-        <p class="pro-note">
-          With your own Anthropic key, we'll skip the 1-page teaser and deliver the <strong>full 10–15 page Claude Sonnet audit</strong>, free. Your key is used once and never stored. Get one at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>.
-        </p>
+    <div class="hero-preview">
+      <div class="preview-card">
+        <div class="preview-head">
+          <div>
+            <div class="preview-brand">SiteX-Ray Report</div>
+            <div class="preview-domain">yourwebsite.com</div>
+          </div>
+          <div class="preview-score">34</div>
+        </div>
+        <div class="preview-bars">
+          <div class="preview-bar-row"><span>SEO</span><div class="preview-bar"><div class="preview-bar-fill" style="width:28%;background:var(--red);"></div></div><span style="color:var(--red)">28</span></div>
+          <div class="preview-bar-row"><span>UX</span><div class="preview-bar"><div class="preview-bar-fill" style="width:52%;background:var(--yellow);"></div></div><span style="color:var(--yellow)">52</span></div>
+          <div class="preview-bar-row"><span>Convert</span><div class="preview-bar"><div class="preview-bar-fill" style="width:22%;background:var(--red);"></div></div><span style="color:var(--red)">22</span></div>
+          <div class="preview-bar-row"><span>Tech</span><div class="preview-bar"><div class="preview-bar-fill" style="width:61%;background:var(--yellow);"></div></div><span style="color:var(--yellow)">61</span></div>
+        </div>
+        <div class="preview-finding">
+          <strong>Critical: No meta description</strong>
+          Google shows random text instead of your pitch. Replace with a 155-char summary of what you do.
+        </div>
       </div>
-    </details>
-
-    <p class="hero-tiny">
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> No signup</span>
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> No card needed</span>
-      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Inbox in ~2 minutes</span>
-    </p>
-
-    <p class="hero-secondary-row">
-      <a href="#" onclick="return goToCheckout(event)">Get full audit — $39 USDT</a>
-      &nbsp;·&nbsp;
-      <a href="/sample-report.html" target="_blank" rel="noopener">See sample report →</a>
-    </p>
-
+    </div>
   </div>
 </section>
 
@@ -1126,8 +1233,8 @@
   <div class="container">
     <div class="reveal">
       <div class="section-eyebrow">How it works</div>
-      <h2>From URL to action plan in 60 seconds</h2>
-      <p class="section-sub">No accounts. No installs. Paste a URL, get a report. That's it.</p>
+      <h2>Three steps. That's it.</h2>
+      <p class="section-sub">URL → AI scan → report in your inbox and on the web.</p>
     </div>
 
     <div class="steps reveal-stagger">
@@ -1155,40 +1262,25 @@
   <div class="container">
     <div class="reveal">
       <div class="section-eyebrow">What you get</div>
-      <h2>A consultant's brain.<br>In a PDF.</h2>
-      <p class="section-sub">Every report is generated fresh against a 50+ point checklist refined from years of conversion audits. No templates, no copy-paste.</p>
+      <h2>What lands in your inbox</h2>
+      <p class="section-sub">Not generic AI fluff — specific fixes pulled from your actual homepage.</p>
     </div>
 
-    <div class="features-grid reveal-stagger">
+    <div class="features-grid reveal-stagger" style="grid-template-columns: repeat(3, 1fr);">
       <div class="feature">
         <div class="icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-        <h4>5 dimensions scored 0–100</h4>
-        <p>SEO, UX, Content, Conversion, Technical — color-coded so you instantly see where to focus.</p>
+        <h4>5 scores, 0–100</h4>
+        <p>SEO, UX, Content, Conversion, Technical — see exactly where you're weak.</p>
       </div>
       <div class="feature">
         <div class="icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-        <h4>Specific fixes, not vague advice</h4>
-        <p>"Replace title with 'X'" — not "improve your title." Hand it to your dev or do it yourself.</p>
+        <h4>Actionable fixes</h4>
+        <p>"Change your title to X" — not "improve SEO." Copy-paste ready for your dev.</p>
       </div>
       <div class="feature">
         <div class="icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-        <h4>Quick wins for today</h4>
-        <p>5–7 changes you can ship in under an hour. Effort + impact labeled.</p>
-      </div>
-      <div class="feature">
-        <div class="icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-        <h4>Critical issues, ranked</h4>
-        <p>What's costing you money right now, sorted by severity. No 100-item to-do list.</p>
-      </div>
-      <div class="feature">
-        <div class="icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-        <h4>90-day strategy</h4>
-        <p>2–4 strategic moves that compound. Not a 50-item to-do list — a plan that fits on one page.</p>
-      </div>
-      <div class="feature">
-        <div class="icon-sm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-        <h4>Plain English</h4>
-        <p>No "schema markup leveraging" — just "Google can't read your business hours, here's how to fix it."</p>
+        <h4>Quick wins first</h4>
+        <p>Changes you can ship today, ranked by effort and impact.</p>
       </div>
     </div>
   </div>
@@ -1548,7 +1640,7 @@
             }
             a.href = "/api/report?kind=free&key=" + encodeURIComponent(key);
             if (status.emailSent) {
-              setStatus("Done! Report sent to your email — open below if inbox is slow.", "success");
+              setStatus("Done! Check inbox (and Promotions tab in Gmail) — or open below.", "success");
             } else if (status.emailError) {
               setStatus("Report ready (button below). Email delivery failed — we're fixing this.", "error");
             } else {

@@ -7,7 +7,7 @@ const ACCOUNT = "6609012adc88f397f50eba13ea2c242f";
 const PROJECT = "sitexray";
 const API = "https://api.cloudflare.com/client/v4";
 const BREVO_KEY = process.argv[2];
-const SENDER = process.argv[3] || "ernest2011kostevich@gmail.com";
+const SENDER = process.argv[3] || "ernestkostevich@gmail.com";
 
 if (!BREVO_KEY?.startsWith("xkeysib-")) {
   console.error("Usage: node cf-brevo-patch.mjs <xkeysib-...> [sender@email]");
@@ -36,7 +36,7 @@ const patch = await fetch(`${API}/accounts/${ACCOUNT}/pages/projects/${PROJECT}`
           BREVO_API_KEY: { type: "secret_text", value: BREVO_KEY },
           BREVO_SENDER_EMAIL: { type: "plain_text", value: SENDER },
           FROM_EMAIL: { type: "plain_text", value: SENDER },
-          REPLY_TO_EMAIL: { type: "plain_text", value: SENDER },
+          REPLY_TO_EMAIL: { type: "plain_text", value: "ernest2011kostevich@gmail.com" },
         },
       },
     },

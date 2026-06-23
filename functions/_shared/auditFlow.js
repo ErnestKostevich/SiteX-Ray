@@ -100,10 +100,10 @@ export async function runAuditAndEmail(opts) {
   let emailSent = false;
   let emailError = null;
   const sender =
-    env.BREVO_SENDER_EMAIL || env.FROM_EMAIL || "ernest2011kostevich@gmail.com";
+    env.BREVO_SENDER_EMAIL || env.FROM_EMAIL || "ernestkostevich@gmail.com";
   const fromEmail = sender.includes("@")
     ? `SiteX-Ray <${sender}>`
-    : "SiteX-Ray <ernest2011kostevich@gmail.com>";
+    : "SiteX-Ray <ernestkostevich@gmail.com>";
 
   try {
     await sendReportEmail({

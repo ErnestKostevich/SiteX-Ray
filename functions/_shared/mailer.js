@@ -4,7 +4,7 @@
 //   3. Cloudflare Email REST API (Workers Paid only)
 
 const DEFAULT_FROM = {
-  email: "ernest2011kostevich@gmail.com",
+  email: "ernestkostevich@gmail.com",
   name: "SiteX-Ray",
 };
 
