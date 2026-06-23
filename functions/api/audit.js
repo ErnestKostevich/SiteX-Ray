@@ -90,6 +90,15 @@ export async function onRequestPost(context) {
   const origin = new URL(request.url).origin;
   const ctaUrl = `${origin}/#pricing`;
 
+  const reportKey = await crypto.subtle
+    .digest("SHA-256", new TextEncoder().encode(`${email}|${url}|${Date.now()}`))
+    .then((buf) =>
+      Array.from(new Uint8Array(buf))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("")
+        .slice(0, 32)
+    );
+
   waitUntil(
     runAuditAndEmail({
       url,
@@ -98,6 +107,7 @@ export async function onRequestPost(context) {
       env,
       ctaUrl,
       byokAnthropicKey,
+      cacheKey: reportKey,
     }).catch((err) => {
       // We don't have logging infra; surface to CF logs.
       console.error("Audit failed:", err && err.stack ? err.stack : err);
@@ -106,8 +116,9 @@ export async function onRequestPost(context) {
 
   return jsonResponse(200, {
     ok: true,
+    reportKey,
     message: isFullReport
-      ? "Your full Claude-powered audit is being generated. It will arrive in your inbox within 2–3 minutes."
-      : "Your free teaser report is being generated. It will arrive in your inbox within 2 minutes.",
+      ? "Your full Claude-powered audit is generating — open the report below or check your inbox."
+      : "Your free teaser is generating — open the report below (email copy sent if configured).",
   });
 }

@@ -240,13 +240,17 @@
     </svg>
   </div>
 
-  <h1>Payment received!</h1>
-  <p class="lead">Your full SiteX-Ray audit is being generated right now.</p>
+  <h1>USDT payment verified!</h1>
+  <p class="lead">Your full cosmic audit is generating — email + instant web backup.</p>
 
-  <div class="timing">
+  <div class="timing" id="timing-box">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;flex-shrink:0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-    Check your inbox in <strong>2–3 minutes</strong> — the report will be there.
+    <span id="timing-text">Check your inbox in <strong>2–3 minutes</strong>. Preparing web download…</span>
   </div>
+
+  <a href="#" id="report-download" class="home" style="display:none;margin-top:0;margin-bottom:20px;background:var(--gradient);border:none;color:white;">
+    Open full report (backup)
+  </a>
 
   <div class="next">
     <h3>What to do next</h3>
@@ -270,5 +274,36 @@
   </a>
 </div>
 
+<script>
+(function () {
+  const params = new URLSearchParams(location.search);
+  const key = (params.get("key") || params.get("tx") || "").trim().toLowerCase();
+  const dl = document.getElementById("report-download");
+  const timingText = document.getElementById("timing-text");
+  if (!key || !dl) return;
+
+  let tries = 0;
+  const maxTries = 60;
+  const poll = async () => {
+    tries++;
+    try {
+      const res = await fetch("/api/report?kind=paid&key=" + encodeURIComponent(key));
+      if (res.ok) {
+        dl.href = "/api/report?kind=paid&key=" + encodeURIComponent(key);
+        dl.style.display = "inline-flex";
+        if (timingText) {
+          timingText.innerHTML = "Report ready — emailed to you <strong>and</strong> available below if inbox is slow.";
+        }
+        return;
+      }
+    } catch (_) {}
+    if (tries < maxTries) setTimeout(poll, 5000);
+    else if (timingText) {
+      timingText.innerHTML = "Still generating — check email in a few minutes or <a href='mailto:ernest2011kostevich@gmail.com'>contact support</a>.";
+    }
+  };
+  poll();
+})();
+</script>
 </body>
 </html>

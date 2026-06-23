@@ -1,6 +1,7 @@
-// Sends transactional email via Cloudflare Email Service (Workers binding).
-// Requires: [[send_email]] name = "EMAIL" in wrangler.toml + domain onboarded
-// in Cloudflare Email Service. No third-party API keys.
+// Transactional email — free-tier friendly provider chain:
+//   1. Brevo API (300 emails/day free, no Workers Paid)
+//   2. Cloudflare Email binding (Workers Paid only)
+//   3. Cloudflare Email REST API (Workers Paid only)
 
 const DEFAULT_FROM = {
   email: "reports@sitexray.xyz",
@@ -43,6 +44,38 @@ export function htmlToPlainText(html) {
 }
 
 const DEFAULT_ACCOUNT_ID = "6609012adc88f397f50eba13ea2c242f";
+
+async function sendViaBrevo(opts) {
+  const { toEmail, subject, html, fromEmail, replyTo, apiKey } = opts;
+  const from = parseFromAddress(fromEmail);
+  const text = htmlToPlainText(html);
+
+  const body = {
+    sender: { name: from.name, email: from.email },
+    to: [{ email: toEmail }],
+    subject,
+    htmlContent: html,
+    textContent: text || subject,
+    ...(replyTo ? { replyTo: { email: replyTo } } : {}),
+  };
+
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
+      accept: "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg = json.message || json.error || `Brevo HTTP ${res.status}`;
+    throw new Error(msg);
+  }
+  return json;
+}
 
 async function sendViaRestApi(opts) {
   const { toEmail, subject, html, fromEmail, replyTo, accountId, apiToken } = opts;
@@ -89,6 +122,7 @@ export async function sendReportEmail(opts) {
     replyTo,
     accountId = DEFAULT_ACCOUNT_ID,
     apiToken,
+    brevoApiKey,
   } = opts;
 
   if (!toEmail) throw new Error("toEmail is required");
@@ -96,6 +130,23 @@ export async function sendReportEmail(opts) {
 
   const from = parseFromAddress(fromEmail);
   const text = htmlToPlainText(html);
+  const brevoKey = brevoApiKey;
+
+  if (brevoKey) {
+    try {
+      return await sendViaBrevo({
+        toEmail,
+        subject,
+        html,
+        fromEmail: fromEmail || `${from.name} <${from.email}>`,
+        replyTo,
+        apiKey: brevoKey,
+      });
+    } catch (err) {
+      const msg = err && err.message ? err.message : String(err);
+      throw new Error(`Brevo: ${msg}`);
+    }
+  }
 
   if (emailBinding) {
     try {
@@ -132,6 +183,6 @@ export async function sendReportEmail(opts) {
   }
 
   throw new Error(
-    "EMAIL binding is not configured. Pages → sitexray → Settings → Bindings → Add → Email → name: EMAIL, then Retry deployment. Also onboard sitexray.xyz in Email Sending."
+    "Email not configured. Add BREVO_API_KEY (free at brevo.com — 300 emails/day) in Pages → Settings → Environment variables, then Retry deployment."
   );
 }
