@@ -2,7 +2,11 @@
 // Also kicks off generation in the background when a job is still pending.
 
 import { getCachedReport, getJob } from "../_shared/reportCache.js";
-import { ensureReport, shouldStartGeneration } from "../_shared/reportGenerate.js";
+import {
+  ensureEmailDelivered,
+  ensureReport,
+  shouldStartGeneration,
+} from "../_shared/reportGenerate.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -34,6 +38,12 @@ export async function onRequestGet(context) {
     );
   }
 
+  if (html && job && !job.emailSent && job.email) {
+    context.waitUntil(
+      ensureEmailDelivered(kind, key, context.env, job).catch(() => {})
+    );
+  }
+
   const ready = !!html || job?.status === "done";
 
   return new Response(
@@ -44,6 +54,7 @@ export async function onRequestGet(context) {
       email: job?.email || null,
       emailSent: !!job?.emailSent,
       emailError: job?.emailError || null,
+      emailMessageId: job?.emailMessageId || null,
       error: job?.status === "error" ? job.error || "Report generation failed" : null,
     }),
     { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }

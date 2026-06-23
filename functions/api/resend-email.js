@@ -1,13 +1,8 @@
 // POST /api/resend-email  Body: { kind?, key }
 // Resends the report notification email for a completed audit.
 
-import {
-  getCachedReportData,
-  getJob,
-  putJob,
-} from "../_shared/reportCache.js";
-import { renderEmailNotification } from "../_shared/renderer.js";
-import { sendReportEmail } from "../_shared/mailer.js";
+import { getCachedReportData, getJob, putJob } from "../_shared/reportCache.js";
+import { buildReportUrl, deliverReportEmail } from "../_shared/auditFlow.js";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -44,8 +39,8 @@ export async function onRequestPost(context) {
   if (!job) {
     return json(404, { ok: false, error: "Report not found" });
   }
-  if (job.status !== "done") {
-    return json(409, { ok: false, error: "Report not ready yet" });
+  if (job.status === "error") {
+    return json(409, { ok: false, error: job.error || "Report generation failed" });
   }
 
   const email = job.email;
@@ -61,45 +56,39 @@ export async function onRequestPost(context) {
     });
   }
 
-  const origin = (env.SITE_URL || new URL(request.url).origin).replace(/\/$/, "");
-  const reportUrl = `${origin}/api/report?kind=${kind}&key=${encodeURIComponent(key)}`;
-  const sender =
-    env.BREVO_SENDER_EMAIL || env.FROM_EMAIL || "ernestkostevich@gmail.com";
-  const fromEmail = sender.includes("@")
-    ? `SiteX-Ray <${sender}>`
-    : "SiteX-Ray <ernestkostevich@gmail.com>";
+  const reportUrl = buildReportUrl(kind, key, env, new URL(request.url).origin);
+  const mail = await deliverReportEmail({
+    email,
+    report,
+    free: !!job.free,
+    ctaUrl: job.ctaUrl || null,
+    reportUrl,
+    env,
+  });
 
-  const subject = job.free
-    ? `Your audit is ready — open report (${report.domain})`
-    : `Your full audit is ready — open report (${report.domain})`;
-
-  try {
-    await sendReportEmail({
-      toEmail: email,
-      subject,
-      html: renderEmailNotification(report, {
-        free: !!job.free,
-        reportUrl,
-        ctaUrl: job.ctaUrl || null,
-      }),
-      fromEmail,
-      replyTo: env.REPLY_TO_EMAIL || "ernest2011kostevich@gmail.com",
-      brevoApiKey: env.BREVO_API_KEY,
-      apiToken: env.CLOUDFLARE_API_TOKEN || env.CF_API_TOKEN,
-      accountId: env.CLOUDFLARE_ACCOUNT_ID,
+  if (!mail.emailSent) {
+    await putJob(kind, key, { ...job, emailSent: false, emailError: mail.emailError });
+    return json(500, {
+      ok: false,
+      sent: false,
+      error: mail.emailError || "Send failed",
+      email,
     });
-
-    await putJob(kind, key, {
-      ...job,
-      emailSent: true,
-      emailError: null,
-      emailResentAt: Date.now(),
-    });
-
-    return json(200, { ok: true, sent: true, email });
-  } catch (err) {
-    const msg = err && err.message ? err.message : String(err);
-    await putJob(kind, key, { ...job, emailSent: false, emailError: msg });
-    return json(500, { ok: false, sent: false, error: msg, email });
   }
+
+  await putJob(kind, key, {
+    ...job,
+    status: "done",
+    emailSent: true,
+    emailError: null,
+    emailMessageId: mail.messageId || null,
+    emailResentAt: Date.now(),
+  });
+
+  return json(200, {
+    ok: true,
+    sent: true,
+    email,
+    messageId: mail.messageId || null,
+  });
 }

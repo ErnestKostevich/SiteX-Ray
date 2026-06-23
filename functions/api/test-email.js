@@ -1,5 +1,5 @@
-// POST /api/test-email  Body: { email? }
-// Sends a test message via Brevo (for production diagnostics).
+// POST /api/test-email  Body: { email?, secret }
+// Dev-only deliverability check. Disabled unless ADMIN_SECRET is set and matches.
 
 import { sendReportEmail } from "../_shared/mailer.js";
 
@@ -14,6 +14,14 @@ export const onRequestOptions = () =>
 
 export async function onRequestPost(context) {
   const { env, request } = context;
+
+  if (!env.ADMIN_SECRET) {
+    return new Response(JSON.stringify({ ok: false, error: "Not found" }), {
+      status: 404,
+      headers: { "Content-Type": "application/json", ...cors },
+    });
+  }
+
   let body = {};
   try {
     body = await request.json();
@@ -21,7 +29,21 @@ export async function onRequestPost(context) {
     /* empty */
   }
 
-  const to = (body.email || "ernest2011kostevich@gmail.com").trim();
+  if (body.secret !== env.ADMIN_SECRET) {
+    return new Response(JSON.stringify({ ok: false, error: "Not found" }), {
+      status: 404,
+      headers: { "Content-Type": "application/json", ...cors },
+    });
+  }
+
+  const to = (body.email || "").trim();
+  if (!to) {
+    return new Response(JSON.stringify({ ok: false, error: "email required" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json", ...cors },
+    });
+  }
+
   const hasBrevo = !!env.BREVO_API_KEY;
   const sender =
     env.BREVO_SENDER_EMAIL || env.FROM_EMAIL || "ernestkostevich@gmail.com";
@@ -32,13 +54,14 @@ export async function onRequestPost(context) {
   try {
     const result = await sendReportEmail({
       toEmail: to,
-      subject: "SiteX-Ray — email delivery test",
-      html: "<p>If you received this, <strong>SiteX-Ray email delivery works</strong>.</p>",
+      subject: "SiteX-Ray — admin email test",
+      html: "<p>Admin test only. SiteX-Ray mailer is configured.</p>",
       fromEmail: from,
       replyTo: env.REPLY_TO_EMAIL || "ernest2011kostevich@gmail.com",
       brevoApiKey: env.BREVO_API_KEY,
       apiToken: env.CLOUDFLARE_API_TOKEN,
       accountId: env.CLOUDFLARE_ACCOUNT_ID,
+      brevoTags: ["admin-test"],
     });
     return new Response(
       JSON.stringify({ ok: true, sent: true, hasBrevo, to, result }),

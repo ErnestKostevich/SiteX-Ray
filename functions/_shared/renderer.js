@@ -162,42 +162,29 @@ const SECTION_SHORT = {
   technical: "Tech",
 };
 
-/** Lightweight email — link to full report (better Gmail deliverability). */
+/** Minimal transactional email — plain HTML like deliverability tests. */
 export function renderEmailNotification(report, opts = {}) {
-  const { free = false, reportUrl, ctaUrl } = opts;
+  const { reportUrl } = opts;
   if (!reportUrl) return renderReport(report, opts);
 
-  const headerCol = scoreColor(report.overall_score);
-  const verdictBg = verdictColor(report.verdict);
-  const badge = free ? "Free preview" : "Full report";
-  const topWin = (report.quick_wins || [])[0];
+  const domain = esc(report.domain || "your site");
+  const score = esc(report.overall_score ?? "—");
+  const link = esc(reportUrl);
 
   return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:${C.outer};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${C.outer}" style="background:${C.outer};">
-<tr><td align="center" style="padding:32px 16px;">
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;background:${C.card};border-radius:16px;border:1px solid ${C.border};">
-<tr><td style="height:4px;background:linear-gradient(90deg,${C.accent},#8b5cf6);border-radius:16px 16px 0 0;font-size:0;">&nbsp;</td></tr>
-<tr><td style="padding:32px 24px;">
-  <div style="font-size:20px;font-weight:800;color:${C.ink};margin-bottom:4px;">Site<span style="color:${C.accent};">X</span>-Ray</div>
-  <div style="font-size:11px;color:${C.muted};margin-bottom:20px;">${badge} · ${esc(report.domain)}</div>
-  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${C.soft};border:1px solid ${C.border};border-radius:12px;margin-bottom:20px;">
-  <tr><td style="padding:20px;text-align:center;">
-    <div style="display:inline-block;width:72px;height:72px;line-height:72px;border-radius:50%;background:${headerCol};color:#fff;font-size:32px;font-weight:800;">${esc(report.overall_score)}</div>
-    <div style="margin-top:10px;"><span style="display:inline-block;padding:4px 12px;border-radius:99px;background:${verdictBg};color:#fff;font-size:11px;font-weight:700;">${esc(report.verdict)}</span></div>
-    <p style="margin:12px 0 0;font-size:15px;line-height:1.55;color:${C.inkSoft};">${esc(report.tldr)}</p>
-  </td></tr></table>
-  ${topWin ? `<p style="font-size:14px;color:${C.inkSoft};margin:0 0 20px;line-height:1.55;"><strong style="color:${C.ink};">Top fix:</strong> ${esc(topWin.title)} — ${esc(topWin.how)}</p>` : ""}
-  <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td align="center">
-    <a href="${esc(reportUrl)}" style="display:inline-block;padding:16px 32px;background:${C.accent};color:#fff;border-radius:10px;font-weight:700;font-size:16px;text-decoration:none;">Open your full report →</a>
-  </td></tr></table>
-  <p style="font-size:12px;color:${C.muted};text-align:center;margin:16px 0 0;line-height:1.5;">The full report opens in your browser — not attached to this email.<br>No account needed — link works 7 days. Check Spam if you don't see this.</p>
-  ${free && ctaUrl ? `<p style="text-align:center;margin-top:20px;font-size:13px;"><a href="${esc(ctaUrl)}" style="color:${C.accent};font-weight:600;">Upgrade to full audit — $39 USDT</a></p>` : ""}
-  <p style="font-size:11px;color:${C.muted};text-align:center;margin-top:24px;border-top:1px solid ${C.border};padding-top:16px;">SiteX-Ray · sitexray.xyz</p>
-</td></tr></table>
-</td></tr></table>
+<html lang="en"><head><meta charset="UTF-8"></head>
+<body style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#111111;margin:0;padding:20px;">
+<p>Your SiteX-Ray audit for <strong>${domain}</strong> is ready.</p>
+<p>Score: <strong>${score}/100</strong></p>
+<p><a href="${link}" style="color:#6d28d9;"><strong>Open your report</strong></a></p>
+<p style="color:#555;font-size:14px;">Private link — works 7 days. No account needed.<br>The full report opens in your browser (not attached here).</p>
+<p style="color:#888;font-size:13px;">SiteX-Ray · <a href="https://sitexray.xyz" style="color:#6d28d9;">sitexray.xyz</a></p>
 </body></html>`;
+}
+
+export function reportEmailSubject(report) {
+  const domain = report?.domain || "your site";
+  return `SiteX-Ray: your report for ${domain} is ready`;
 }
 
 export function renderReport(report, opts = {}) {
