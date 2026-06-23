@@ -1,11 +1,11 @@
-// POST /api/audit — free teaser endpoint (or full Claude report if BYOK).
-// Body: { url, email, turnstileToken?, anthropicApiKey? }
-//
-// Returns immediately with reportKey. Client polls GET /api/report?kind=free&key=...
-// Generation runs on-demand when the poll hits (works on Workers Free — no long waitUntil).
+// POST /api/audit
+// Free: URL + email → Llama teaser
+// Full: lifetime unlock + BYOK Anthropic key → Claude Sonnet 4.6 full audit
 
 import { verifyTurnstile } from "../_shared/turnstile.js";
 import { putJob } from "../_shared/reportCache.js";
+import { verifyLicense } from "../_shared/licenses.js";
+import { stashByokKey } from "../_shared/ephemeralKey.js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -35,6 +35,7 @@ export async function onRequestPost(context) {
   const url = (body.url || "").trim();
   const email = (body.email || "").trim();
   const turnstileToken = body.turnstileToken || body["cf-turnstile-response"];
+  const unlockToken = (body.unlockToken || "").trim();
   const byokKeyRaw = (body.anthropicApiKey || "").trim();
 
   if (!url) return jsonResponse(400, { ok: false, error: "URL is required" });
@@ -47,16 +48,41 @@ export async function onRequestPost(context) {
     return jsonResponse(400, { ok: false, error: "Invalid URL" });
   }
 
-  let byokAnthropicKey = null;
+  if (byokKeyRaw && !unlockToken) {
+    return jsonResponse(403, {
+      ok: false,
+      error:
+        "Full Claude audits require lifetime unlock ($39 USDT). Free tier is Llama teaser only.",
+      needsUnlock: true,
+    });
+  }
+
+  if (unlockToken && !byokKeyRaw) {
+    return jsonResponse(400, {
+      ok: false,
+      error: "Paste your Anthropic API key for full audits (BYOK).",
+      needsKey: true,
+    });
+  }
+
+  let licensedFull = false;
   if (byokKeyRaw) {
     if (!/^sk-ant-[A-Za-z0-9_\-]{20,}$/.test(byokKeyRaw)) {
       return jsonResponse(400, {
         ok: false,
         error:
-          "Anthropic API key looks invalid. It should start with 'sk-ant-' followed by your key. Get one at console.anthropic.com.",
+          "Anthropic API key looks invalid. Get one at console.anthropic.com.",
       });
     }
-    byokAnthropicKey = byokKeyRaw;
+    const valid = await verifyLicense(email, unlockToken);
+    if (!valid) {
+      return jsonResponse(403, {
+        ok: false,
+        error: "Invalid unlock code for this email. Pay 39 USDT or use the code from your unlock email.",
+        needsUnlock: true,
+      });
+    }
+    licensedFull = true;
   }
 
   if (env.TURNSTILE_SECRET) {
@@ -73,9 +99,9 @@ export async function onRequestPost(context) {
     }
   }
 
-  const isFullReport = !!byokAnthropicKey;
   const origin = new URL(request.url).origin;
   const ctaUrl = `${origin}/#pricing`;
+  const reportKind = licensedFull ? "full" : "free";
 
   const reportKey = await crypto.subtle
     .digest("SHA-256", new TextEncoder().encode(`${email}|${url}|${Date.now()}`))
@@ -86,21 +112,27 @@ export async function onRequestPost(context) {
         .slice(0, 32)
     );
 
-  await putJob("free", reportKey, {
+  if (licensedFull) {
+    await stashByokKey(reportKey, byokKeyRaw);
+  }
+
+  await putJob(reportKind, reportKey, {
     status: "pending",
     url,
     email,
-    free: !isFullReport,
+    free: !licensedFull,
+    licensedFull,
     ctaUrl,
-    byokAnthropicKey,
     createdAt: Date.now(),
   });
 
   return jsonResponse(200, {
     ok: true,
     reportKey,
-    message: isFullReport
-      ? "Generating full audit — stay on this page. You'll get a private link + email (no account)."
-      : "Generating free teaser — stay on this page. Private link appears here + email sent.",
+    kind: reportKind,
+    full: licensedFull,
+    message: licensedFull
+      ? "Generating full Claude audit — stay on this page. Private link + email when ready."
+      : "Generating free Llama teaser — stay on this page. Private link + email when ready.",
   });
 }

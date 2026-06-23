@@ -275,6 +275,19 @@
     border: 1px solid var(--border); background: var(--bg);
     color: var(--text); font-size: 12px; font-family: ui-monospace, monospace;
   }
+  .pro-note { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.45; }
+  .unlock-banner {
+    width: 100%; margin-top: 14px; padding: 12px 14px; border-radius: 9px;
+    background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.28);
+    text-align: center;
+  }
+  .unlock-badge {
+    display: block; font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--green); margin-bottom: 4px;
+  }
+  .unlock-text { font-size: 12px; color: var(--text-2); }
+  .unlock-cta { margin-top: 14px; font-size: 13px; text-align: center; }
+  .unlock-cta a { color: var(--accent-2); font-weight: 600; }
 
   /* Sections */
   section:not(.hero) { padding: 80px 0; }
@@ -513,7 +526,7 @@
         <input type="email" id="email-input" name="email" placeholder="you@company.com" required autocomplete="email">
       </div>
       <button type="submit" class="btn btn-primary" id="submit-btn">Get free report</button>
-      <p class="form-note">~2 min · full report opens here + email with link</p>
+      <p class="form-note">~2 min · Llama teaser · link on page + email</p>
     </form>
 
     <div class="hero-actions" id="hero-actions">
@@ -537,12 +550,20 @@
         View sample report
         <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       </a>
-      <details class="pro-toggle" id="pro-section">
-        <summary>Claude API key — full report free</summary>
+      <div id="unlock-banner" class="unlock-banner" hidden>
+        <span class="unlock-badge">Lifetime full access</span>
+        <span class="unlock-text">Claude Sonnet 4.6 · BYOK · unlimited audits</span>
+      </div>
+      <details class="pro-toggle" id="pro-section" hidden>
+        <summary>Full audit — your Anthropic API key (BYOK)</summary>
         <div class="inner">
+          <p class="pro-note">Requires $39 lifetime unlock. Key used once per audit, never stored on our servers.</p>
           <input type="password" id="anthropic-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false">
         </div>
       </details>
+      <p class="unlock-cta" id="unlock-cta">
+        <a href="#pricing">Unlock lifetime full access — 39 USDT once</a>
+      </p>
     </div>
   </div>
   </div>
@@ -556,7 +577,7 @@
     <div class="section-head">
       <div class="section-label">Delivery</div>
       <h2>How you get your report</h2>
-      <p class="section-desc">No signup. Private link on this page and in email. Stored 7 days, then deleted.</p>
+      <p class="section-desc">No signup. Each report: private link + email. Individual reports kept 7 days.</p>
     </div>
     <div class="steps">
       <div class="step">
@@ -599,33 +620,33 @@
   <div class="wrap">
     <div class="section-head">
       <div class="section-label">Pricing</div>
-      <h2>One-time payment</h2>
-      <p class="section-desc">Same delivery for both — link and email.</p>
+      <h2>Pay once, full access forever</h2>
+      <p class="section-desc">Not a subscription. $39 unlocks unlimited full Claude audits with your own API key.</p>
     </div>
     <div class="pricing">
       <div class="plan">
         <div class="plan-tag">Free</div>
         <div class="plan-price">$0</div>
-        <div class="plan-sub">1-page teaser</div>
+        <div class="plan-sub">Llama teaser · 1 page</div>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Score + verdict</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Top 3 quick wins</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>#1 issue + fix</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Web + email</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>No Claude · web + email</li>
         </ul>
         <a href="#audit" class="btn btn-ghost">Get free report</a>
       </div>
       <div class="plan featured">
-        <div class="plan-tag">Full audit</div>
+        <div class="plan-tag">Lifetime full</div>
         <div class="plan-price">$39</div>
-        <div class="plan-sub">39 USDT · TRC-20 or ERC-20</div>
+        <div class="plan-sub">39 USDT once · not a subscription</div>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>10–15 page report</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>All 5 dimensions</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Every issue + fix</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>90-day plan</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Unlimited full audits forever</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>BYOK — your Anthropic key</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Claude Sonnet 4.6 · effort medium</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Key never stored on our servers</li>
         </ul>
-        <a href="#" class="btn btn-primary" onclick="return goToCheckout(event)">Pay 39 USDT</a>
+        <a href="#" class="btn btn-primary" onclick="return goToCheckout(event)">Unlock — 39 USDT</a>
       </div>
     </div>
   </div>
@@ -648,7 +669,11 @@
       </details>
       <details>
         <summary>How do I pay with USDT?</summary>
-        <div class="ans">Enter URL + email, click Pay 39 USDT, send exactly 39 USDT, paste tx hash. Verified on-chain — report delivered automatically.</div>
+        <div class="ans">Enter your email, click Unlock 39 USDT, send exactly 39 USDT, paste tx hash. On-chain verification grants lifetime full access — not a subscription. You then run unlimited full audits with your own Anthropic API key.</div>
+      </details>
+      <details>
+        <summary>Is Claude free?</summary>
+        <div class="ans">No. Free tier uses Llama (Cloudflare AI) teaser only. Full Claude Sonnet 4.6 audits require the $39 lifetime unlock plus your own API key (BYOK). You pay Anthropic per audit; we never store your key.</div>
       </details>
       <details>
         <summary>Refund policy?</summary>
@@ -661,8 +686,8 @@
 <div class="pay-overlay" id="pay-overlay" role="dialog" aria-modal="true" aria-label="Payment">
   <div class="pay-modal">
     <button type="button" class="pay-close" id="pay-close" aria-label="Close">&times;</button>
-    <h2>Full audit — 39 USDT</h2>
-    <p class="pay-sub">Verify on-chain → report to email + success page</p>
+    <h2>Lifetime full access — 39 USDT</h2>
+    <p class="pay-sub">One-time payment · unlock forever · not a subscription</p>
     <div class="pay-tabs">
       <button type="button" class="pay-tab active" data-network="trc20">TRC-20</button>
       <button type="button" class="pay-tab" data-network="erc20">ERC-20</button>
@@ -678,7 +703,7 @@
     <input type="text" id="pay-txhash" placeholder="Paste after payment" autocomplete="off">
     <div class="pay-actions">
       <button type="button" class="btn btn-ghost" id="pay-cancel">Cancel</button>
-      <button type="button" class="btn btn-primary" id="pay-submit">Verify &amp; deliver</button>
+      <button type="button" class="btn btn-primary" id="pay-submit">Verify &amp; unlock</button>
     </div>
     <div class="pay-status" id="pay-status" role="status"></div>
   </div>
@@ -715,7 +740,72 @@ const PAY_NETWORKS = {
   const statusEl = document.getElementById("form-status");
   const turnstileContainer = document.getElementById("turnstile-container");
   const resendBtn = document.getElementById("resend-email-btn");
+  const proSection = document.getElementById("pro-section");
+  const unlockBanner = document.getElementById("unlock-banner");
+  const unlockCta = document.getElementById("unlock-cta");
   let activeReportKey = null;
+  let activeReportKind = "free";
+  let unlockToken = null;
+
+  const UNLOCK_STORAGE = "sitexray_unlock";
+
+  function loadUnlock() {
+    try {
+      const raw = localStorage.getItem(UNLOCK_STORAGE);
+      if (raw) {
+        const data = JSON.parse(raw);
+        if (data?.unlockToken) return data;
+      }
+    } catch (_) {}
+    const params = new URLSearchParams(location.search);
+    const token = params.get("unlock") || params.get("token");
+    const em = params.get("email");
+    if (token) {
+      const data = { unlockToken: token.trim(), email: em ? em.trim() : null };
+      try { localStorage.setItem(UNLOCK_STORAGE, JSON.stringify(data)); } catch (_) {}
+      return data;
+    }
+    return null;
+  }
+
+  async function refreshUnlockUI() {
+    const stored = loadUnlock();
+    unlockToken = stored?.unlockToken || null;
+    const email = stored?.email || emailInput.value.trim();
+    if (!unlockToken || !email) {
+      proSection.hidden = true;
+      unlockBanner.hidden = true;
+      unlockCta.hidden = false;
+      submitBtn.textContent = "Get free teaser";
+      return;
+    }
+    try {
+      const res = await fetch("/api/license-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, unlockToken }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.licensed) {
+        proSection.hidden = false;
+        unlockBanner.hidden = false;
+        unlockCta.hidden = true;
+        submitBtn.textContent = byokInput?.value.trim() ? "Run full Claude audit" : "Get free teaser";
+        if (stored.email) emailInput.value = stored.email;
+        return;
+      }
+    } catch (_) {}
+    proSection.hidden = true;
+    unlockBanner.hidden = true;
+    unlockCta.hidden = false;
+    submitBtn.textContent = "Get free teaser";
+  }
+
+  refreshUnlockUI();
+  emailInput.addEventListener("change", refreshUnlockUI);
+  byokInput?.addEventListener("input", () => {
+    if (unlockToken) submitBtn.textContent = byokInput.value.trim() ? "Run full Claude audit" : "Get free teaser";
+  });
 
   if (TURNSTILE_SITE_KEY && turnstileContainer) {
     const w = document.createElement("div");
@@ -759,21 +849,37 @@ const PAY_NETWORKS = {
     if (resendBtn) resendBtn.hidden = true;
     activeReportKey = null;
 
+    const byok = byokInput?.value.trim() || "";
+    const payload = {
+      url, email,
+      turnstileToken: getTurnstileToken(),
+    };
+    if (byok) {
+      if (!unlockToken) {
+        setStatus("Lifetime unlock required for full audits. Pay 39 USDT once.", "error");
+        submitBtn.disabled = false;
+        submitBtn.textContent = orig;
+        submitBtn.classList.remove("btn-loading");
+        return;
+      }
+      payload.anthropicApiKey = byok;
+      payload.unlockToken = unlockToken;
+    }
+
     try {
       const res = await fetch("/api/audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          url, email,
-          turnstileToken: getTurnstileToken(),
-          anthropicApiKey: byokInput?.value.trim() || undefined,
-        }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.ok) {
+        activeReportKind = data.kind || (data.full ? "full" : "free");
         setStatus("Generating… stay on this page.", "success");
-        if (data.reportKey) pollFreeReport(data.reportKey);
+        if (data.reportKey) pollReport(data.reportKey, activeReportKind);
+        if (byok && byokInput) byokInput.value = "";
       } else {
+        if (data.needsUnlock) refreshUnlockUI();
         setStatus(data.error || "Something went wrong.", "error");
       }
     } catch {
@@ -838,9 +944,13 @@ const PAY_NETWORKS = {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.ok) {
-        setPayStatus("Verified. Redirecting…", "success");
+        setPayStatus("Unlocked! Check your email…", "success");
+        const em = emailInput.value.trim();
+        const tok = data.unlockToken || "";
         setTimeout(() => {
-          window.location.href = "/success.html?key=" + encodeURIComponent(data.reportKey || txHash);
+          let href = "/success.html?unlock=" + encodeURIComponent(tok);
+          if (em) href += "&email=" + encodeURIComponent(em);
+          window.location.href = href;
         }, 1200);
       } else {
         setPayStatus(data.error || "Verification failed.", "error");
@@ -856,9 +966,10 @@ const PAY_NETWORKS = {
     return shown + "@" + domain;
   }
 
-  function showReportReady(key, status) {
+  function showReportReady(key, kind, status) {
     activeReportKey = key;
-    const reportHref = "/api/report?kind=free&key=" + encodeURIComponent(key);
+    activeReportKind = kind || "free";
+    const reportHref = "/api/report?kind=" + encodeURIComponent(activeReportKind) + "&key=" + encodeURIComponent(key);
     const link = document.getElementById("report-ready-link");
     const detail = document.getElementById("result-detail");
     const hint = document.getElementById("result-hint");
@@ -914,7 +1025,7 @@ const PAY_NETWORKS = {
       const res = await fetch("/api/resend-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ kind: "free", key: activeReportKey }),
+        body: JSON.stringify({ kind: activeReportKind, key: activeReportKey }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.ok) {
@@ -938,18 +1049,19 @@ const PAY_NETWORKS = {
     }
   });
 
-  function pollFreeReport(key) {
+  function pollReport(key, kind) {
+    const reportKind = kind || "free";
     let tries = 0;
     const poll = async () => {
       tries++;
       try {
-        const reportRes = await fetch("/api/report?kind=free&key=" + encodeURIComponent(key));
+        const reportRes = await fetch("/api/report?kind=" + encodeURIComponent(reportKind) + "&key=" + encodeURIComponent(key));
         const ctype = reportRes.headers.get("content-type") || "";
 
         if (reportRes.ok && ctype.includes("text/html")) {
-          const st = await fetch("/api/report-status?kind=free&key=" + encodeURIComponent(key));
+          const st = await fetch("/api/report-status?kind=" + encodeURIComponent(reportKind) + "&key=" + encodeURIComponent(key));
           const status = st.ok ? await st.json() : {};
-          showReportReady(key, status);
+          showReportReady(key, reportKind, status);
           return;
         }
 
@@ -959,14 +1071,14 @@ const PAY_NETWORKS = {
           return;
         }
 
-        const st = await fetch("/api/report-status?kind=free&key=" + encodeURIComponent(key));
+        const st = await fetch("/api/report-status?kind=" + encodeURIComponent(reportKind) + "&key=" + encodeURIComponent(key));
         const status = st.ok ? await st.json() : {};
         if (status.error) {
           setStatus(status.error, "error");
           return;
         }
         if (status.ready) {
-          showReportReady(key, status);
+          showReportReady(key, reportKind, status);
           return;
         }
       } catch (_) {}
@@ -984,9 +1096,10 @@ const PAY_NETWORKS = {
     if (event) event.preventDefault();
     const url = urlInput.value.trim();
     const email = emailInput.value.trim();
-    if (!url || !email) {
+    const email = emailInput.value.trim();
+    if (!email) {
       document.getElementById("audit").scrollIntoView({ behavior: "smooth" });
-      setStatus(!url ? "Enter your URL first." : "Enter your email first.", "error");
+      setStatus("Enter your email first (used for lifetime unlock).", "error");
       return false;
     }
     setStatus("", null);
