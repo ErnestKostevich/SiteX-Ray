@@ -10,27 +10,27 @@
 <style>
   :root {
     --bg: #08050f; --surface: #110a1c; --border: rgba(167,139,250,0.14);
-    --text: #f3eeff; --muted: #7c6b9e; --accent: #8b5cf6; --green: #34d399;
+    --text: #f3eeff; --muted: #7c6b9e; --accent: #8b5cf6; --green: #34d399; --red: #f87171;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Inter", system-ui, sans-serif;
     background: var(--bg); color: var(--text);
-    min-height: 100vh; display: grid; place-items: center; padding: 24px;
+    min-height: 100dvh; display: flex; align-items: center; justify-content: center;
+    padding: 24px; -webkit-font-smoothing: antialiased;
   }
   body::before {
     content: ""; position: fixed; inset: 0; z-index: -1;
-    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,92,246,0.15), transparent);
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(139,92,246,0.15), transparent);
   }
   .card {
-    max-width: 420px; width: 100%;
+    width: 100%; max-width: 400px; text-align: center;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 14px; padding: 36px 28px; text-align: center;
+    border-radius: 14px; padding: 36px 28px;
   }
   .brand {
     display: inline-flex; align-items: center; gap: 8px;
     font-weight: 700; font-size: 15px; margin-bottom: 28px;
-    letter-spacing: -0.02em;
   }
   .brand-mark {
     width: 28px; height: 28px; border-radius: 7px;
@@ -40,33 +40,27 @@
   .brand-mark svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2; }
   .brand em { font-style: normal; color: #a78bfa; }
   .check {
-    width: 52px; height: 52px; border-radius: 50%;
-    background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.35);
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3);
     display: grid; place-items: center; margin: 0 auto 18px; color: var(--green);
   }
-  .check svg { width: 26px; height: 26px; stroke-width: 2.5; }
-  h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.02em; }
+  .check svg { width: 24px; height: 24px; stroke-width: 2.5; fill: none; stroke: currentColor; }
+  h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.02em; }
   .lead { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
   .status-box {
-    background: rgba(8,5,15,0.6); border: 1px solid var(--border);
-    border-radius: 9px; padding: 12px 14px; font-size: 13px;
-    color: var(--muted); margin-bottom: 18px; line-height: 1.5;
+    font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.5;
+    min-height: 1.4em;
   }
   .btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    padding: 11px 20px; border-radius: 9px; font-weight: 600; font-size: 14px;
-    text-decoration: none; margin-bottom: 10px; width: 100%;
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; padding: 11px 20px; border-radius: 9px;
+    font-weight: 600; font-size: 14px; text-decoration: none; margin-bottom: 10px;
   }
   .btn-primary {
     background: linear-gradient(135deg, #7c3aed, #8b5cf6);
     color: #fff; box-shadow: 0 2px 16px rgba(139,92,246,0.35);
   }
   .btn-ghost { color: var(--text); border: 1px solid var(--border); background: transparent; }
-  .note {
-    text-align: left; margin-top: 24px; padding-top: 20px;
-    border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); line-height: 1.6;
-  }
-  .note strong { color: #c4b5e0; font-weight: 600; display: block; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
   a { color: #a78bfa; }
 </style>
 </head>
@@ -79,17 +73,13 @@
     Site<em>X</em>-Ray
   </div>
   <div class="check">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
   </div>
   <h1>Payment verified</h1>
   <p class="lead">Your full report is generating.</p>
-  <div class="status-box" id="timing-text">Preparing… check email in ~2 min.</div>
+  <div class="status-box" id="timing-text">Preparing… ~2 min.</div>
   <a href="#" id="report-download" class="btn btn-primary" style="display:none">Open full report</a>
   <a href="/" class="btn btn-ghost">Back to home</a>
-  <div class="note">
-    <strong>Delivery</strong>
-    Same private link goes to your email. Stay on this page — button appears when ready. Link works 7 days.
-  </div>
 </div>
 <script>
 (function () {
@@ -106,24 +96,27 @@
       if (reportRes.status === 500) {
         const err = await reportRes.json().catch(() => ({}));
         timingText.textContent = err.error || "Generation failed.";
+        timingText.style.color = "var(--red)";
         return;
       }
       const st = await fetch("/api/report-status?kind=paid&key=" + encodeURIComponent(key));
       const status = st.ok ? await st.json() : {};
       if (status.error) {
         timingText.textContent = status.error;
+        timingText.style.color = "var(--red)";
         return;
       }
       if (status.ready || (reportRes.ok && ctype.includes("text/html"))) {
         dl.href = "/api/report?kind=paid&key=" + encodeURIComponent(key);
-        dl.style.display = "inline-flex";
+        dl.style.display = "flex";
         timingText.textContent = status.emailSent
           ? "Email sent. Open below if inbox is slow."
           : "Report ready — open below.";
+        timingText.style.color = "var(--green)";
         return;
       }
     } catch (_) {}
-    if (tries < 60) {
+    if (tries < 45) {
       timingText.textContent = "Generating… (" + tries + ")";
       setTimeout(poll, 4000);
     } else {
