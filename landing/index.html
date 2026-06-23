@@ -1692,12 +1692,9 @@
       const poll = async () => {
         tries++;
         try {
-          const res = await fetch("/api/report?kind=free&key=" + encodeURIComponent(key));
-          if (res.status === 202) {
-            if (tries < maxTries) setTimeout(poll, 4000);
-            return;
-          }
-          if (res.ok) {
+          const st = await fetch("/api/report-status?kind=free&key=" + encodeURIComponent(key));
+          const status = st.ok ? await st.json() : {};
+          if (status.ready) {
             let a = document.getElementById(linkId);
             if (!a) {
               a = document.createElement("a");
@@ -1706,16 +1703,26 @@
               a.style.marginTop = "16px";
               a.target = "_blank";
               a.rel = "noopener";
-              a.textContent = "Open your report →";
+              a.textContent = "Open your SiteX-Ray report →";
               statusEl.parentNode.insertBefore(a, statusEl.nextSibling);
             }
             a.href = "/api/report?kind=free&key=" + encodeURIComponent(key);
-            setStatus("Report ready! Open below or check your inbox.", "success");
+            if (status.emailSent) {
+              setStatus("Done! Report opened below — copy also sent to your inbox.", "success");
+            } else if (status.emailError) {
+              setStatus("Report ready below. Email failed — use the button (not spam).", "success");
+            } else {
+              setStatus("Report ready — open below.", "success");
+            }
             return;
           }
         } catch (_) {}
-        if (tries < maxTries) setTimeout(poll, 4000);
-        else setStatus("Still generating — refresh in a minute or check email.", "success");
+        if (tries < maxTries) {
+          setStatus("Generating your SiteX-Ray report… (" + tries + ")", null);
+          setTimeout(poll, 4000);
+        } else {
+          setStatus("Taking longer than usual — try again in a minute.", "error");
+        }
       };
       poll();
     }

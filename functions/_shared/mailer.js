@@ -4,7 +4,7 @@
 //   3. Cloudflare Email REST API (Workers Paid only)
 
 const DEFAULT_FROM = {
-  email: "reports@sitexray.xyz",
+  email: "ernest2011kostevich@gmail.com",
   name: "SiteX-Ray",
 };
 
@@ -56,7 +56,7 @@ async function sendViaBrevo(opts) {
     subject,
     htmlContent: html,
     textContent: text || subject,
-    ...(replyTo ? { replyTo: { email: replyTo } } : {}),
+    ...(replyTo ? { replyTo: replyTo.includes("@") ? replyTo : { email: replyTo } } : {}),
   };
 
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {

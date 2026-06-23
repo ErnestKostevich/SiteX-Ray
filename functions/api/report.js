@@ -42,7 +42,7 @@ async function ensureReport(kind, key, env) {
   await putJob(kind, key, working);
 
   try {
-    await runAuditAndEmail({
+    const result = await runAuditAndEmail({
       url: working.url,
       email: working.email,
       free: working.free,
@@ -51,7 +51,12 @@ async function ensureReport(kind, key, env) {
       byokAnthropicKey: working.byokAnthropicKey || null,
       cacheKey: key,
     });
-    await putJob(kind, key, { ...working, status: "done" });
+    await putJob(kind, key, {
+      ...working,
+      status: "done",
+      emailSent: !!result.emailSent,
+      emailError: result.emailError || null,
+    });
     return await getCachedReport(kind, key);
   } catch (err) {
     const msg = err && err.message ? err.message : String(err);

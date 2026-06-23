@@ -97,25 +97,36 @@ export async function runAuditAndEmail(opts) {
       ? `Your full SiteX-Ray audit (Claude · BYOK) — ${siteData.domain}`
       : `Your full SiteX-Ray report — ${siteData.domain}`;
 
+  let emailSent = false;
+  let emailError = null;
+  const fromEmail =
+    env.FROM_EMAIL ||
+    env.BREVO_SENDER_EMAIL ||
+    "SiteX-Ray <ernest2011kostevich@gmail.com>";
+
   try {
     await sendReportEmail({
       toEmail: email,
       subject,
       html,
       emailBinding: env.EMAIL,
-      fromEmail: env.FROM_EMAIL || env.BREVO_SENDER_EMAIL,
-      replyTo: env.REPLY_TO_EMAIL || "support@sitexray.xyz",
+      fromEmail,
+      replyTo: env.REPLY_TO_EMAIL || "ernest2011kostevich@gmail.com",
       brevoApiKey: env.BREVO_API_KEY,
       apiToken: env.CLOUDFLARE_API_TOKEN || env.CF_API_TOKEN,
       accountId: env.CLOUDFLARE_ACCOUNT_ID,
     });
+    emailSent = true;
   } catch (emailErr) {
+    emailError = emailErr && emailErr.message ? emailErr.message : String(emailErr);
+    console.error("Email delivery failed:", emailError);
     if (!cacheKey) throw emailErr;
-    console.error(
-      "Email delivery failed (report available via web cache):",
-      emailErr && emailErr.message ? emailErr.message : emailErr
-    );
   }
 
-  return { domain: siteData.domain, overall_score: report.overall_score };
+  return {
+    domain: siteData.domain,
+    overall_score: report.overall_score,
+    emailSent,
+    emailError,
+  };
 }
