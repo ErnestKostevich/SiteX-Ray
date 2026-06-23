@@ -101,6 +101,10 @@ export async function analyzeWithCloudflareAI(siteData, env, opts = {}) {
     }
   }
 
-  const rawText = response && response.response ? response.response : "";
+  const raw = response?.response ?? response?.result?.response ?? response;
+  if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+    return raw;
+  }
+  const rawText = typeof raw === "string" ? raw : JSON.stringify(raw ?? "");
   return parseJsonFromText(rawText);
 }
