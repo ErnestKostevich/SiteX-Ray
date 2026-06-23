@@ -1,4 +1,4 @@
-// Audit pipeline: free = Llama teaser; full = BYOK Claude Sonnet 4.6 (licensed users only).
+// Audit pipeline: free = Llama teaser; full = Llama full (licensed) or BYOK Claude Sonnet 4.6.
 
 import { scrapeSite } from "./scraper.js";
 import { analyzeWithClaude, DEFAULT_EFFORT, DEFAULT_MODEL } from "./analyzer.js";
@@ -71,16 +71,12 @@ async function pickBackendAndAnalyze(siteData, env, free, byokAnthropicKey) {
     });
   }
 
-  if (free) {
-    if (!env.AI) {
-      throw new Error(
-        "Free teaser requires Cloudflare Workers AI. Enable the AI binding in Pages settings."
-      );
-    }
-    return await analyzeWithCloudflareAI(siteData, env, { free: true });
+  if (!env.AI) {
+    throw new Error(
+      "Llama audits require Cloudflare Workers AI. Enable the AI binding in Pages settings."
+    );
   }
-
-  throw new Error("Full audits require your Anthropic API key (BYOK) and lifetime unlock.");
+  return await analyzeWithCloudflareAI(siteData, env, { free });
 }
 
 export async function runAuditAndEmail(opts) {

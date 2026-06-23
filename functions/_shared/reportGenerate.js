@@ -101,13 +101,14 @@ export async function ensureReport(kind, key, env) {
 
   const reportUrl = buildReportUrl(kind, key, env);
 
-  const byokKey =
-    working.licensedFull || kind === "full"
-      ? (await peekByokKey(key)) || (await takeByokKey(key))
-      : null;
+  const useClaude = working.engine === "claude";
+  const byokKey = useClaude
+    ? (await peekByokKey(key)) || (await takeByokKey(key))
+    : null;
 
-  if ((working.licensedFull || kind === "full") && !byokKey) {
-    const msg = "Anthropic API key expired from memory. Submit a new audit with your key.";
+  if (useClaude && !byokKey) {
+    const msg =
+      "Anthropic API key expired from memory. Submit again with your key (BYOK).";
     await putJob(kind, key, { ...working, status: "error", error: msg });
     throw new Error(msg);
   }
@@ -116,7 +117,7 @@ export async function ensureReport(kind, key, env) {
     const result = await runAuditAndEmail({
       url: working.url,
       email: working.email,
-      free: working.free !== false && kind === "free",
+      free: kind === "free",
       env,
       ctaUrl: working.ctaUrl || null,
       byokAnthropicKey: byokKey,

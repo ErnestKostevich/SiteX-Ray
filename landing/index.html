@@ -288,6 +288,46 @@
   .unlock-text { font-size: 12px; color: var(--text-2); }
   .unlock-cta { margin-top: 14px; font-size: 13px; text-align: center; }
   .unlock-cta a { color: var(--accent-2); font-weight: 600; }
+  .unlock-restore {
+    width: 100%; margin-top: 14px; border: 1px solid var(--border);
+    border-radius: 9px; background: var(--surface); text-align: left;
+  }
+  .unlock-restore summary {
+    padding: 11px 14px; font-size: 12px; color: var(--muted);
+    cursor: pointer; list-style: none;
+  }
+  .unlock-restore summary::-webkit-details-marker { display: none; }
+  .unlock-restore .inner { padding: 0 14px 14px; }
+  .unlock-restore input {
+    width: 100%; padding: 10px 12px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--text); font-size: 12px; font-family: inherit;
+  }
+  .unlock-restore input.mono { font-family: ui-monospace, monospace; font-size: 11px; }
+  .unlock-restore .field-mini + .field-mini { margin-top: 10px; }
+  .unlock-restore label {
+    display: block; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted); margin-bottom: 5px;
+  }
+  .unlock-restore-actions {
+    display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .unlock-restore-actions .btn { flex: 1; min-width: 120px; margin-top: 0; }
+  .pay-email-row {
+    margin-bottom: 14px; padding: 12px; border-radius: 8px;
+    background: var(--bg); border: 1px solid var(--border); text-align: left;
+  }
+  .pay-email-row label {
+    display: block; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .pay-email-row input {
+    width: 100%; padding: 10px 12px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text); font-size: 14px; font-family: inherit;
+  }
 
   /* Sections */
   section:not(.hero) { padding: 80px 0; }
@@ -552,12 +592,31 @@
       </a>
       <div id="unlock-banner" class="unlock-banner" hidden>
         <span class="unlock-badge">Lifetime full access</span>
-        <span class="unlock-text">Claude Sonnet 4.6 · BYOK · unlimited audits</span>
+        <span class="unlock-text">Full Llama audits included · optional Claude Sonnet 4.6 (BYOK)</span>
       </div>
-      <details class="pro-toggle" id="pro-section" hidden>
-        <summary>Full audit — your Anthropic API key (BYOK)</summary>
+      <details class="unlock-restore" id="unlock-restore">
+        <summary>Already paid? Enter unlock code</summary>
         <div class="inner">
-          <p class="pro-note">Requires $39 lifetime unlock. Key used once per audit, never stored on our servers.</p>
+          <p class="pro-note">Use the email from payment and the code we emailed you. Saved in this browser after first unlock.</p>
+          <div class="field-mini">
+            <label for="unlock-email-input">License email</label>
+            <input type="email" id="unlock-email-input" placeholder="you@company.com" autocomplete="email">
+          </div>
+          <div class="field-mini">
+            <label for="unlock-code-input">Unlock code</label>
+            <input type="text" id="unlock-code-input" class="mono" placeholder="64-char code from email" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="unlock-restore-actions">
+            <button type="button" class="btn btn-ghost btn-sm" id="unlock-apply-btn">Apply code</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="resend-unlock-btn">Resend code</button>
+          </div>
+          <p class="form-note" id="unlock-restore-status" style="margin-top:10px;text-align:left"></p>
+        </div>
+      </details>
+      <details class="pro-toggle" id="pro-section" hidden>
+        <summary>Optional — Claude Sonnet 4.6 (your Anthropic API key)</summary>
+        <div class="inner">
+          <p class="pro-note">Without a key you get a full Llama report. Paste your key for Claude — used once per audit, never stored.</p>
           <input type="password" id="anthropic-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false">
         </div>
       </details>
@@ -621,7 +680,7 @@
     <div class="section-head">
       <div class="section-label">Pricing</div>
       <h2>Pay once, full access forever</h2>
-      <p class="section-desc">Not a subscription. $39 unlocks unlimited full Claude audits with your own API key.</p>
+      <p class="section-desc">Not a subscription. $39 unlocks unlimited full Llama audits forever — Claude optional with your API key.</p>
     </div>
     <div class="pricing">
       <div class="plan">
@@ -641,10 +700,10 @@
         <div class="plan-price">$39</div>
         <div class="plan-sub">39 USDT once · not a subscription</div>
         <ul>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Unlimited full audits forever</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>BYOK — your Anthropic key</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Claude Sonnet 4.6 · effort medium</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Key never stored on our servers</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Unlimited full Llama audits forever</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Long report every time — not a teaser</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Optional Claude Sonnet 4.6 (BYOK)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>License saved ~10 years · code by email</li>
         </ul>
         <a href="#" class="btn btn-primary" onclick="return goToCheckout(event)">Unlock — 39 USDT</a>
       </div>
@@ -669,11 +728,15 @@
       </details>
       <details>
         <summary>How do I pay with USDT?</summary>
-        <div class="ans">Enter your email, click Unlock 39 USDT, send exactly 39 USDT, paste tx hash. On-chain verification grants lifetime full access — not a subscription. You then run unlimited full audits with your own Anthropic API key.</div>
+        <div class="ans">Enter your email on the form, click Unlock 39 USDT, confirm email in the payment window, send exactly 39 USDT, paste tx hash. We verify on-chain and email your unlock code — not a subscription. Then run unlimited full Llama audits; add your Anthropic key anytime for Claude.</div>
+      </details>
+      <details>
+        <summary>Will my license disappear?</summary>
+        <div class="ans">No. Your lifetime license (email + unlock code) is stored on our servers for about 10 years. We also email the code after payment and save it in your browser. Individual report links expire after 7 days — run a new audit anytime while unlocked.</div>
       </details>
       <details>
         <summary>Is Claude free?</summary>
-        <div class="ans">No. Free tier uses Llama (Cloudflare AI) teaser only. Full Claude Sonnet 4.6 audits require the $39 lifetime unlock plus your own API key (BYOK). You pay Anthropic per audit; we never store your key.</div>
+        <div class="ans">Claude is optional. Free tier = Llama teaser only. Paid unlock = full Llama reports without any API key. For Claude Sonnet 4.6, paste your own Anthropic key (BYOK) — you pay Anthropic per audit; we never store your key.</div>
       </details>
       <details>
         <summary>Refund policy?</summary>
@@ -688,6 +751,10 @@
     <button type="button" class="pay-close" id="pay-close" aria-label="Close">&times;</button>
     <h2>Lifetime full access — 39 USDT</h2>
     <p class="pay-sub">One-time payment · unlock forever · not a subscription</p>
+    <div class="pay-email-row">
+      <label for="pay-email">Your email (license tied to this)</label>
+      <input type="email" id="pay-email" placeholder="you@company.com" autocomplete="email">
+    </div>
     <div class="pay-tabs">
       <button type="button" class="pay-tab active" data-network="trc20">TRC-20</button>
       <button type="button" class="pay-tab" data-network="erc20">ERC-20</button>
@@ -743,13 +810,24 @@ const PAY_NETWORKS = {
   const proSection = document.getElementById("pro-section");
   const unlockBanner = document.getElementById("unlock-banner");
   const unlockCta = document.getElementById("unlock-cta");
+  const unlockCodeInput = document.getElementById("unlock-code-input");
+  const unlockEmailInput = document.getElementById("unlock-email-input");
+  const unlockApplyBtn = document.getElementById("unlock-apply-btn");
+  const resendUnlockBtn = document.getElementById("resend-unlock-btn");
+  const unlockRestoreStatus = document.getElementById("unlock-restore-status");
+  const payEmailInput = document.getElementById("pay-email");
   let activeReportKey = null;
   let activeReportKind = "free";
   let unlockToken = null;
+  let licensed = false;
 
   const UNLOCK_STORAGE = "sitexray_unlock";
 
-  function loadUnlock() {
+  function saveUnlock(data) {
+    try { localStorage.setItem(UNLOCK_STORAGE, JSON.stringify(data)); } catch (_) {}
+  }
+
+  function loadUnlockFromStorage() {
     try {
       const raw = localStorage.getItem(UNLOCK_STORAGE);
       if (raw) {
@@ -757,28 +835,74 @@ const PAY_NETWORKS = {
         if (data?.unlockToken) return data;
       }
     } catch (_) {}
+    return null;
+  }
+
+  function loadUnlockFromUrl() {
     const params = new URLSearchParams(location.search);
     const token = params.get("unlock") || params.get("token");
     const em = params.get("email");
     if (token) {
       const data = { unlockToken: token.trim(), email: em ? em.trim() : null };
-      try { localStorage.setItem(UNLOCK_STORAGE, JSON.stringify(data)); } catch (_) {}
+      saveUnlock(data);
       return data;
     }
     return null;
   }
 
-  async function refreshUnlockUI() {
-    const stored = loadUnlock();
-    unlockToken = stored?.unlockToken || null;
-    const email = stored?.email || emailInput.value.trim();
-    if (!unlockToken || !email) {
-      proSection.hidden = true;
-      unlockBanner.hidden = true;
-      unlockCta.hidden = false;
+  function getActiveUnlock() {
+    const manualCode = unlockCodeInput?.value.trim() || "";
+    const manualEmail = unlockEmailInput?.value.trim() || "";
+    if (manualCode.length >= 32) {
+      return {
+        unlockToken: manualCode,
+        email: manualEmail || emailInput.value.trim() || null,
+      };
+    }
+    return loadUnlockFromStorage() || loadUnlockFromUrl();
+  }
+
+  function updateSubmitLabel() {
+    if (!licensed) {
       submitBtn.textContent = "Get free teaser";
       return;
     }
+    submitBtn.textContent = byokInput?.value.trim()
+      ? "Run full Claude audit"
+      : "Run full audit (Llama)";
+  }
+
+  function setUnlockRestoreStatus(text, kind) {
+    if (!unlockRestoreStatus) return;
+    unlockRestoreStatus.textContent = text || "";
+    unlockRestoreStatus.style.color = kind === "error"
+      ? "var(--red)"
+      : kind === "success"
+        ? "var(--green)"
+        : "var(--muted)";
+  }
+
+  async function refreshUnlockUI() {
+    const active = getActiveUnlock();
+    unlockToken = active?.unlockToken || null;
+    const email = active?.email || emailInput.value.trim();
+
+    if (unlockCodeInput && active?.unlockToken && !unlockCodeInput.value.trim()) {
+      unlockCodeInput.value = active.unlockToken;
+    }
+    if (unlockEmailInput && active?.email && !unlockEmailInput.value.trim()) {
+      unlockEmailInput.value = active.email;
+    }
+
+    if (!unlockToken || !email) {
+      licensed = false;
+      proSection.hidden = true;
+      unlockBanner.hidden = true;
+      unlockCta.hidden = false;
+      updateSubmitLabel();
+      return false;
+    }
+
     try {
       const res = await fetch("/api/license-status", {
         method: "POST",
@@ -787,24 +911,77 @@ const PAY_NETWORKS = {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.licensed) {
+        licensed = true;
+        saveUnlock({ unlockToken, email });
         proSection.hidden = false;
         unlockBanner.hidden = false;
         unlockCta.hidden = true;
-        submitBtn.textContent = byokInput?.value.trim() ? "Run full Claude audit" : "Get free teaser";
-        if (stored.email) emailInput.value = stored.email;
-        return;
+        if (active.email) emailInput.value = active.email;
+        updateSubmitLabel();
+        return true;
       }
     } catch (_) {}
+
+    licensed = false;
     proSection.hidden = true;
     unlockBanner.hidden = true;
     unlockCta.hidden = false;
-    submitBtn.textContent = "Get free teaser";
+    updateSubmitLabel();
+    return false;
   }
 
   refreshUnlockUI();
   emailInput.addEventListener("change", refreshUnlockUI);
-  byokInput?.addEventListener("input", () => {
-    if (unlockToken) submitBtn.textContent = byokInput.value.trim() ? "Run full Claude audit" : "Get free teaser";
+  unlockCodeInput?.addEventListener("change", refreshUnlockUI);
+  unlockEmailInput?.addEventListener("change", refreshUnlockUI);
+  byokInput?.addEventListener("input", updateSubmitLabel);
+
+  unlockApplyBtn?.addEventListener("click", async () => {
+    const code = unlockCodeInput?.value.trim() || "";
+    const em = unlockEmailInput?.value.trim() || emailInput.value.trim();
+    if (!em) {
+      setUnlockRestoreStatus("Enter license email first.", "error");
+      return;
+    }
+    if (code.length < 32) {
+      setUnlockRestoreStatus("Paste the full unlock code from your email.", "error");
+      return;
+    }
+    unlockToken = code;
+    emailInput.value = em;
+    setUnlockRestoreStatus("Checking…", null);
+    const ok = await refreshUnlockUI();
+    setUnlockRestoreStatus(
+      ok ? "Unlocked — full Llama audits enabled on this device." : "Invalid code for this email.",
+      ok ? "success" : "error"
+    );
+  });
+
+  resendUnlockBtn?.addEventListener("click", async () => {
+    const em = unlockEmailInput?.value.trim() || emailInput.value.trim();
+    if (!em) {
+      setUnlockRestoreStatus("Enter the email you paid with.", "error");
+      return;
+    }
+    resendUnlockBtn.disabled = true;
+    setUnlockRestoreStatus("Sending new code…", null);
+    try {
+      const res = await fetch("/api/resend-unlock", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: em }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        setUnlockRestoreStatus("New unlock code sent — check inbox and spam.", "success");
+      } else {
+        setUnlockRestoreStatus(data.error || "Could not resend.", "error");
+      }
+    } catch {
+      setUnlockRestoreStatus("Server error.", "error");
+    } finally {
+      resendUnlockBtn.disabled = false;
+    }
   });
 
   if (TURNSTILE_SITE_KEY && turnstileContainer) {
@@ -850,21 +1027,23 @@ const PAY_NETWORKS = {
     activeReportKey = null;
 
     const byok = byokInput?.value.trim() || "";
+    const active = getActiveUnlock();
+    const token = active?.unlockToken || unlockToken;
     const payload = {
       url, email,
       turnstileToken: getTurnstileToken(),
     };
     if (byok) {
-      if (!unlockToken) {
-        setStatus("Lifetime unlock required for full audits. Pay 39 USDT once.", "error");
+      if (!token) {
+        setStatus("Lifetime unlock required for Claude. Pay 39 USDT once.", "error");
         submitBtn.disabled = false;
         submitBtn.textContent = orig;
         submitBtn.classList.remove("btn-loading");
         return;
       }
       payload.anthropicApiKey = byok;
-      payload.unlockToken = unlockToken;
     }
+    if (token) payload.unlockToken = token;
 
     try {
       const res = await fetch("/api/audit", {
@@ -934,11 +1113,18 @@ const PAY_NETWORKS = {
     paySubmit.disabled = true;
     setPayStatus("Verifying…", null);
     try {
+      const payEmail = (payEmailInput?.value || emailInput.value).trim();
+      if (!payEmail) {
+        setPayStatus("Enter your email — license is tied to it.", "error");
+        paySubmit.disabled = false;
+        return;
+      }
+      emailInput.value = payEmail;
       const res = await fetch("/api/verify-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          url: urlInput.value.trim(), email: emailInput.value.trim(),
+          url: urlInput.value.trim(), email: payEmail,
           network: payNetwork, txHash, turnstileToken: getTurnstileToken(),
         }),
       });
@@ -1094,14 +1280,13 @@ const PAY_NETWORKS = {
 
   window.goToCheckout = function (event) {
     if (event) event.preventDefault();
-    const url = urlInput.value.trim();
-    const email = emailInput.value.trim();
     const email = emailInput.value.trim();
     if (!email) {
       document.getElementById("audit").scrollIntoView({ behavior: "smooth" });
       setStatus("Enter your email first (used for lifetime unlock).", "error");
       return false;
     }
+    if (payEmailInput) payEmailInput.value = email;
     setStatus("", null);
     setPayStatus("", null);
     payTxInput.value = "";
@@ -1109,6 +1294,10 @@ const PAY_NETWORKS = {
     payOverlay.classList.add("open");
     return false;
   };
+
+  payEmailInput?.addEventListener("change", () => {
+    if (payEmailInput.value.trim()) emailInput.value = payEmailInput.value.trim();
+  });
 })();
 </script>
 </body>

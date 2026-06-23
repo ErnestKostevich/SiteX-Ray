@@ -9,11 +9,11 @@ export function renderUnlockEmail(opts) {
 <body style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#111;margin:0;padding:20px;">
 <p><strong>SiteX-Ray — lifetime full access unlocked</strong></p>
 <p>You paid 39 USDT once. This is <strong>not a subscription</strong> — your email is unlocked <strong>forever</strong>.</p>
-<p><strong>What you get:</strong> unlimited full audits with your own Anthropic API key (BYOK). We use Claude Sonnet 4.6, effort medium. Your key is used only for that request and is never stored on our servers.</p>
+<p><strong>What you get:</strong> unlimited <strong>full</strong> Llama audits — long report every time, no API key needed. Optionally paste your Anthropic key for Claude Sonnet 4.6 (BYOK); your key is used only for that request and is never stored.</p>
 <p><a href="${link}" style="color:#6d28d9;"><strong>Activate on SiteX-Ray</strong></a></p>
 <p style="color:#555;font-size:14px;">Save this unlock code (treat like a password):<br>
 <code style="word-break:break-all;">${unlockToken}</code></p>
-<p style="color:#888;font-size:13px;">Free tier stays Llama teaser only. Full Claude audits require this unlock + your key.<br>SiteX-Ray · sitexray.xyz</p>
+<p style="color:#888;font-size:13px;">Your license is stored for years on our servers. Save this email. Individual report links expire in 7 days — run new audits anytime.<br>SiteX-Ray · sitexray.xyz</p>
 </body></html>`;
 }
 
