@@ -1,16 +1,19 @@
 // POST /api/verify-payment
-// Body: { url, email, network: "trc20"|"erc20", txHash, turnstileToken? }
-// Verifies on-chain USDT payment and delivers full audit by email.
+// Verifies 39 USDT → grants lifetime full-access license (not a subscription).
 
 import { verifyTurnstile } from "../_shared/turnstile.js";
-import { putJob } from "../_shared/reportCache.js";
+import {
+  grantLifetimeLicense,
+  isLicensed,
+  rotateUnlockToken,
+} from "../_shared/licenses.js";
+import { sendUnlockEmail } from "../_shared/unlockEmail.js";
 import {
   verifyUsdtPayment,
   markTxUsed,
   PRICE_USDT,
   NETWORKS,
 } from "../_shared/usdtVerify.js";
-
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -37,25 +40,17 @@ export async function onRequestPost(context) {
     return json(400, { ok: false, error: "Invalid JSON body" });
   }
 
-  const url = (body.url || "").trim();
   const email = (body.email || "").trim();
   const network = (body.network || "").trim().toLowerCase();
   const txHash = (body.txHash || body.tx_hash || "").trim();
   const turnstileToken = body.turnstileToken || body["cf-turnstile-response"];
 
-  if (!url) return json(400, { ok: false, error: "URL is required" });
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json(400, { ok: false, error: "Valid email is required" });
   }
   if (!txHash) return json(400, { ok: false, error: "Transaction hash is required" });
   if (!NETWORKS[network]) {
     return json(400, { ok: false, error: "Choose network: trc20 or erc20" });
-  }
-
-  try {
-    new URL(/^https?:\/\//i.test(url) ? url : "https://" + url);
-  } catch {
-    return json(400, { ok: false, error: "Invalid URL" });
   }
 
   if (env.TURNSTILE_SECRET) {
@@ -79,22 +74,43 @@ export async function onRequestPost(context) {
 
   await markTxUsed(payment.network, payment.txHash);
 
-  await putJob("paid", payment.txHash, {
-    status: "pending",
-    url,
-    email,
-    free: false,
-    ctaUrl: null,
-    createdAt: Date.now(),
-    network: payment.network,
-    amount: payment.amount,
-  });
+  const siteUrl = env.SITE_URL || new URL(request.url).origin;
+  let unlockToken;
+  let alreadyLicensed = await isLicensed(email);
+
+  if (alreadyLicensed) {
+    unlockToken = await rotateUnlockToken(email);
+  } else {
+    unlockToken = await grantLifetimeLicense(email, {
+      txHash: payment.txHash,
+      network: payment.network,
+      amount: payment.amount,
+    });
+  }
+
+  let emailSent = false;
+  let emailError = null;
+  try {
+    await sendUnlockEmail({ email, unlockToken, env, siteUrl });
+    emailSent = true;
+  } catch (err) {
+    emailError = err && err.message ? err.message : String(err);
+    console.error("Unlock email failed:", emailError);
+  }
 
   return json(200, {
     ok: true,
-    message: `Payment verified (${PRICE_USDT} USDT). Your full audit is generating — check ${email} in 2–3 minutes.`,
+    licensed: true,
+    lifetime: true,
+    alreadyLicensed,
+    unlockToken,
+    emailSent,
+    emailError,
+    message: alreadyLicensed
+      ? `Already unlocked. New access code emailed to ${email}.`
+      : `Lifetime full access unlocked for ${email}. Save your unlock code — not a subscription.`,
     txHash: payment.txHash,
     network: payment.network,
-    reportKey: payment.txHash,
+    priceUsdt: PRICE_USDT,
   });
 }

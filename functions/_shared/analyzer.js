@@ -1,8 +1,10 @@
-// Calls Anthropic Messages API, parses JSON audit report.
+// Calls Anthropic Messages API — BYOK full audits only (Sonnet 4.6, effort medium).
+
 import { AUDITOR_SYSTEM_PROMPT } from "./prompt.js";
 
-const DEFAULT_MODEL = "claude-sonnet-4-5";
-const MAX_TOKENS = 8000;
+export const DEFAULT_MODEL = "claude-sonnet-4-6";
+export const DEFAULT_EFFORT = "medium";
+const MAX_TOKENS = 16000;
 
 function extractJson(raw) {
   let text = raw.trim();
@@ -22,14 +24,19 @@ function extractJson(raw) {
 }
 
 export async function analyzeWithClaude(siteData, apiKey, opts = {}) {
-  const { free = true, model = DEFAULT_MODEL } = opts;
+  const {
+    free = false,
+    model = DEFAULT_MODEL,
+    effort = DEFAULT_EFFORT,
+  } = opts;
 
-  if (!apiKey) throw new Error("ANTHROPIC_API_KEY is not set");
-
-  const mode = free ? "TEASER" : "FULL";
+  if (!apiKey) throw new Error("Anthropic API key is required");
+  if (free) {
+    throw new Error("Claude is not available on the free tier");
+  }
 
   const userMessage =
-    `Mode: ${mode}\n\n` +
+    "Mode: FULL\n\n" +
     "Site data (JSON):\n```json\n" +
     JSON.stringify(siteData, null, 2) +
     "\n```\n\n" +
@@ -47,6 +54,7 @@ export async function analyzeWithClaude(siteData, apiKey, opts = {}) {
       max_tokens: MAX_TOKENS,
       system: AUDITOR_SYSTEM_PROMPT,
       messages: [{ role: "user", content: userMessage }],
+      output_config: { effort },
     }),
   });
 

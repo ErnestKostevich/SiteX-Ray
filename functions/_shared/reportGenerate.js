@@ -13,6 +13,7 @@ import {
   deliverReportEmail,
   runAuditAndEmail,
 } from "./auditFlow.js";
+import { peekByokKey, takeByokKey } from "./ephemeralKey.js";
 import { renderReport } from "./renderer.js";
 
 export async function ensureEmailDelivered(kind, key, env, job) {
@@ -100,17 +101,30 @@ export async function ensureReport(kind, key, env) {
 
   const reportUrl = buildReportUrl(kind, key, env);
 
+  const byokKey =
+    working.licensedFull || kind === "full"
+      ? (await peekByokKey(key)) || (await takeByokKey(key))
+      : null;
+
+  if ((working.licensedFull || kind === "full") && !byokKey) {
+    const msg = "Anthropic API key expired from memory. Submit a new audit with your key.";
+    await putJob(kind, key, { ...working, status: "error", error: msg });
+    throw new Error(msg);
+  }
+
   try {
     const result = await runAuditAndEmail({
       url: working.url,
       email: working.email,
-      free: working.free,
+      free: working.free !== false && kind === "free",
       env,
       ctaUrl: working.ctaUrl || null,
-      byokAnthropicKey: working.byokAnthropicKey || null,
+      byokAnthropicKey: byokKey,
       cacheKey: key,
       reportUrl,
+      reportKind: kind,
     });
+    await takeByokKey(key);
     await putJob(kind, key, {
       ...working,
       status: "done",
@@ -121,6 +135,7 @@ export async function ensureReport(kind, key, env) {
     });
     return await getCachedReport(kind, key);
   } catch (err) {
+    await takeByokKey(key);
     const msg = err && err.message ? err.message : String(err);
     await putJob(kind, key, { ...working, status: "error", error: msg });
     throw err;

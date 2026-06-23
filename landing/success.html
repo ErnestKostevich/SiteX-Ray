@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payment verified — SiteX-Ray</title>
+<title>Lifetime access unlocked — SiteX-Ray</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(139,92,246,0.15), transparent);
   }
   .card {
-    width: 100%; max-width: 400px; text-align: center;
+    width: 100%; max-width: 440px; text-align: center;
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 14px; padding: 36px 28px;
   }
@@ -46,10 +46,16 @@
   }
   .check svg { width: 24px; height: 24px; stroke-width: 2.5; fill: none; stroke: currentColor; }
   h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.02em; }
-  .lead { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+  .lead { color: var(--muted); font-size: 14px; margin-bottom: 16px; line-height: 1.55; text-align: left; }
+  .lead li { margin: 6px 0 6px 18px; }
   .status-box {
     font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.5;
     min-height: 1.4em;
+  }
+  .code-box {
+    font-family: ui-monospace, monospace; font-size: 11px; word-break: break-all;
+    text-align: left; padding: 12px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); margin: 12px 0 18px;
   }
   .btn {
     display: flex; align-items: center; justify-content: center;
@@ -75,55 +81,50 @@
   <div class="check">
     <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
   </div>
-  <h1>Payment verified</h1>
-  <p class="lead">Your full report is generating.</p>
-  <div class="status-box" id="timing-text">Preparing… ~2 min.</div>
-  <a href="#" id="report-download" class="btn btn-primary" style="display:none">Open full report</a>
+  <h1>Lifetime full access unlocked</h1>
+  <p class="lead">Not a subscription — one payment, forever:</p>
+  <ul class="lead">
+    <li>Unlimited <strong>full</strong> audits with your Anthropic key (BYOK)</li>
+    <li>Claude Sonnet 4.6 · effort medium</li>
+    <li>Your API key is used once per request and <strong>never stored</strong></li>
+    <li>Free tier stays Llama teaser only</li>
+  </ul>
+  <div class="status-box" id="status-text">Saving your unlock code…</div>
+  <div class="code-box" id="unlock-code" hidden></div>
+  <a href="/#audit" class="btn btn-primary" id="start-btn">Run your first full audit</a>
   <a href="/" class="btn btn-ghost">Back to home</a>
 </div>
 <script>
 (function () {
-  const key = (new URLSearchParams(location.search).get("key") || "").trim().toLowerCase();
-  const dl = document.getElementById("report-download");
-  const timingText = document.getElementById("timing-text");
-  if (!key || !dl) return;
-  let tries = 0;
-  const poll = async () => {
-    tries++;
-    try {
-      const reportRes = await fetch("/api/report?kind=paid&key=" + encodeURIComponent(key));
-      const ctype = reportRes.headers.get("content-type") || "";
-      if (reportRes.status === 500) {
-        const err = await reportRes.json().catch(() => ({}));
-        timingText.textContent = err.error || "Generation failed.";
-        timingText.style.color = "var(--red)";
-        return;
-      }
-      const st = await fetch("/api/report-status?kind=paid&key=" + encodeURIComponent(key));
-      const status = st.ok ? await st.json() : {};
-      if (status.error) {
-        timingText.textContent = status.error;
-        timingText.style.color = "var(--red)";
-        return;
-      }
-      if (status.ready || (reportRes.ok && ctype.includes("text/html"))) {
-        dl.href = "/api/report?kind=paid&key=" + encodeURIComponent(key);
-        dl.style.display = "flex";
-        timingText.textContent = status.emailSent
-          ? "Email sent. Open below if inbox is slow."
-          : "Report ready — open below.";
-        timingText.style.color = "var(--green)";
-        return;
-      }
-    } catch (_) {}
-    if (tries < 45) {
-      timingText.textContent = "Generating… (" + tries + ")";
-      setTimeout(poll, 4000);
-    } else {
-      timingText.innerHTML = "Still generating — check email or <a href='mailto:ernest2011kostevich@gmail.com'>contact us</a>.";
-    }
-  };
-  poll();
+  const params = new URLSearchParams(location.search);
+  const unlock = (params.get("unlock") || params.get("token") || "").trim();
+  const email = (params.get("email") || "").trim();
+  const status = document.getElementById("status-text");
+  const codeBox = document.getElementById("unlock-code");
+
+  if (!unlock) {
+    status.textContent = "Missing unlock code. Check your email or contact support.";
+    status.style.color = "var(--red)";
+    return;
+  }
+
+  const store = { unlockToken: unlock, email: email || null, savedAt: Date.now() };
+  try {
+    localStorage.setItem("sitexray_unlock", JSON.stringify(store));
+  } catch (_) {}
+
+  codeBox.hidden = false;
+  codeBox.textContent = unlock;
+
+  if (email) {
+    status.textContent = "Unlocked for " + email + ". Code saved in this browser. We also emailed it.";
+    status.style.color = "var(--green)";
+  } else {
+    status.textContent = "Unlock code saved in this browser. Enter the same email when auditing.";
+    status.style.color = "var(--green)";
+  }
+
+  document.getElementById("start-btn").href = "/?unlock=" + encodeURIComponent(unlock) + (email ? "&email=" + encodeURIComponent(email) : "") + "#audit";
 })();
 </script>
 </body>
