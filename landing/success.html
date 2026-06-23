@@ -3,287 +3,101 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payment received — SiteX-Ray</title>
-<meta name="description" content="Your full audit is being generated. Check your inbox in 2-3 minutes.">
+<title>Payment verified — SiteX-Ray</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #07090d;
-    --bg-elev: #0e1117;
-    --bg-card: #12161d;
-    --border: #21262d;
-    --border-subtle: #1a1f27;
-    --ink: #f0f6fc;
-    --ink-soft: #c9d1d9;
-    --muted: #8b949e;
-    --accent-1: #818cf8;
-    --accent-2: #c084fc;
-    --green: #34d399;
-    --gradient: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
-    --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --bg: #09090b; --surface: #111114; --border: #27272a;
+    --text: #fafafa; --muted: #71717a; --accent: #6366f1; --green: #22c55e;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-    line-height: 1.6;
-    font-size: 16px;
-    -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    overflow-x: hidden;
+    font-family: "Inter", system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; display: grid; place-items: center; padding: 24px;
   }
-
-  .mesh-bg {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
-    pointer-events: none;
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(99,102,241,0.12), transparent);
   }
-  .mesh-blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.4;
-    animation: drift 24s ease-in-out infinite;
-  }
-  .mesh-blob.a { width: 480px; height: 480px; background: #34d399; top: -100px; left: -80px; }
-  .mesh-blob.b { width: 380px; height: 380px; background: #818cf8; bottom: -60px; right: -60px; animation-delay: -10s; }
-  @keyframes drift {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50%      { transform: translate(40px, -30px) scale(1.06); }
-  }
-  .grain {
-    position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.025;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  }
-
-  a { color: var(--accent-1); text-decoration: none; transition: color 0.2s var(--easing); }
-  a:hover { color: var(--accent-2); }
-
   .card {
-    background: rgba(18, 22, 29, 0.7);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 56px 44px;
-    max-width: 560px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-    animation: pop 0.6s var(--easing);
+    max-width: 480px; width: 100%;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 40px 32px; text-align: center;
   }
-  @keyframes pop {
-    from { opacity: 0; transform: translateY(20px) scale(0.98); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
+  .brand {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-weight: 800; font-size: 15px; margin-bottom: 28px;
   }
-  .logo-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 32px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+  .brand-icon {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: var(--accent); color: #fff;
+    display: grid; place-items: center; font-size: 13px;
   }
-  .logo-mark {
-    width: 22px; height: 22px;
-    background: var(--gradient);
-    border-radius: 6px;
-    display: grid;
-    place-items: center;
-  }
-  .logo-mark svg { width: 12px; height: 12px; }
-
+  .brand span { color: #818cf8; }
   .check {
-    width: 84px;
-    height: 84px;
-    margin: 0 auto 28px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #34d399, #10b981);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 12px 40px rgba(52, 211, 153, 0.35);
-    position: relative;
-    animation: check-pop 0.7s var(--easing) 0.2s backwards;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: rgba(34,197,94,0.15); border: 2px solid var(--green);
+    display: grid; place-items: center; margin: 0 auto 20px;
   }
-  .check::before {
-    content: "";
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 2px solid rgba(52, 211, 153, 0.3);
-    animation: ripple 2.5s ease-out infinite;
+  .check svg { width: 28px; height: 28px; color: var(--green); }
+  h1 { font-size: 24px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .lead { color: var(--muted); font-size: 15px; margin-bottom: 24px; line-height: 1.55; }
+  .status-box {
+    background: #0a0a0c; border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px; font-size: 14px;
+    color: var(--muted); margin-bottom: 20px; line-height: 1.5;
   }
-  @keyframes check-pop {
-    from { transform: scale(0); opacity: 0; }
-    60%  { transform: scale(1.1); }
-    to   { transform: scale(1); opacity: 1; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 24px; border-radius: 10px; font-weight: 600; font-size: 15px;
+    text-decoration: none; margin-bottom: 12px;
   }
-  @keyframes ripple {
-    0%   { inset: -4px; opacity: 0.6; }
-    100% { inset: -30px; opacity: 0; }
+  .btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff; box-shadow: 0 4px 20px rgba(99,102,241,0.3);
   }
-  .check svg { width: 42px; height: 42px; }
-
-  h1 {
-    font-size: 32px;
-    margin-bottom: 12px;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
+  .btn-ghost {
+    color: var(--text); border: 1px solid var(--border); background: transparent;
   }
-  .lead {
-    color: var(--ink-soft);
-    margin-bottom: 32px;
-    font-size: 17px;
-    line-height: 1.55;
+  .steps {
+    text-align: left; margin: 28px 0; padding: 20px;
+    background: #0a0a0c; border-radius: 10px; border: 1px solid var(--border);
   }
-
-  .timing {
-    background: rgba(129, 140, 248, 0.08);
-    border: 1px solid rgba(129, 140, 248, 0.3);
-    border-radius: 12px;
-    padding: 18px 22px;
-    color: #c7d2fe;
-    margin-bottom: 32px;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .timing strong { color: var(--accent-1); }
-
-  .next {
-    text-align: left;
-    margin-bottom: 32px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-    padding: 20px 24px;
-  }
-  .next h3 {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent-1);
-    margin-bottom: 14px;
-    font-weight: 600;
-  }
-  .next ol {
-    padding-left: 22px;
-    color: var(--ink-soft);
-    font-size: 14.5px;
-    line-height: 1.7;
-  }
-  .next li { margin-bottom: 4px; }
-
-  .upsell {
-    border-top: 1px solid var(--border-subtle);
-    padding-top: 24px;
-    margin-top: 8px;
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .upsell a { color: var(--accent-2); font-weight: 600; }
-  .home {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 20px;
-    padding: 12px 22px;
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.2s var(--easing);
-  }
-  .home:hover { border-color: var(--accent-1); color: var(--accent-1); transform: translateY(-1px); }
+  .steps h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 12px; }
+  .steps ol { padding-left: 20px; font-size: 14px; color: var(--muted); line-height: 1.7; }
+  a { color: #818cf8; }
 </style>
 </head>
 <body>
-
-<div class="mesh-bg" aria-hidden="true">
-  <div class="mesh-blob a"></div>
-  <div class="mesh-blob b"></div>
-</div>
-<div class="grain" aria-hidden="true"></div>
-
 <div class="card">
-
-  <div class="logo-row">
-    <span class="logo-mark">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><line x1="7" y1="7" x2="13" y2="13" stroke-width="1.2" opacity="0.55"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
-    </span>
-    SiteX-Ray
-  </div>
-
+  <div class="brand"><span class="brand-icon">X</span> Site<span>X</span>-Ray</div>
   <div class="check">
-    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="20 6 9 17 4 12"></polyline>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
   </div>
-
-  <h1>USDT payment verified!</h1>
-  <p class="lead">Your full SiteX-Ray audit is generating — email + instant web download.</p>
-
-  <div class="timing" id="timing-box">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;flex-shrink:0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-    <span id="timing-text">Check your inbox in <strong>2–3 minutes</strong>. Preparing web download…</span>
-  </div>
-
-  <a href="#" id="report-download" class="home" style="display:none;margin-top:0;margin-bottom:20px;background:var(--gradient);border:none;color:white;">
-    Open full report (backup)
-  </a>
-
-  <div class="next">
+  <h1>Payment verified</h1>
+  <p class="lead">Your full audit report is generating now.</p>
+  <div class="status-box" id="timing-text">Preparing report… check email in 2–3 minutes.</div>
+  <a href="#" id="report-download" class="btn btn-primary" style="display:none">Open full report →</a>
+  <a href="/" class="btn btn-ghost">← Back to SiteX-Ray</a>
+  <div class="steps">
     <h3>What to do next</h3>
     <ol>
-      <li>Open the report when it arrives (check spam if it's missing after 5 min)</li>
-      <li>Read the "Quick wins" first — those are 30-min fixes</li>
-      <li>Reply to the email if anything's unclear or off</li>
-      <li>Re-audit in 30 days to see what improved</li>
+      <li>Open the report from your email</li>
+      <li>Start with Quick wins — fastest fixes</li>
+      <li>Use the web link below if email is slow</li>
     </ol>
   </div>
-
-  <div class="upsell">
-    Want us to implement the fixes instead?
-    <a href="mailto:ernest2011kostevich@gmail.com?subject=Done-for-you%20audit%20request">Request a quote</a>
-    — starting at $299, fixed site in 5 business days.
-  </div>
-
-  <a href="/" class="home">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-    Back to SiteX-Ray
-  </a>
 </div>
-
 <script>
 (function () {
-  const params = new URLSearchParams(location.search);
-  const key = (params.get("key") || params.get("tx") || "").trim().toLowerCase();
+  const key = (new URLSearchParams(location.search).get("key") || "").trim().toLowerCase();
   const dl = document.getElementById("report-download");
   const timingText = document.getElementById("timing-text");
   if (!key || !dl) return;
-
   let tries = 0;
-  const maxTries = 60;
   const poll = async () => {
     tries++;
     try {
@@ -292,23 +106,17 @@
       if (status.ready) {
         dl.href = "/api/report?kind=paid&key=" + encodeURIComponent(key);
         dl.style.display = "inline-flex";
-        if (timingText) {
-          if (status.emailSent) {
-            timingText.innerHTML = "Done! Report sent to your inbox — <strong>open below</strong> if email is slow.";
-          } else if (status.emailError) {
-            timingText.innerHTML = "Report ready. <strong>Email failed</strong> — use the button below. Need help? <a href='mailto:ernest2011kostevich@gmail.com'>Email us</a>.";
-          } else {
-            timingText.innerHTML = "Report ready — open below or check your inbox.";
-          }
-        }
+        timingText.innerHTML = status.emailSent
+          ? "✓ Report sent to your email. Open below if inbox is slow."
+          : "Report ready — use the button below.";
         return;
       }
     } catch (_) {}
-    if (tries < maxTries) {
-      if (timingText) timingText.innerHTML = "Generating report… (" + tries + ")";
+    if (tries < 60) {
+      timingText.textContent = "Generating report… (" + tries + ")";
       setTimeout(poll, 4000);
-    } else if (timingText) {
-      timingText.innerHTML = "Still generating — check email in a few minutes or <a href='mailto:ernest2011kostevich@gmail.com'>contact support</a>.";
+    } else {
+      timingText.innerHTML = "Still generating — check email or <a href='mailto:ernest2011kostevich@gmail.com'>contact us</a>.";
     }
   };
   poll();
