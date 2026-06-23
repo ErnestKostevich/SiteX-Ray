@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SiteX-Ray — AI website audit in 60 seconds</title>
-<meta name="description" content="Pro-grade AI website audit. SEO, UX, conversion, tech — specific fixes in 60 seconds. Free teaser or full report $39 USDT.">
+<title>SiteX-Ray — AI website audit</title>
+<meta name="description" content="AI website audit with specific fixes. Free teaser or full report $39 USDT. Private link + email. No account.">
 <meta property="og:title" content="SiteX-Ray — AI website audit">
 <meta property="og:description" content="Specific fixes, not vague scores. Free teaser or full report $39.">
 <meta property="og:type" content="website">
@@ -14,25 +14,24 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f1f5f9;
-    --surface: #ffffff;
-    --surface-2: #f8fafc;
-    --border: #e2e8f0;
-    --text: #0f172a;
-    --text-2: #334155;
-    --muted: #64748b;
-    --accent: #4f46e5;
-    --accent-2: #6366f1;
-    --accent-soft: #eef2ff;
-    --green: #16a34a;
-    --green-soft: #f0fdf4;
-    --red: #dc2626;
-    --radius: 16px;
-    --shadow: 0 1px 3px rgba(15,23,42,0.06), 0 8px 24px rgba(15,23,42,0.06);
-    --shadow-lg: 0 4px 6px rgba(15,23,42,0.04), 0 20px 48px rgba(15,23,42,0.1);
+    --bg: #08050f;
+    --surface: #110a1c;
+    --surface-2: #160f24;
+    --border: rgba(167,139,250,0.14);
+    --border-strong: rgba(167,139,250,0.28);
+    --text: #f3eeff;
+    --text-2: #c4b5e0;
+    --muted: #7c6b9e;
+    --accent: #8b5cf6;
+    --accent-2: #a78bfa;
+    --accent-glow: rgba(139,92,246,0.35);
+    --green: #34d399;
+    --red: #f87171;
+    --radius: 12px;
+    --max: 1040px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -40,407 +39,370 @@
     font-family: "Inter", system-ui, sans-serif;
     background: var(--bg);
     color: var(--text);
-    line-height: 1.6;
-    font-size: 16px;
+    line-height: 1.55;
+    font-size: 15px;
     -webkit-font-smoothing: antialiased;
   }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { color: var(--accent-2); }
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-  img, svg { max-width: 100%; height: auto; }
+  body::before {
+    content: "";
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(139,92,246,0.18), transparent),
+      radial-gradient(ellipse 40% 30% at 100% 50%, rgba(124,58,237,0.08), transparent);
+  }
+  a { color: var(--accent-2); text-decoration: none; transition: color 0.15s; }
+  a:hover { color: #c4b5fd; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
 
+  .ico {
+    width: 20px; height: 20px; flex-shrink: 0;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .ico-lg { width: 22px; height: 22px; }
+
+  /* Nav */
   nav {
     position: sticky; top: 0; z-index: 50;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(12px);
+    background: rgba(8,5,15,0.88);
+    backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
   }
   nav .wrap {
     display: flex; align-items: center; justify-content: space-between;
-    height: 64px;
+    height: 60px;
   }
   .brand {
     display: flex; align-items: center; gap: 10px;
-    font-weight: 800; font-size: 17px; color: var(--text);
+    font-weight: 700; font-size: 16px; color: var(--text);
+    letter-spacing: -0.02em;
   }
-  .brand-icon {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: var(--accent); color: #fff;
-    display: grid; place-items: center; font-size: 15px; font-weight: 800;
+  .brand-mark {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    display: grid; place-items: center;
   }
-  .brand span { color: var(--accent-2); }
-  .nav-links { display: flex; gap: 24px; align-items: center; font-size: 14px; font-weight: 500; }
-  .nav-links a { color: var(--text-2); }
-  .nav-links a:hover { color: var(--text); }
+  .brand-mark svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2; }
+  .brand em { font-style: normal; color: var(--accent-2); }
+  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 13px; font-weight: 500; }
+  .nav-links a { color: var(--muted); }
+  .nav-links a:hover { color: var(--text-2); }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    padding: 13px 24px; border-radius: 10px; font-weight: 600; font-size: 15px;
+    padding: 11px 20px; border-radius: 9px; font-weight: 600; font-size: 14px;
     border: none; cursor: pointer; font-family: inherit; text-decoration: none;
-    transition: transform 0.15s, box-shadow 0.15s;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
   }
   .btn-primary {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    color: #fff; box-shadow: 0 4px 16px rgba(79,70,229,0.35);
+    background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+    color: #fff; box-shadow: 0 2px 16px var(--accent-glow);
   }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(79,70,229,0.4); color: #fff; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 24px var(--accent-glow); color: #fff; }
   .btn-ghost {
-    background: var(--surface); color: var(--text);
-    border: 1px solid var(--border);
+    background: transparent; color: var(--text-2);
+    border: 1px solid var(--border-strong);
   }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-sm { padding: 9px 16px; font-size: 13px; }
-  .btn-loading { opacity: 0.8; cursor: wait; }
+  .btn-ghost:hover { border-color: var(--accent-2); color: var(--text); }
+  .btn-sm { padding: 8px 14px; font-size: 13px; }
+  .btn-loading { opacity: 0.75; cursor: wait; pointer-events: none; }
   .btn-loading::before {
-    content: ""; width: 14px; height: 14px; margin-right: 6px;
+    content: ""; width: 14px; height: 14px;
     border: 2px solid currentColor; border-right-color: transparent;
-    border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
   /* Hero */
-  .hero {
-    padding: 48px 0 64px;
-    background: linear-gradient(180deg, #fff 0%, var(--bg) 100%);
-  }
+  .hero { padding: 56px 0 72px; }
   .hero-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
   }
   .eyebrow {
     display: inline-flex; align-items: center; gap: 8px;
-    font-size: 13px; font-weight: 600; color: var(--accent);
-    background: var(--accent-soft); padding: 6px 12px; border-radius: 99px;
-    margin-bottom: 20px;
+    font-size: 12px; font-weight: 500; color: var(--muted);
+    margin-bottom: 16px; letter-spacing: 0.02em;
   }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .eyebrow-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 8px rgba(52,211,153,0.5);
+  }
   h1 {
-    font-size: clamp(32px, 4vw, 44px); font-weight: 800;
-    line-height: 1.1; letter-spacing: -0.035em; margin-bottom: 14px;
+    font-size: clamp(30px, 3.8vw, 42px); font-weight: 700;
+    line-height: 1.12; letter-spacing: -0.035em; margin-bottom: 12px;
   }
-  h1 em { font-style: normal; color: var(--accent); }
-  .lead { font-size: 17px; color: var(--muted); max-width: 420px; margin-bottom: 24px; line-height: 1.55; }
+  h1 em { font-style: normal; color: var(--accent-2); }
+  .lead { font-size: 16px; color: var(--muted); max-width: 400px; margin-bottom: 28px; }
 
   .form-card {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 24px;
-    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius); padding: 22px;
   }
-  .form-card:focus-within { border-color: var(--accent-2); box-shadow: var(--shadow-lg), 0 0 0 3px rgba(99,102,241,0.15); }
-  .form-title { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
-  .field { margin-bottom: 12px; }
+  .form-card:focus-within { border-color: var(--border-strong); }
+  .field + .field { margin-top: 12px; }
   .field label {
-    display: block; font-size: 12px; font-weight: 600;
-    color: var(--muted); margin-bottom: 5px;
+    display: block; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted); margin-bottom: 6px;
   }
   .field input {
-    width: 100%; padding: 12px 14px; border-radius: 8px;
-    border: 1px solid var(--border); background: var(--surface-2);
-    color: var(--text); font-size: 16px; font-family: inherit;
+    width: 100%; padding: 11px 13px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--text); font-size: 15px; font-family: inherit;
+    transition: border-color 0.15s;
   }
-  .field input:focus { outline: none; border-color: var(--accent); background: #fff; }
-  .field input::placeholder { color: #94a3b8; }
-  .form-card .btn { width: 100%; margin-top: 6px; }
+  .field input:focus { outline: none; border-color: var(--accent); }
+  .field input::placeholder { color: #5b4d78; }
+  .form-card .btn { width: 100%; margin-top: 16px; }
   .form-note { font-size: 12px; color: var(--muted); margin-top: 10px; text-align: center; }
-  .form-status { margin-top: 12px; font-size: 14px; min-height: 20px; }
+
+  .form-status { margin-top: 14px; font-size: 13px; min-height: 18px; color: var(--text-2); }
   .form-status[data-kind="success"] { color: var(--green); }
   .form-status[data-kind="error"] { color: var(--red); }
 
   .report-ready-box {
-    margin-top: 14px; padding: 16px; border-radius: 12px;
-    background: var(--green-soft); border: 1px solid #bbf7d0;
-    text-align: left; font-size: 14px; color: var(--text-2);
+    margin-top: 14px; padding: 14px 16px; border-radius: 10px;
+    background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.2);
+    font-size: 13px; color: var(--text-2); line-height: 1.5;
   }
-  .report-ready-box strong { color: var(--text); }
+  .report-ready-box strong { color: var(--text); font-weight: 600; }
+
+  #report-ready-link { margin-top: 12px; }
 
   .pro-toggle {
-    margin-top: 14px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; overflow: hidden;
+    margin-top: 14px; border: 1px solid var(--border);
+    border-radius: 9px; background: var(--surface);
   }
   .pro-toggle summary {
-    padding: 12px 16px; font-size: 13px; color: var(--text-2);
+    padding: 11px 14px; font-size: 12px; color: var(--muted);
     cursor: pointer; list-style: none;
   }
   .pro-toggle summary::-webkit-details-marker { display: none; }
-  .pro-toggle .inner { padding: 0 16px 16px; }
+  .pro-toggle .inner { padding: 0 14px 14px; }
   .pro-toggle input {
-    width: 100%; padding: 10px 12px; border-radius: 8px;
-    border: 1px solid var(--border); background: var(--surface-2);
-    color: var(--text); font-size: 13px; font-family: monospace;
+    width: 100%; padding: 10px 12px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--text); font-size: 12px; font-family: ui-monospace, monospace;
   }
 
-  /* Report preview */
+  /* Preview */
   .preview {
     background: #fff; border-radius: var(--radius);
     border: 1px solid var(--border); overflow: hidden;
-    box-shadow: var(--shadow-lg);
-    position: sticky; top: 84px;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.45);
+    position: sticky; top: 76px;
+    color: #0f172a;
   }
-  .preview-bar-top { height: 4px; background: linear-gradient(90deg, #4f46e5, #7c3aed); }
-  .preview-body { padding: 22px; }
-  .preview-brand { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
-  .preview-brand span { color: var(--accent); }
-  .preview-domain { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+  .preview-accent { height: 3px; background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+  .preview-body { padding: 20px; }
+  .preview-brand { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .preview-brand span { color: #7c3aed; }
+  .preview-domain { font-size: 11px; color: #64748b; margin-bottom: 14px; }
   .preview-score-row {
-    display: flex; gap: 14px; align-items: center;
-    padding: 14px; background: var(--surface-2); border-radius: 10px;
-    border: 1px solid var(--border); margin-bottom: 14px;
+    display: flex; gap: 12px; align-items: center;
+    padding: 12px; background: #f8fafc; border-radius: 8px;
+    border: 1px solid #e2e8f0; margin-bottom: 12px;
   }
   .preview-score-num {
-    width: 58px; height: 58px; border-radius: 50%;
+    width: 52px; height: 52px; border-radius: 50%;
     background: #dc2626; color: #fff;
     display: grid; place-items: center;
-    font-size: 22px; font-weight: 800; flex-shrink: 0;
+    font-size: 20px; font-weight: 700; flex-shrink: 0;
   }
   .preview-verdict {
-    font-size: 10px; font-weight: 700; color: #fff;
-    background: #dc2626; padding: 3px 9px; border-radius: 99px;
-    display: inline-block; margin-bottom: 4px;
+    font-size: 9px; font-weight: 700; color: #fff;
+    background: #dc2626; padding: 2px 8px; border-radius: 99px;
+    display: inline-block; margin-bottom: 4px; letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
-  .preview-tldr { font-size: 12px; color: var(--text-2); line-height: 1.45; }
+  .preview-tldr { font-size: 11px; color: #475569; line-height: 1.45; }
   .bar-row {
-    display: grid; grid-template-columns: 52px 1fr 26px; gap: 6px;
-    align-items: center; font-size: 11px; margin-bottom: 6px;
+    display: grid; grid-template-columns: 48px 1fr 24px; gap: 6px;
+    align-items: center; font-size: 10px; margin-bottom: 5px;
   }
-  .bar-row span:first-child { color: var(--muted); font-weight: 600; }
-  .bar-track { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .bar-row span:first-child { color: #64748b; font-weight: 600; }
+  .bar-track { height: 4px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 99px; }
-  .bar-row span:last-child { font-weight: 800; text-align: right; }
+  .bar-row span:last-child { font-weight: 700; text-align: right; }
   .preview-finding {
-    font-size: 11px; padding: 9px 11px; background: #fef2f2;
-    border-left: 3px solid #dc2626; border-radius: 0 6px 6px 0;
-    color: var(--text-2); line-height: 1.45;
+    font-size: 10px; padding: 8px 10px; background: #fef2f2;
+    border-left: 2px solid #dc2626; border-radius: 0 5px 5px 0;
+    color: #475569; line-height: 1.45; margin-top: 10px;
   }
-  .preview-finding strong { color: var(--text); display: block; margin-bottom: 2px; }
+  .preview-finding strong { color: #0f172a; display: block; margin-bottom: 2px; font-size: 10px; }
   .preview-link {
-    display: block; text-align: center; padding: 12px;
-    font-size: 13px; font-weight: 600; color: var(--accent);
-    border-top: 1px solid var(--border); background: var(--surface-2);
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 11px; font-size: 12px; font-weight: 600; color: #7c3aed;
+    border-top: 1px solid #e2e8f0; background: #f8fafc;
   }
-  .preview-link:hover { background: var(--accent-soft); }
+  .preview-link:hover { background: #ede9fe; color: #6d28d9; }
+  .preview-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-  /* Delivery section — the main explainer */
-  #delivery {
-    padding: 72px 0;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
+  /* Sections */
+  section { padding: 72px 0; }
+  .section-head { text-align: center; margin-bottom: 40px; }
   .section-label {
-    font-size: 12px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.1em; color: var(--accent); text-align: center; margin-bottom: 10px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--accent-2); margin-bottom: 8px;
   }
   h2 {
-    font-size: clamp(24px, 3vw, 32px); font-weight: 800;
-    text-align: center; letter-spacing: -0.03em; margin-bottom: 10px;
+    font-size: clamp(22px, 2.8vw, 28px); font-weight: 700;
+    letter-spacing: -0.03em; margin-bottom: 8px;
   }
-  .section-desc {
-    text-align: center; color: var(--muted); font-size: 16px;
-    max-width: 560px; margin: 0 auto 40px; line-height: 1.55;
-  }
+  .section-desc { color: var(--muted); font-size: 14px; max-width: 480px; margin: 0 auto; }
 
-  .delivery-highlight {
-    max-width: 720px; margin: 0 auto 40px;
-    padding: 20px 24px; border-radius: 14px;
-    background: var(--accent-soft); border: 1px solid #c7d2fe;
-    text-align: center; font-size: 15px; color: var(--text-2); line-height: 1.55;
+  /* Delivery */
+  #delivery { border-top: 1px solid var(--border); }
+  .steps {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    max-width: 880px; margin: 0 auto;
   }
-  .delivery-highlight strong { color: var(--text); }
-
-  .delivery-flow {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
-    max-width: 900px; margin: 0 auto 48px; position: relative;
+  .step {
+    padding: 20px 16px; border-radius: var(--radius);
+    background: var(--surface); border: 1px solid var(--border);
+    text-align: center;
   }
-  .delivery-flow::before {
-    content: ""; position: absolute; top: 28px; left: 12%; right: 12%;
-    height: 2px; background: var(--border); z-index: 0;
-  }
-  .flow-step {
-    text-align: center; padding: 0 12px; position: relative; z-index: 1;
-  }
-  .flow-icon {
-    width: 56px; height: 56px; border-radius: 14px;
-    background: var(--surface); border: 2px solid var(--accent);
+  .step-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--surface-2); border: 1px solid var(--border-strong);
     display: grid; place-items: center; margin: 0 auto 14px;
-    font-size: 22px; box-shadow: var(--shadow);
+    color: var(--accent-2);
   }
-  .flow-step h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-  .flow-step p { font-size: 12px; color: var(--muted); line-height: 1.45; }
-
-  .delivery-cards {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-    max-width: 800px; margin: 0 auto;
+  .step-icon svg { width: 20px; height: 20px; }
+  .step-num {
+    font-size: 10px; font-weight: 600; color: var(--muted);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px;
   }
-  .delivery-card {
-    padding: 24px; border-radius: var(--radius);
-    border: 1px solid var(--border); background: var(--surface-2);
-  }
-  .delivery-card h4 {
-    font-size: 15px; font-weight: 700; margin-bottom: 14px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .delivery-card .tag {
-    font-size: 10px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.06em; padding: 3px 8px; border-radius: 6px;
-  }
-  .tag-free { background: var(--accent-soft); color: var(--accent); }
-  .tag-paid { background: #fef3c7; color: #b45309; }
-  .delivery-card ol {
-    padding-left: 18px; font-size: 13px; color: var(--text-2); line-height: 1.65;
-  }
-  .delivery-card li { margin-bottom: 6px; }
-  .delivery-card .note {
-    margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
-    font-size: 12px; color: var(--muted); line-height: 1.5;
-  }
-
-  .storage-box {
-    max-width: 800px; margin: 32px auto 0;
-    padding: 20px 24px; border-radius: 12px;
-    background: #fff; border: 1px dashed var(--border);
-    display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start;
-  }
-  .storage-icon { font-size: 28px; line-height: 1; }
-  .storage-box h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-  .storage-box p { font-size: 13px; color: var(--muted); line-height: 1.55; }
-
-  /* Report contents */
-  section { padding: 72px 0; }
-  .features {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
-  }
-  .feat {
-    padding: 22px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--radius);
-    box-shadow: var(--shadow);
-  }
-  .feat-icon { font-size: 24px; margin-bottom: 12px; }
-  .feat h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-  .feat p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .step h3 { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .step p { font-size: 12px; color: var(--muted); line-height: 1.45; }
 
   /* Pricing */
-  #pricing { background: var(--surface-2); }
+  #pricing { border-top: 1px solid var(--border); }
   .pricing {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-    max-width: 720px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    max-width: 640px; margin: 0 auto;
   }
   .plan {
+    padding: 24px; border-radius: var(--radius);
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 28px 24px;
-    display: flex; flex-direction: column; box-shadow: var(--shadow);
+    display: flex; flex-direction: column;
   }
-  .plan.featured {
-    border-color: var(--accent);
-    box-shadow: var(--shadow-lg), 0 0 0 1px var(--accent);
+  .plan.featured { border-color: var(--border-strong); box-shadow: 0 0 0 1px rgba(139,92,246,0.2); }
+  .plan-tag {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--accent-2); margin-bottom: 10px;
   }
-  .plan-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 10px; }
-  .plan-price { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: 4px; }
-  .plan-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .plan-price { font-size: 36px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+  .plan-sub { font-size: 12px; color: var(--muted); margin: 4px 0 20px; }
   .plan ul { list-style: none; flex: 1; margin-bottom: 20px; }
   .plan li {
-    font-size: 14px; color: var(--text-2); padding: 5px 0;
-    padding-left: 22px; position: relative;
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13px; color: var(--text-2); padding: 5px 0;
   }
-  .plan li::before {
-    content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 700;
-  }
+  .plan li svg { width: 16px; height: 16px; stroke: var(--green); flex-shrink: 0; margin-top: 2px; }
   .plan .btn { width: 100%; }
 
-  .faq { max-width: 640px; margin: 0 auto; }
-  .faq details {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; margin-bottom: 8px; overflow: hidden;
-  }
+  /* FAQ */
+  #faq { border-top: 1px solid var(--border); padding-bottom: 80px; }
+  .faq { max-width: 560px; margin: 0 auto; }
+  .faq details { border-bottom: 1px solid var(--border); }
+  .faq details:first-child { border-top: 1px solid var(--border); }
   .faq summary {
-    padding: 16px 18px; font-weight: 600; font-size: 14px;
-    cursor: pointer; list-style: none;
+    padding: 16px 0; font-weight: 600; font-size: 14px;
+    cursor: pointer; list-style: none; color: var(--text);
   }
   .faq summary::-webkit-details-marker { display: none; }
-  .faq .ans { padding: 0 18px 16px; font-size: 14px; color: var(--muted); line-height: 1.6; }
+  .faq .ans { padding: 0 0 16px; font-size: 13px; color: var(--muted); line-height: 1.6; }
 
   .mobile-cta {
     display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
-    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-    background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(8,5,15,0.94); backdrop-filter: blur(16px);
     border-top: 1px solid var(--border);
   }
   .mobile-cta .btn { width: 100%; }
 
   footer {
-    border-top: 1px solid var(--border); padding: 28px 0;
-    font-size: 13px; color: var(--muted); background: var(--surface);
+    border-top: 1px solid var(--border); padding: 24px 0;
+    font-size: 12px; color: var(--muted);
   }
-  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  footer .wrap {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--text-2); }
 
   /* Payment modal */
   .pay-overlay {
     position: fixed; inset: 0; z-index: 100;
-    background: rgba(15,23,42,0.5); backdrop-filter: blur(6px);
+    background: rgba(8,5,15,0.75); backdrop-filter: blur(8px);
     display: none; align-items: center; justify-content: center; padding: 20px;
   }
   .pay-overlay.open { display: flex; }
   .pay-modal {
-    width: 100%; max-width: 480px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 28px; position: relative; box-shadow: var(--shadow-lg);
+    width: 100%; max-width: 440px; background: var(--surface);
+    border: 1px solid var(--border-strong); border-radius: var(--radius);
+    padding: 24px; position: relative;
   }
   .pay-close {
-    position: absolute; top: 14px; right: 16px;
+    position: absolute; top: 12px; right: 14px;
     background: none; border: none; color: var(--muted);
-    font-size: 24px; cursor: pointer;
+    font-size: 22px; cursor: pointer; line-height: 1;
   }
-  .pay-modal h2 { font-size: 20px; font-weight: 800; margin-bottom: 6px; text-align: left; }
-  .pay-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
-  .pay-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .pay-close:hover { color: var(--text); }
+  .pay-modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .pay-sub { font-size: 12px; color: var(--muted); margin-bottom: 18px; }
+  .pay-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
   .pay-tab {
-    flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border);
-    background: var(--surface-2); color: var(--text-2); font-size: 12px; font-weight: 600;
-    cursor: pointer;
+    flex: 1; padding: 9px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--muted); font-size: 11px; font-weight: 600;
+    cursor: pointer; font-family: inherit; transition: all 0.15s;
   }
-  .pay-tab.active { border-color: var(--accent); color: var(--text); background: var(--accent-soft); }
+  .pay-tab.active { border-color: var(--accent); color: var(--text); background: rgba(139,92,246,0.12); }
   .pay-box {
-    background: var(--surface-2); border: 1px solid var(--border);
-    border-radius: 10px; padding: 16px; margin-bottom: 14px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 9px; padding: 14px; margin-bottom: 12px;
   }
-  .pay-box label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
-  .pay-amount { font-size: 26px; font-weight: 800; color: var(--green); margin: 4px 0 12px; }
+  .pay-box label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+  .pay-amount { font-size: 24px; font-weight: 700; color: var(--green); margin: 4px 0 10px; }
   .pay-address {
-    font-family: monospace; font-size: 11px; word-break: break-all;
-    padding: 12px; background: var(--surface); border-radius: 6px;
-    color: var(--text-2); margin: 6px 0;
+    font-family: ui-monospace, monospace; font-size: 11px; word-break: break-all;
+    padding: 10px; background: var(--surface); border-radius: 6px;
+    color: var(--text-2); margin: 6px 0; border: 1px solid var(--border);
   }
-  .pay-copy { font-size: 12px; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; }
+  .pay-copy { font-size: 12px; color: var(--accent-2); background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; }
+  .pay-copy:hover { color: #c4b5fd; }
   .pay-modal input[type="text"] {
-    width: 100%; padding: 12px 14px; border-radius: 8px;
-    border: 1px solid var(--border); background: var(--surface-2);
-    color: var(--text); font-size: 14px; margin: 8px 0 16px;
+    width: 100%; padding: 11px 13px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--text); font-size: 13px; margin: 6px 0 14px; font-family: inherit;
   }
+  .pay-modal input:focus { outline: none; border-color: var(--accent); }
   .pay-actions { display: flex; gap: 10px; }
   .pay-actions .btn { flex: 1; }
-  .pay-status { font-size: 13px; margin-top: 12px; min-height: 1.2em; }
+  .pay-status { font-size: 12px; margin-top: 10px; min-height: 1.2em; color: var(--text-2); }
   .pay-status[data-kind="error"] { color: var(--red); }
   .pay-status[data-kind="success"] { color: var(--green); }
 
-  @media (max-width: 900px) {
+  @media (max-width: 860px) {
     .nav-links a:not(.btn) { display: none; }
-    .hero { padding: 32px 0 48px; }
-    .hero-grid { grid-template-columns: 1fr; gap: 28px; }
+    .hero { padding: 36px 0 56px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 32px; }
     .preview { position: static; order: 3; }
     .eyebrow, h1, .lead { text-align: center; }
     .lead { margin-left: auto; margin-right: auto; }
-    section, #delivery { padding: 48px 0; }
-    .delivery-flow { grid-template-columns: 1fr 1fr; gap: 24px; }
-    .delivery-flow::before { display: none; }
-    .delivery-cards, .features, .pricing { grid-template-columns: 1fr; }
-    .storage-box { grid-template-columns: 1fr; text-align: center; }
+    section { padding: 56px 0; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .pricing { grid-template-columns: 1fr; }
     .mobile-cta { display: block; }
-    body { padding-bottom: 72px; }
+    body { padding-bottom: 68px; }
     .pay-overlay { align-items: flex-end; padding: 0; }
-    .pay-modal { max-width: 100%; border-radius: 16px 16px 0 0; max-height: 92vh; overflow-y: auto; }
+    .pay-modal { max-width: 100%; border-radius: 14px 14px 0 0; max-height: 90vh; overflow-y: auto; }
   }
-  @media (max-width: 500px) {
-    .delivery-flow { grid-template-columns: 1fr; }
+  @media (max-width: 480px) {
     .wrap { padding: 0 16px; }
+    .steps { grid-template-columns: 1fr; }
     h1 { font-size: 28px; }
   }
 </style>
@@ -450,8 +412,10 @@
 <nav>
   <div class="wrap">
     <a class="brand" href="/">
-      <span class="brand-icon">X</span>
-      Site<span>X</span>-Ray
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="5"/><line x1="14" y1="14" x2="20" y2="20"/></svg>
+      </span>
+      Site<em>X</em>-Ray
     </a>
     <div class="nav-links">
       <a href="#delivery">Delivery</a>
@@ -464,23 +428,22 @@
 
 <section class="hero" id="audit">
   <div class="wrap hero-grid">
-    <div>
-      <div class="eyebrow"><span class="dot"></span> No account · Private link · 7 days</div>
-      <h1>See exactly what's wrong with your <em>website</em></h1>
-      <p class="lead">Paste URL + email. Get a professional audit with specific fixes — delivered to this page and your inbox.</p>
+    <div class="hero-left">
+      <div class="eyebrow"><span class="eyebrow-dot"></span>No account · private link · 7 days</div>
+      <h1>See what's wrong with your <em>website</em></h1>
+      <p class="lead">Paste URL and email. Get a professional audit with specific fixes — on this page and in your inbox.</p>
 
       <form class="form-card" id="audit-form" novalidate>
-        <div class="form-title">Start free audit</div>
         <div class="field">
           <label for="url-input">Website URL</label>
           <input type="url" id="url-input" name="url" placeholder="https://yourwebsite.com" required autocomplete="url">
         </div>
         <div class="field">
-          <label for="email-input">Your email</label>
+          <label for="email-input">Email</label>
           <input type="email" id="email-input" name="email" placeholder="you@company.com" required autocomplete="email">
         </div>
-        <button type="submit" class="btn btn-primary" id="submit-btn">Get free report →</button>
-        <p class="form-note">~2 min · button appears here + email with link</p>
+        <button type="submit" class="btn btn-primary" id="submit-btn">Get free report</button>
+        <p class="form-note">~2 min · link appears here + email</p>
       </form>
 
       <div id="turnstile-container"></div>
@@ -488,15 +451,15 @@
       <div id="report-ready-box" class="report-ready-box" style="display:none" aria-live="polite"></div>
 
       <details class="pro-toggle" id="pro-section">
-        <summary>Have a Claude API key? Get the full report free</summary>
+        <summary>Claude API key — full report free</summary>
         <div class="inner">
           <input type="password" id="anthropic-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false">
         </div>
       </details>
     </div>
 
-    <div class="preview">
-      <div class="preview-bar-top"></div>
+    <aside class="preview" aria-label="Sample report preview">
+      <div class="preview-accent"></div>
       <div class="preview-body">
         <div class="preview-brand">Site<span>X</span>-Ray</div>
         <div class="preview-domain">acmedental.com</div>
@@ -504,108 +467,64 @@
           <div class="preview-score-num">34</div>
           <div>
             <span class="preview-verdict">Critical</span>
-            <p class="preview-tldr">Homepage hides your value prop. CTA buried. SEO basics missing.</p>
+            <p class="preview-tldr">Value prop hidden. CTA buried. SEO basics missing.</p>
           </div>
         </div>
         <div class="bar-row"><span>SEO</span><div class="bar-track"><div class="bar-fill" style="width:28%;background:#dc2626"></div></div><span style="color:#dc2626">28</span></div>
         <div class="bar-row"><span>UX</span><div class="bar-track"><div class="bar-fill" style="width:52%;background:#ca8a04"></div></div><span style="color:#ca8a04">52</span></div>
         <div class="bar-row"><span>Convert</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:#dc2626"></div></div><span style="color:#dc2626">22</span></div>
-        <div class="preview-finding" style="margin-top:10px">
-          <strong>Critical: No meta description</strong>
-          Google shows random text. Add a 155-char summary of what you do.
+        <div class="preview-finding">
+          <strong>No meta description</strong>
+          Google shows random text. Add a 155-char summary.
         </div>
       </div>
-      <a class="preview-link" href="/sample-report.html" target="_blank" rel="noopener">View full sample report →</a>
-    </div>
+      <a class="preview-link" href="/sample-report.html" target="_blank" rel="noopener">
+        View sample report
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </aside>
   </div>
 </section>
 
 <section id="delivery">
   <div class="wrap">
-    <div class="section-label">How you get your report</div>
-    <h2>No account. Two ways to open it.</h2>
-    <p class="section-desc">You don't register or log in. We generate a private link — only you get it. Same flow for free and paid.</p>
-
-    <div class="delivery-highlight">
-      <strong>Stay on this page after submitting.</strong> A button appears when ready. We also email you the same link. Bookmark either — it's your only access.
+    <div class="section-head">
+      <div class="section-label">Delivery</div>
+      <h2>How you get your report</h2>
+      <p class="section-desc">No signup. Private link on this page and in email. Stored 7 days, then deleted.</p>
     </div>
-
-    <div class="delivery-flow">
-      <div class="flow-step">
-        <div class="flow-icon">📝</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div class="step-num">Step 1</div>
         <h3>URL + email</h3>
-        <p>No signup. No password. Just two fields.</p>
+        <p>Two fields. No password, no account.</p>
       </div>
-      <div class="flow-step">
-        <div class="flow-icon">⚡</div>
+      <div class="step">
+        <div class="step-icon">
+          <svg class="ico" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="step-num">Step 2</div>
         <h3>AI generates</h3>
-        <p>~2 minutes. Progress shown on page.</p>
+        <p>~2 minutes. Progress on this page.</p>
       </div>
-      <div class="flow-step">
-        <div class="flow-icon">📬</div>
+      <div class="step">
+        <div class="step-icon">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="step-num">Step 3</div>
         <h3>Email + button</h3>
-        <p>Short email with "Open report" link. Button here too.</p>
+        <p>Same private link in both places.</p>
       </div>
-      <div class="flow-step">
-        <div class="flow-icon">🔒</div>
+      <div class="step">
+        <div class="step-icon">
+          <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="step-num">Step 4</div>
         <h3>Private link</h3>
-        <p>Secret URL. Nobody else can guess it. Works 7 days.</p>
-      </div>
-    </div>
-
-    <div class="delivery-cards">
-      <div class="delivery-card">
-        <h4><span class="tag tag-free">Free</span> Teaser report</h4>
-        <ol>
-          <li>Submit URL + email above</li>
-          <li>Wait — "Open your report" button appears</li>
-          <li>Check email — same link inside</li>
-          <li>Open in browser — full HTML report, save or print</li>
-        </ol>
-        <p class="note">Free = 1-page teaser. Upgrade anytime from the report.</p>
-      </div>
-      <div class="delivery-card">
-        <h4><span class="tag tag-paid">Paid</span> Full report ($39 USDT)</h4>
-        <ol>
-          <li>Enter URL + email, click Pay 39 USDT</li>
-          <li>Send USDT, paste transaction hash</li>
-          <li>Redirected to success page — button + email</li>
-          <li>10–15 page report with every fix detailed</li>
-        </ol>
-        <p class="note">Payment verified on-chain. No manual approval needed.</p>
-      </div>
-    </div>
-
-    <div class="storage-box">
-      <div class="storage-icon">🗄️</div>
-      <div>
-        <h4>Where is it stored?</h4>
-        <p>Report HTML lives in temporary server cache for <strong>7 days</strong> — so your link keeps working. After that it's auto-deleted. We don't build a customer database, don't store passwords, and don't keep your URLs forever. Each audit is one private link, tied to your email only for delivery.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="report">
-  <div class="wrap">
-    <div class="section-label">What's inside</div>
-    <h2>Reports that look like a consultant wrote them</h2>
-    <p class="section-desc">Not a generic AI wall of text — scored dimensions, ranked fixes, copy you can paste.</p>
-    <div class="features">
-      <div class="feat">
-        <div class="feat-icon">📊</div>
-        <h4>5-dimension scores</h4>
-        <p>SEO, UX, content, conversion, tech — color bars show where to focus first.</p>
-      </div>
-      <div class="feat">
-        <div class="feat-icon">✏️</div>
-        <h4>Exact copy fixes</h4>
-        <p>Rewritten headlines, meta descriptions, CTA text — not "improve your SEO."</p>
-      </div>
-      <div class="feat">
-        <div class="feat-icon">🎯</div>
-        <h4>Quick wins ranked</h4>
-        <p>Changes you can ship today, labeled by effort and impact.</p>
+        <p>Secret URL. Only you have it. 7 days.</p>
       </div>
     </div>
   </div>
@@ -613,19 +532,21 @@
 
 <section id="pricing">
   <div class="wrap">
-    <div class="section-label">Pricing</div>
-    <h2>One-time payment, no subscription</h2>
-    <p class="section-desc">Both tiers deliver the same way — private link + email.</p>
+    <div class="section-head">
+      <div class="section-label">Pricing</div>
+      <h2>One-time payment</h2>
+      <p class="section-desc">Same delivery for both — link and email.</p>
+    </div>
     <div class="pricing">
       <div class="plan">
         <div class="plan-tag">Free</div>
         <div class="plan-price">$0</div>
         <div class="plan-sub">1-page teaser</div>
         <ul>
-          <li>Overall score + verdict</li>
-          <li>Top 3 quick wins</li>
-          <li>#1 critical issue + fix</li>
-          <li>Web link + email</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Score + verdict</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Top 3 quick wins</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>#1 issue + fix</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Web + email</li>
         </ul>
         <a href="#audit" class="btn btn-ghost">Get free report</a>
       </div>
@@ -634,56 +555,52 @@
         <div class="plan-price">$39</div>
         <div class="plan-sub">39 USDT · TRC-20 or ERC-20</div>
         <ul>
-          <li>10–15 page full report</li>
-          <li>All 5 dimensions analyzed</li>
-          <li>Every critical issue + fixes</li>
-          <li>90-day strategic plan</li>
-          <li>Same delivery: link + email</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>10–15 page report</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>All 5 dimensions</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Every issue + fix</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>90-day plan</li>
         </ul>
         <a href="#" class="btn btn-primary" onclick="return goToCheckout(event)">Pay 39 USDT</a>
       </div>
     </div>
-    <p style="text-align:center;margin-top:24px;font-size:14px;color:var(--muted)">Want us to implement fixes? <a href="mailto:ernest2011kostevich@gmail.com">Email for a quote</a></p>
   </div>
 </section>
 
 <section id="faq">
   <div class="wrap">
-    <div class="section-label">FAQ</div>
-    <h2>Common questions</h2>
-    <div class="faq" style="margin-top:32px">
+    <div class="section-head">
+      <div class="section-label">FAQ</div>
+      <h2>Questions</h2>
+    </div>
+    <div class="faq">
       <details open>
-        <summary>How do I access my report without an account?</summary>
-        <div class="ans">After you submit, stay on the page — a button appears when ready. We also email you the same private link. No login, no dashboard. The link is a long random key only you receive. It works for 7 days, then auto-deletes.</div>
+        <summary>How do I open my report without an account?</summary>
+        <div class="ans">Stay on this page after submitting — a button appears when ready. We email the same private link. No login. The link works 7 days, then auto-deletes.</div>
       </details>
       <details>
         <summary>What if email doesn't arrive?</summary>
-        <div class="ans">Check spam. The report is always available via the button on this page (free) or the success page (paid). If email fails, we show an error and the web link still works.</div>
-      </details>
-      <details>
-        <summary>How is this different from PageSpeed?</summary>
-        <div class="ans">PageSpeed gives a performance number. SiteX-Ray reads your actual copy, CTAs, and structure — and tells you exactly what to change.</div>
+        <div class="ans">Check spam. The web button always works. If email fails, we show an error but your report is still ready on the page.</div>
       </details>
       <details>
         <summary>How do I pay with USDT?</summary>
-        <div class="ans">Enter URL + email first, click Pay 39 USDT, send exactly 39 USDT via TRC-20 or ERC-20, paste your tx hash. We verify on-chain and deliver automatically.</div>
+        <div class="ans">Enter URL + email, click Pay 39 USDT, send exactly 39 USDT, paste tx hash. Verified on-chain — report delivered automatically.</div>
       </details>
       <details>
-        <summary>What if I don't like the full report?</summary>
-        <div class="ans">Full refund within 7 days, no questions. Email us.</div>
+        <summary>Refund policy?</summary>
+        <div class="ans">Full refund within 7 days on paid reports. Email us.</div>
       </details>
     </div>
   </div>
 </section>
 
-<div class="pay-overlay" id="pay-overlay" role="dialog" aria-modal="true">
+<div class="pay-overlay" id="pay-overlay" role="dialog" aria-modal="true" aria-label="Payment">
   <div class="pay-modal">
     <button type="button" class="pay-close" id="pay-close" aria-label="Close">&times;</button>
     <h2>Full audit — 39 USDT</h2>
-    <p class="pay-sub">On-chain verify → report to email + success page link</p>
+    <p class="pay-sub">Verify on-chain → report to email + success page</p>
     <div class="pay-tabs">
-      <button type="button" class="pay-tab active" data-network="trc20">TRC-20 (TRON)</button>
-      <button type="button" class="pay-tab" data-network="erc20">ERC-20 (Ethereum)</button>
+      <button type="button" class="pay-tab active" data-network="trc20">TRC-20</button>
+      <button type="button" class="pay-tab" data-network="erc20">ERC-20</button>
     </div>
     <div class="pay-box">
       <label>Send exactly</label>
@@ -692,7 +609,7 @@
       <div class="pay-address" id="pay-address">TV1EBHTyvpP98jZGerz6sRmZvipn15LqDA</div>
       <button type="button" class="pay-copy" id="pay-copy">Copy address</button>
     </div>
-    <label for="pay-txhash" style="font-size:12px;font-weight:600;color:var(--text-2)">Transaction hash</label>
+    <label for="pay-txhash" style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Transaction hash</label>
     <input type="text" id="pay-txhash" placeholder="Paste after payment" autocomplete="off">
     <div class="pay-actions">
       <button type="button" class="btn btn-ghost" id="pay-cancel">Cancel</button>
@@ -703,16 +620,18 @@
 </div>
 
 <div class="mobile-cta">
-  <a href="#audit" class="btn btn-primary">Get free report →</a>
+  <a href="#audit" class="btn btn-primary">Get free report</a>
 </div>
 
 <footer>
   <div class="wrap">
-    <div class="brand" style="font-size:14px"><span class="brand-icon" style="width:24px;height:24px;font-size:12px">X</span> © 2026 SiteX-Ray</div>
+    <span>© 2026 SiteX-Ray</span>
     <div>
-      <a href="mailto:ernest2011kostevich@gmail.com" style="margin-right:20px;color:var(--muted)">Contact</a>
-      <a href="/terms.html" style="margin-right:20px;color:var(--muted)">Terms</a>
-      <a href="/privacy.html" style="color:var(--muted)">Privacy</a>
+      <a href="mailto:ernest2011kostevich@gmail.com">Contact</a>
+      <span style="margin:0 12px;opacity:0.3">·</span>
+      <a href="/terms.html">Terms</a>
+      <span style="margin:0 12px;opacity:0.3">·</span>
+      <a href="/privacy.html">Privacy</a>
     </div>
   </div>
 </footer>
@@ -738,7 +657,7 @@ const PAY_NETWORKS = {
     const w = document.createElement("div");
     w.className = "cf-turnstile";
     w.setAttribute("data-sitekey", TURNSTILE_SITE_KEY);
-    w.setAttribute("data-theme", "light");
+    w.setAttribute("data-theme", "dark");
     turnstileContainer.appendChild(w);
   }
 
@@ -762,10 +681,15 @@ const PAY_NETWORKS = {
     if (TURNSTILE_SITE_KEY && !getTurnstileToken()) { setStatus("Complete the bot check.", "error"); return; }
 
     submitBtn.disabled = true;
-    const orig = submitBtn.innerHTML;
+    const orig = submitBtn.textContent;
     submitBtn.textContent = "Starting…";
     submitBtn.classList.add("btn-loading");
     setStatus("", null);
+
+    const existingLink = document.getElementById("report-ready-link");
+    if (existingLink) existingLink.remove();
+    const readyBox = document.getElementById("report-ready-box");
+    if (readyBox) { readyBox.style.display = "none"; readyBox.innerHTML = ""; }
 
     try {
       const res = await fetch("/api/audit", {
@@ -779,7 +703,7 @@ const PAY_NETWORKS = {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.ok) {
-        setStatus("Generating your report… stay on this page.", "success");
+        setStatus("Generating… stay on this page.", "success");
         if (data.reportKey) pollFreeReport(data.reportKey);
       } else {
         setStatus(data.error || "Something went wrong.", "error");
@@ -788,7 +712,7 @@ const PAY_NETWORKS = {
       setStatus("Server unreachable. Try again.", "error");
     } finally {
       submitBtn.disabled = false;
-      submitBtn.innerHTML = orig;
+      submitBtn.textContent = orig;
       submitBtn.classList.remove("btn-loading");
     }
   });
@@ -825,7 +749,7 @@ const PAY_NETWORKS = {
   document.getElementById("pay-copy")?.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(payAddress?.textContent || "");
-      setPayStatus("Copied!", "success");
+      setPayStatus("Copied", "success");
       setTimeout(() => setPayStatus(""), 2000);
     } catch { setPayStatus("Copy manually", "error"); }
   });
@@ -846,7 +770,7 @@ const PAY_NETWORKS = {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.ok) {
-        setPayStatus("Verified! Redirecting…", "success");
+        setPayStatus("Verified. Redirecting…", "success");
         setTimeout(() => {
           window.location.href = "/success.html?key=" + encodeURIComponent(data.reportKey || txHash);
         }, 1200);
@@ -871,26 +795,24 @@ const PAY_NETWORKS = {
             a = document.createElement("a");
             a.id = "report-ready-link";
             a.className = "btn btn-primary";
-            a.style.marginTop = "14px";
-            a.style.display = "inline-flex";
             a.target = "_blank";
             a.rel = "noopener";
-            a.textContent = "Open your report →";
-            statusEl.after(a);
+            a.textContent = "Open your report";
+            statusEl.insertAdjacentElement("afterend", a);
           }
           a.href = reportHref;
           const box = document.getElementById("report-ready-box");
           if (box) {
             box.style.display = "block";
             if (status.emailSent) {
-              box.innerHTML = "<strong>✓ Report ready</strong><p>Email sent with your private link. <strong>Save this page too</strong> — button above works for 7 days. No account needed.</p>";
-              setStatus("Done! Open report or check email.", "success");
+              box.innerHTML = "<strong>Report ready</strong><p>Email sent with your private link. Save this page — button works for 7 days.</p>";
+              setStatus("Done. Open report or check email.", "success");
             } else if (status.emailError) {
-              box.innerHTML = "<strong style=\"color:var(--red)\">Email failed</strong><p>Use the button above — your report is ready. (" + (status.emailError || "unknown") + ")</p>";
-              setStatus("Report ready on web — email did not send.", "error");
+              box.innerHTML = "<strong style=\"color:var(--red)\">Email failed</strong><p>Report is ready — use the button above. (" + (status.emailError || "unknown") + ")</p>";
+              setStatus("Report ready on web.", "error");
             } else {
-              box.innerHTML = "<strong>✓ Report ready</strong><p>Open with the button above. Bookmark it — private access for 7 days.</p>";
-              setStatus("Report ready — open above.", "success");
+              box.innerHTML = "<strong>Report ready</strong><p>Open with the button above. Private link — 7 days.</p>";
+              setStatus("Report ready.", "success");
             }
           }
           return;
@@ -900,7 +822,7 @@ const PAY_NETWORKS = {
         setStatus("Generating… (" + tries + ") — stay on this page.", null);
         setTimeout(poll, 4000);
       } else {
-        setStatus("Taking longer than usual — refresh and try again.", "error");
+        setStatus("Taking longer than usual. Try again.", "error");
       }
     };
     poll();
