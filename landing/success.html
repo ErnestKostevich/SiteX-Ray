@@ -6,11 +6,11 @@
 <title>Payment verified — SiteX-Ray</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #09090b; --surface: #111114; --border: #27272a;
-    --text: #fafafa; --muted: #71717a; --accent: #6366f1; --green: #22c55e;
+    --bg: #08050f; --surface: #110a1c; --border: rgba(167,139,250,0.14);
+    --text: #f3eeff; --muted: #7c6b9e; --accent: #8b5cf6; --green: #34d399;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -20,75 +20,75 @@
   }
   body::before {
     content: ""; position: fixed; inset: 0; z-index: -1;
-    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(99,102,241,0.12), transparent);
+    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,92,246,0.15), transparent);
   }
   .card {
-    max-width: 480px; width: 100%;
+    max-width: 420px; width: 100%;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 16px; padding: 40px 32px; text-align: center;
+    border-radius: 14px; padding: 36px 28px; text-align: center;
   }
   .brand {
     display: inline-flex; align-items: center; gap: 8px;
-    font-weight: 800; font-size: 15px; margin-bottom: 28px;
+    font-weight: 700; font-size: 15px; margin-bottom: 28px;
+    letter-spacing: -0.02em;
   }
-  .brand-icon {
+  .brand-mark {
     width: 28px; height: 28px; border-radius: 7px;
-    background: var(--accent); color: #fff;
-    display: grid; place-items: center; font-size: 13px;
+    background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    display: grid; place-items: center;
   }
-  .brand span { color: #818cf8; }
+  .brand-mark svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2; }
+  .brand em { font-style: normal; color: #a78bfa; }
   .check {
-    width: 56px; height: 56px; border-radius: 50%;
-    background: rgba(34,197,94,0.15); border: 2px solid var(--green);
-    display: grid; place-items: center; margin: 0 auto 20px;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.35);
+    display: grid; place-items: center; margin: 0 auto 18px; color: var(--green);
   }
-  .check svg { width: 28px; height: 28px; color: var(--green); }
-  h1 { font-size: 24px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
-  .lead { color: var(--muted); font-size: 15px; margin-bottom: 24px; line-height: 1.55; }
+  .check svg { width: 26px; height: 26px; stroke-width: 2.5; }
+  h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.02em; }
+  .lead { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
   .status-box {
-    background: #0a0a0c; border: 1px solid var(--border);
-    border-radius: 10px; padding: 14px 16px; font-size: 14px;
-    color: var(--muted); margin-bottom: 20px; line-height: 1.5;
+    background: rgba(8,5,15,0.6); border: 1px solid var(--border);
+    border-radius: 9px; padding: 12px 14px; font-size: 13px;
+    color: var(--muted); margin-bottom: 18px; line-height: 1.5;
   }
   .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 13px 24px; border-radius: 10px; font-weight: 600; font-size: 15px;
-    text-decoration: none; margin-bottom: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 11px 20px; border-radius: 9px; font-weight: 600; font-size: 14px;
+    text-decoration: none; margin-bottom: 10px; width: 100%;
   }
   .btn-primary {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: #fff; box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+    background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+    color: #fff; box-shadow: 0 2px 16px rgba(139,92,246,0.35);
   }
-  .btn-ghost {
-    color: var(--text); border: 1px solid var(--border); background: transparent;
+  .btn-ghost { color: var(--text); border: 1px solid var(--border); background: transparent; }
+  .note {
+    text-align: left; margin-top: 24px; padding-top: 20px;
+    border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); line-height: 1.6;
   }
-  .steps {
-    text-align: left; margin: 28px 0; padding: 20px;
-    background: #0a0a0c; border-radius: 10px; border: 1px solid var(--border);
-  }
-  .steps h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 12px; }
-  .steps ol { padding-left: 20px; font-size: 14px; color: var(--muted); line-height: 1.7; }
-  a { color: #818cf8; }
+  .note strong { color: #c4b5e0; font-weight: 600; display: block; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+  a { color: #a78bfa; }
 </style>
 </head>
 <body>
 <div class="card">
-  <div class="brand"><span class="brand-icon">X</span> Site<span>X</span>-Ray</div>
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="5"/><line x1="14" y1="14" x2="20" y2="20"/></svg>
+    </span>
+    Site<em>X</em>-Ray
+  </div>
   <div class="check">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
   </div>
   <h1>Payment verified</h1>
-  <p class="lead">Your full audit report is generating now.</p>
-  <div class="status-box" id="timing-text">Preparing report… check email in 2–3 minutes.</div>
-  <a href="#" id="report-download" class="btn btn-primary" style="display:none">Open full report →</a>
-  <a href="/" class="btn btn-ghost">← Back to SiteX-Ray</a>
-  <div class="steps">
-    <h3>What to do next</h3>
-    <ol>
-      <li>Open the report from your email</li>
-      <li>Start with Quick wins — fastest fixes</li>
-      <li>Use the web link below if email is slow</li>
-    </ol>
+  <p class="lead">Your full report is generating.</p>
+  <div class="status-box" id="timing-text">Preparing… check email in ~2 min.</div>
+  <a href="#" id="report-download" class="btn btn-primary" style="display:none">Open full report</a>
+  <a href="/" class="btn btn-ghost">Back to home</a>
+  <div class="note">
+    <strong>Delivery</strong>
+    Same private link goes to your email. Stay on this page — button appears when ready. Link works 7 days.
   </div>
 </div>
 <script>
@@ -106,14 +106,14 @@
       if (status.ready) {
         dl.href = "/api/report?kind=paid&key=" + encodeURIComponent(key);
         dl.style.display = "inline-flex";
-        timingText.innerHTML = status.emailSent
-          ? "✓ Report sent to your email. Open below if inbox is slow."
-          : "Report ready — use the button below.";
+        timingText.textContent = status.emailSent
+          ? "Email sent. Open below if inbox is slow."
+          : "Report ready — open below.";
         return;
       }
     } catch (_) {}
     if (tries < 60) {
-      timingText.textContent = "Generating report… (" + tries + ")";
+      timingText.textContent = "Generating… (" + tries + ")";
       setTimeout(poll, 4000);
     } else {
       timingText.innerHTML = "Still generating — check email or <a href='mailto:ernest2011kostevich@gmail.com'>contact us</a>.";
