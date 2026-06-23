@@ -4,4 +4,4 @@ Disallow: /api/
 Disallow: /success
 Disallow: /success.html
 
-Sitemap: /sitemap.xml
+Sitemap: https://sitexray.xyz/sitemap.xml
