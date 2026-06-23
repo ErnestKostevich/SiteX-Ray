@@ -16,41 +16,59 @@ const THEMES = {
     badgeBg: "#312e81",
     badgeColor: "#c7d2fe",
     outerBg: "#07090d",
+    nebulaTop: "#1e1b4b",
+    nebulaMid: "#0f172a",
     cardBg: "#0e1117",
-    cardBorder: "#312e81",
+    cardBorder: "#4338ca",
+    cardGlow: "#312e81",
     ink: "#f0f6fc",
     inkSoft: "#c9d1d9",
     muted: "#8b949e",
     accent: "#818cf8",
     accent2: "#c084fc",
+    accent3: "#f472b6",
     scoreRing: "#6366f1",
     sectionBg: "#12161d",
     sectionBorder: "#21262d",
-    upsellBg: "#312e81",
-    upsellBorder: "#4f46e5",
+    upsellBg: "#1e1b4b",
+    upsellBorder: "#6366f1",
+    upsellBtnBg: "#f0f6fc",
+    upsellBtnColor: "#312e81",
     footer: "#636e7b",
     h2Border: "#818cf8",
+    scanLine: "#4338ca",
+    logoMark: "linear-gradient(135deg,#818cf8,#c084fc,#f472b6)",
+    tagline: "Cosmic website intelligence · preview mode",
   },
   paid: {
     badge: "FULL MISSION REPORT · PREMIUM",
-    badgeBg: "#3b2f1e",
+    badgeBg: "#422006",
     badgeColor: "#fde68a",
-    outerBg: "#050508",
+    outerBg: "#030305",
+    nebulaTop: "#1a1025",
+    nebulaMid: "#0a0812",
     cardBg: "#0a0c12",
     cardBorder: "#a78bfa",
+    cardGlow: "#3b2f1e",
     ink: "#fafafa",
     inkSoft: "#e2e8f0",
     muted: "#94a3b8",
     accent: "#a78bfa",
     accent2: "#f472b6",
+    accent3: "#fbbf24",
     scoreRing: "#fbbf24",
     sectionBg: "#111318",
     sectionBorder: "#3f3f46",
     upsellBg: null,
     upsellBorder: null,
+    upsellBtnBg: null,
+    upsellBtnColor: null,
     footer: "#71717a",
     h2Border: "#fbbf24",
+    scanLine: "#fbbf24",
     premiumBar: "#fbbf24",
+    logoMark: "linear-gradient(135deg,#fbbf24,#a78bfa,#f472b6)",
+    tagline: "Full strategic intelligence · premium mission",
   },
 };
 
@@ -79,17 +97,59 @@ function severityColor(sev) {
   );
 }
 
-function sectionHeading(text, t) {
-  return `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:36px 0 16px;">
-    <tr><td style="font-size:20px; font-weight:700; color:${t.ink}; padding-bottom:10px; border-bottom:2px solid ${t.h2Border}; letter-spacing:-0.02em;">${text}</td></tr>
+function cosmicHeader(t, premium) {
+  const markBg = premium ? "#fbbf24" : "#818cf8";
+  const markAccent = premium ? "#a78bfa" : "#c084fc";
+  return `<table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px; width:100%; margin-bottom:14px;">
+    <tr>
+      <td align="center" style="padding:8px 0 14px;">
+        <table cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td width="36" height="36" align="center" valign="middle" style="width:36px; height:36px; border-radius:10px; background:${markBg}; font-size:18px; font-weight:800; color:#07090d;">X</td>
+            <td style="padding-left:12px; text-align:left;">
+              <div style="font-size:24px; font-weight:800; letter-spacing:-0.03em; color:${t.ink}; line-height:1.1;">Site<span style="color:${t.accent};">X</span>-Ray</div>
+              <div style="font-size:11px; color:${t.muted}; letter-spacing:.06em; margin-top:2px;">${t.tagline}</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td align="center" style="padding-bottom:6px;">
+      <span style="font-size:10px; letter-spacing:.14em; text-transform:uppercase; padding:7px 16px; border-radius:999px; background:${t.badgeBg}; color:${t.badgeColor}; font-weight:700; border:1px solid ${premium ? "#fbbf24" : t.accent};">${t.badge}</span>
+    </td></tr>
+    <tr><td align="center">
+      <table cellpadding="0" cellspacing="0" border="0" width="120"><tr>
+        <td height="2" style="background:${t.accent}; font-size:0; line-height:0;">&nbsp;</td>
+        <td width="40" height="2" style="background:${markAccent}; font-size:0; line-height:0;">&nbsp;</td>
+        <td height="2" style="background:${t.accent2}; font-size:0; line-height:0;">&nbsp;</td>
+      </tr></table>
+    </td></tr>
   </table>`;
 }
 
-function findingHtml(f, t) {
+function nebulaWrap(inner, t) {
+  return `<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${t.outerBg}" style="background:${t.outerBg};">
+    <tr><td bgcolor="${t.nebulaTop}" style="background:${t.nebulaTop}; height:80px; font-size:0; line-height:0;">&nbsp;</td></tr>
+    <tr><td bgcolor="${t.nebulaMid}" style="background:${t.nebulaMid}; padding:0 12px 40px;" align="center">
+      ${inner}
+    </td></tr>
+    <tr><td bgcolor="${t.outerBg}" style="background:${t.outerBg}; height:40px; font-size:0; line-height:0;">&nbsp;</td></tr>
+  </table>`;
+}
+
+function sectionHeading(text, t, icon = "") {
+  const label = icon ? `${icon} ${text}` : text;
+  return `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:36px 0 16px;">
+    <tr><td style="font-size:20px; font-weight:700; color:${t.ink}; padding-bottom:10px; border-bottom:2px solid ${t.h2Border}; letter-spacing:-0.02em;">${label}</td></tr>
+  </table>`;
+}
+
+function findingHtml(f, t, premium = false) {
   if (!f) return "";
   const sev = String(f.severity || "medium").toLowerCase();
   const sevColor = severityColor(sev);
-  return `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:14px; border-collapse:separate; border-radius:10px; background:${t.sectionBg}; border:1px solid ${t.sectionBorder}; border-left:4px solid ${sevColor};">
+  const border = premium ? `border:1px solid ${t.sectionBorder}; border-left:4px solid ${sevColor};` : `border:1px solid ${t.sectionBorder}; border-left:4px solid ${sevColor};`;
+  return `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:14px; border-collapse:separate; border-radius:10px; background:${t.sectionBg}; ${border}">
   <tr><td style="padding:16px 18px;">
     <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
       <td style="padding-bottom:8px;">
@@ -108,11 +168,12 @@ function findingHtml(f, t) {
 
 function quickWinHtml(qw, t, premium = false) {
   if (!qw) return "";
-  const border = premium ? t.premiumBar || t.accent : t.sectionBorder;
+  const border = premium ? `${t.premiumBar || t.accent}` : t.sectionBorder;
+  const icon = premium ? "◆" : "▸";
   return `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:12px; border-collapse:separate; border-radius:12px; background:${t.sectionBg}; border:1px solid ${border};">
   <tr><td style="padding:18px;">
     <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
-      <td style="font-size:16px; font-weight:700; color:${t.ink}; vertical-align:top;">${premium ? "◆ " : "▸ "}${esc(qw.title)}</td>
+      <td style="font-size:16px; font-weight:700; color:${t.ink}; vertical-align:top;">${icon} ${esc(qw.title)}</td>
       <td align="right" style="font-size:11px; color:${t.muted}; white-space:nowrap; vertical-align:top; padding-left:10px;">
         <span style="padding:3px 10px; background:#1a1f27; border-radius:999px; border:1px solid ${t.sectionBorder};">${esc(qw.effort)}</span>
         <span style="padding:3px 10px; background:#1a1f27; border-radius:999px; border:1px solid ${t.sectionBorder}; margin-left:4px;">${esc(qw.impact)}</span>
@@ -164,8 +225,9 @@ export function renderReport(report, opts = {}) {
       const sec = (report.sections && report.sections[key]) || {};
       const score = sec.score ?? 0;
       const col = scoreColor(score);
+      const ring = premium ? `border:1px solid ${t.premiumBar || t.accent};` : "";
       return `<td width="20%" align="center" style="padding:4px;">
-        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${t.sectionBg}; border:1px solid ${t.sectionBorder}; border-radius:10px;">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${t.sectionBg}; border:1px solid ${t.sectionBorder}; border-radius:10px; ${ring}">
           <tr><td align="center" style="padding:14px 8px;">
             <div style="font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:${t.muted}; margin-bottom:6px;">${esc(label)}</div>
             <div style="font-size:26px; font-weight:800; color:${col}; line-height:1;">${esc(score)}</div>
@@ -178,18 +240,28 @@ export function renderReport(report, opts = {}) {
   const upsell = free
     ? `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:36px 0; border-collapse:separate; border-radius:14px; background:${t.upsellBg}; border:1px solid ${t.upsellBorder};">
         <tr><td style="padding:28px 24px; text-align:center;">
-          <div style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#a5b4fc; margin-bottom:8px;">Unlock full orbit scan</div>
+          <div style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#a5b4fc; margin-bottom:8px;">◈ Unlock full orbit scan</div>
           <h2 style="color:#fff; margin:0 0 10px; font-size:22px; font-weight:800;">This was your free preview</h2>
-          <p style="margin:0 0 18px; color:#c7d2fe; font-size:15px; line-height:1.55;">Full mission report: 5 deep-dive sectors, every critical issue, 5–7 quick wins, and a 90-day flight plan.</p>
-          ${ctaUrl ? `<a href="${esc(ctaUrl)}" style="display:inline-block; padding:14px 28px; background:#f0f6fc; color:#312e81; border-radius:10px; font-weight:700; text-decoration:none; font-size:15px;">Get full audit — $39</a>` : ""}
+          <p style="margin:0 0 6px; color:#c7d2fe; font-size:15px; line-height:1.55;">Full mission report unlocks:</p>
+          <p style="margin:0 0 18px; color:#94a3b8; font-size:13px; line-height:1.6;">5 deep-dive sectors · every critical issue · 5–7 quick wins · 90-day flight plan</p>
+          ${ctaUrl ? `<a href="${esc(ctaUrl)}" style="display:inline-block; padding:14px 28px; background:${t.upsellBtnBg}; color:${t.upsellBtnColor}; border-radius:10px; font-weight:700; text-decoration:none; font-size:15px; border:2px solid #818cf8;">Get full audit — $39</a>` : ""}
         </td></tr>
       </table>`
     : "";
 
   const paidBanner = premium
     ? `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:24px;">
-        <tr><td align="center" style="padding:12px 16px; background:#1a1508; border:1px solid #fbbf24; border-radius:10px; color:#fde68a; font-size:13px; font-weight:600; letter-spacing:.04em;">
-          ✦ Premium mission complete — full strategic intelligence below
+        <tr><td align="center" style="padding:14px 18px; background:#1a1508; border:2px solid #fbbf24; border-radius:12px;">
+          <div style="color:#fde68a; font-size:14px; font-weight:700; letter-spacing:.06em;">✦ PREMIUM MISSION COMPLETE</div>
+          <div style="color:#d4d4d8; font-size:12px; margin-top:4px;">Full strategic intelligence · all sectors · 90-day plan included</div>
+        </td></tr>
+      </table>`
+    : "";
+
+  const freeBanner = free
+    ? `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:20px;">
+        <tr><td align="center" style="padding:10px 14px; background:#1e1b4b; border:1px dashed #6366f1; border-radius:10px; color:#a5b4fc; font-size:12px; font-weight:600;">
+          Preview scan · 3 quick wins + 1 critical signal · upgrade for full orbit analysis
         </td></tr>
       </table>`
     : "";
@@ -199,7 +271,7 @@ export function renderReport(report, opts = {}) {
         .map(([key, label]) => {
           const sec = (report.sections && report.sections[key]) || {};
           if (!sec.score && !(sec.findings || []).length) return "";
-          const findings = (sec.findings || []).map((f) => findingHtml(f, t)).join("");
+          const findings = (sec.findings || []).map((f) => findingHtml(f, t, true)).join("");
           return `<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:28px;">
             <tr><td>
               <div style="font-size:17px; font-weight:700; color:${t.ink}; margin-bottom:8px;">${esc(label)} <span style="color:${scoreColor(sec.score)};">${esc(sec.score)}/100</span></div>
@@ -215,7 +287,7 @@ export function renderReport(report, opts = {}) {
     .map((qw) => quickWinHtml(qw, t, premium))
     .join("");
   const criticals = (report.critical_issues || [])
-    .map((f) => findingHtml(f, t))
+    .map((f) => findingHtml(f, t, premium))
     .join("");
   const longTerm = premium
     ? (report.long_term || []).map((r) => recommendationHtml(r, t)).join("")
@@ -223,6 +295,62 @@ export function renderReport(report, opts = {}) {
 
   const headerColor = scoreColor(report.overall_score);
   const verdictBg = verdictColor(report.verdict);
+  const scoreRingColor = premium ? t.premiumBar : t.scoreRing;
+
+  const cardInner = `
+  ${cosmicHeader(t, premium)}
+
+  <table cellpadding="0" cellspacing="0" border="0" width="600" bgcolor="${t.cardBg}" style="max-width:600px; width:100%; background:${t.cardBg}; border-radius:16px; border:2px solid ${t.cardBorder};">
+  <tr><td style="padding:4px; background:${t.cardGlow}; border-radius:16px 16px 0 0; font-size:0; line-height:0; height:4px;">&nbsp;</td></tr>
+  <tr><td style="padding:32px 28px 36px;">
+
+    <h1 style="font-size:26px; margin:0 0 6px; color:${t.ink}; font-weight:800; letter-spacing:-0.02em; line-height:1.2;">${esc(report.domain)}</h1>
+    <div style="font-size:13px; margin-bottom:20px;"><a href="${esc(report.url)}" style="color:${t.accent}; text-decoration:none;">${esc(report.url)}</a></div>
+
+    ${freeBanner}
+    ${paidBanner}
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:28px; background:${t.sectionBg}; border:1px solid ${t.sectionBorder}; border-radius:14px;">
+      <tr>
+        <td width="110" align="center" valign="middle" style="padding:20px 10px;">
+          <table cellpadding="0" cellspacing="0" border="0" width="96" height="96" style="border-radius:50%; background:${headerColor}; border:4px solid ${scoreRingColor};">
+            <tr><td align="center" valign="middle" style="color:#fff;">
+              <div style="font-size:36px; font-weight:800; line-height:1;">${esc(report.overall_score)}</div>
+              <div style="font-size:10px; margin-top:2px; opacity:.9;">/100</div>
+            </td></tr>
+          </table>
+        </td>
+        <td valign="middle" style="padding:18px 14px 18px 0;">
+          <span style="display:inline-block; padding:5px 12px; border-radius:999px; color:#fff; font-size:11px; font-weight:700; letter-spacing:.04em; background:${verdictBg}; margin-bottom:10px;">${esc(report.verdict)}</span>
+          <p style="font-size:16px; line-height:1.55; margin:0 0 8px; color:${t.ink}; font-weight:500;">${esc(report.tldr)}</p>
+          ${report.headline_finding ? `<p style="color:${t.muted}; font-size:13px; margin:0; line-height:1.5; border-left:3px solid ${t.accent}; padding-left:12px;">${esc(report.headline_finding)}</p>` : ""}
+        </td>
+      </tr>
+    </table>
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:8px;"><tr>
+      <td style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:${t.muted};">${premium ? "◈ Sector constellation" : "Sector scan"}</td>
+      <td align="right" width="60"><table cellpadding="0" cellspacing="0" border="0" width="60"><tr>
+        <td height="1" style="background:${t.scanLine}; font-size:0;">&nbsp;</td>
+      </tr></table></td>
+    </tr></table>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:28px;"><tr>${sectionsGrid}</tr></table>
+
+    ${quickWins ? sectionHeading(free ? "Top quick wins" : "Quick wins — deploy now", t, premium ? "◆" : "▸") + quickWins : ""}
+    ${criticals ? sectionHeading(free ? "Critical signal" : "Critical issues", t, "⚠") + criticals : ""}
+    ${upsell}
+    ${sectionBlocks ? sectionHeading("Deep sector analysis", t, "◈") + sectionBlocks : ""}
+    ${longTerm ? sectionHeading("90-day mission plan", t, "✦") + longTerm : ""}
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:36px; border-top:1px solid ${t.sectionBorder};">
+      <tr><td style="padding-top:20px; text-align:center; color:${t.footer}; font-size:12px; line-height:1.6;">
+        <span style="color:${t.accent}; font-weight:700;">SiteX-Ray</span> · AI-powered website audit<br>
+        <span style="color:${t.muted};">${new Date().toUTCString()}</span>
+      </td></tr>
+    </table>
+
+  </td></tr>
+  </table>`;
 
   return `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -233,69 +361,7 @@ export function renderReport(report, opts = {}) {
 <title>SiteX-Ray — ${esc(report.domain)}</title>
 </head>
 <body style="margin:0; padding:0; background:${t.outerBg}; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif; -webkit-text-size-adjust:100%;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="${t.outerBg}" style="background:${t.outerBg};"><tr><td align="center" style="padding:32px 12px;">
-
-  <!-- Brand header -->
-  <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px; width:100%; margin-bottom:12px;">
-    <tr><td align="center" style="padding-bottom:8px;">
-      <span style="font-size:22px; font-weight:800; letter-spacing:-0.03em; color:${t.ink};">Site<span style="color:${t.accent};">X</span>-Ray</span>
-    </td></tr>
-    <tr><td align="center">
-      <span style="font-size:10px; letter-spacing:.14em; text-transform:uppercase; padding:6px 14px; border-radius:999px; background:${t.badgeBg}; color:${t.badgeColor}; font-weight:700;">${t.badge}</span>
-    </td></tr>
-  </table>
-
-  <!-- Main card -->
-  <table cellpadding="0" cellspacing="0" border="0" width="600" bgcolor="${t.cardBg}" style="max-width:600px; width:100%; background:${t.cardBg}; border-radius:16px; border:1px solid ${t.cardBorder};">
-  <tr><td style="padding:36px 28px;">
-
-    <h1 style="font-size:26px; margin:0 0 6px; color:${t.ink}; font-weight:800; letter-spacing:-0.02em; line-height:1.2;">${esc(report.domain)}</h1>
-    <div style="font-size:13px; margin-bottom:24px;"><a href="${esc(report.url)}" style="color:${t.accent}; text-decoration:none;">${esc(report.url)}</a></div>
-
-    ${paidBanner}
-
-    <!-- Score hero -->
-    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:28px; background:${t.sectionBg}; border:1px solid ${t.sectionBorder}; border-radius:14px;">
-      <tr>
-        <td width="110" align="center" valign="middle" style="padding:20px 10px;">
-          <table cellpadding="0" cellspacing="0" border="0" width="96" height="96" style="border-radius:50%; background:${headerColor}; border:3px solid ${t.scoreRing};">
-            <tr><td align="center" valign="middle" style="color:#fff;">
-              <div style="font-size:36px; font-weight:800; line-height:1;">${esc(report.overall_score)}</div>
-              <div style="font-size:10px; margin-top:2px; opacity:.9;">/100</div>
-            </td></tr>
-          </table>
-        </td>
-        <td valign="middle" style="padding:18px 14px 18px 0;">
-          <span style="display:inline-block; padding:5px 12px; border-radius:999px; color:#fff; font-size:11px; font-weight:700; letter-spacing:.04em; background:${verdictBg}; margin-bottom:10px;">${esc(report.verdict)}</span>
-          <p style="font-size:16px; line-height:1.55; margin:0 0 8px; color:${t.ink}; font-weight:500;">${esc(report.tldr)}</p>
-          ${report.headline_finding ? `<p style="color:${t.muted}; font-size:13px; margin:0; line-height:1.5; border-left:2px solid ${t.accent}; padding-left:10px;">${esc(report.headline_finding)}</p>` : ""}
-        </td>
-      </tr>
-    </table>
-
-    <!-- Sector scores -->
-    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:8px;">
-      <tr><td style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:${t.muted}; padding-bottom:10px;">Sector scan</td></tr>
-    </table>
-    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:28px;"><tr>${sectionsGrid}</tr></table>
-
-    ${quickWins ? sectionHeading(free ? "Top quick wins" : "Quick wins — deploy now", t) + quickWins : ""}
-    ${criticals ? sectionHeading(free ? "Critical signal" : "Critical issues", t) + criticals : ""}
-    ${upsell}
-    ${sectionBlocks ? sectionHeading("Deep sector analysis", t) + sectionBlocks : ""}
-    ${longTerm ? sectionHeading("90-day mission plan", t) + longTerm : ""}
-
-    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:36px; border-top:1px solid ${t.sectionBorder};">
-      <tr><td style="padding-top:20px; text-align:center; color:${t.footer}; font-size:12px; line-height:1.6;">
-        <span style="color:${t.accent}; font-weight:700;">SiteX-Ray</span> · AI-powered website audit<br>
-        <span style="color:${t.muted};">${new Date().toUTCString()}</span>
-      </td></tr>
-    </table>
-
-  </td></tr>
-  </table>
-
-</td></tr></table>
+${nebulaWrap(cardInner, t)}
 </body>
 </html>`;
 }
