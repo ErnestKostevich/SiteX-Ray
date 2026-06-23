@@ -13,9 +13,71 @@ import { scrapeSite } from "./scraper.js";
 import { analyzeWithClaude } from "./analyzer.js";
 import { analyzeWithCloudflareAI } from "./cloudflareAI.js";
 import { normalizeReport } from "./normalize.js";
-import { renderReport, renderEmailNotification } from "./renderer.js";
+import {
+  renderReport,
+  renderEmailNotification,
+  reportEmailSubject,
+} from "./renderer.js";
 import { sendReportEmail } from "./mailer.js";
 import { cacheReport, cacheReportData } from "./reportCache.js";
+
+export function buildReportUrl(kind, key, env, originHint) {
+  const origin = (
+    env.SITE_URL ||
+    originHint ||
+    "https://sitexray.xyz"
+  ).replace(/\/$/, "");
+  return `${origin}/api/report?kind=${kind}&key=${encodeURIComponent(key)}`;
+}
+
+function emailFromEnv(env) {
+  const sender =
+    env.BREVO_SENDER_EMAIL || env.FROM_EMAIL || "ernestkostevich@gmail.com";
+  return sender.includes("@")
+    ? `SiteX-Ray <${sender}>`
+    : "SiteX-Ray <ernestkostevich@gmail.com>";
+}
+
+/** Send the report-link notification. Returns { emailSent, emailError, messageId }. */
+export async function deliverReportEmail(opts) {
+  const {
+    email,
+    report,
+    free = true,
+    ctaUrl = null,
+    reportUrl,
+    env,
+  } = opts;
+
+  if (!email) throw new Error("email is required");
+  if (!report) throw new Error("report is required");
+  if (!reportUrl) throw new Error("reportUrl is required");
+
+  try {
+    const result = await sendReportEmail({
+      toEmail: email,
+      subject: reportEmailSubject(report),
+      html: renderEmailNotification(report, { free, reportUrl, ctaUrl }),
+      emailBinding: env.EMAIL,
+      fromEmail: emailFromEnv(env),
+      replyTo: env.REPLY_TO_EMAIL || "ernest2011kostevich@gmail.com",
+      brevoApiKey: env.BREVO_API_KEY,
+      apiToken: env.CLOUDFLARE_API_TOKEN || env.CF_API_TOKEN,
+      accountId: env.CLOUDFLARE_ACCOUNT_ID,
+      brevoTags: ["audit-report"],
+    });
+    return {
+      emailSent: true,
+      emailError: null,
+      messageId: result?.messageId || null,
+    };
+  } catch (emailErr) {
+    const emailError =
+      emailErr && emailErr.message ? emailErr.message : String(emailErr);
+    console.error("Email delivery failed:", emailError);
+    return { emailSent: false, emailError, messageId: null };
+  }
+}
 
 async function pickBackendAndAnalyze(siteData, env, free, byokAnthropicKey) {
   const claudeKey = byokAnthropicKey || env.ANTHROPIC_API_KEY;
@@ -88,47 +150,55 @@ export async function runAuditAndEmail(opts) {
 
   const html = renderReport(report, { free, ctaUrl });
 
+  // Email BEFORE cache — if the worker times out after caching, we must not
+  // skip delivery on the next poll (ensureReport retries when emailSent=false).
+  let emailSent = false;
+  let emailError = null;
+  let messageId = null;
+
+  if (reportUrl) {
+    const mail = await deliverReportEmail({
+      email,
+      report,
+      free,
+      ctaUrl,
+      reportUrl,
+      env,
+    });
+    emailSent = mail.emailSent;
+    emailError = mail.emailError;
+    messageId = mail.messageId;
+    if (!emailSent && !cacheKey) {
+      throw new Error(emailError || "Email delivery failed");
+    }
+  } else {
+    try {
+      const result = await sendReportEmail({
+        toEmail: email,
+        subject: reportEmailSubject(report),
+        html,
+        emailBinding: env.EMAIL,
+        fromEmail: emailFromEnv(env),
+        replyTo: env.REPLY_TO_EMAIL || "ernest2011kostevich@gmail.com",
+        brevoApiKey: env.BREVO_API_KEY,
+        apiToken: env.CLOUDFLARE_API_TOKEN || env.CF_API_TOKEN,
+        accountId: env.CLOUDFLARE_ACCOUNT_ID,
+        brevoTags: ["audit-report"],
+      });
+      emailSent = true;
+      messageId = result?.messageId || null;
+    } catch (emailErr) {
+      emailError =
+        emailErr && emailErr.message ? emailErr.message : String(emailErr);
+      console.error("Email delivery failed:", emailError);
+      if (!cacheKey) throw emailErr;
+    }
+  }
+
   if (cacheKey) {
     const kind = free ? "free" : "paid";
     await cacheReportData(kind, cacheKey, report);
     await cacheReport(kind, cacheKey, html);
-  }
-
-  const subject = free
-    ? `Your audit is ready — open report (${siteData.domain})`
-    : byokAnthropicKey
-      ? `Your full audit is ready — open report (${siteData.domain})`
-      : `Your full audit is ready — open report (${siteData.domain})`;
-
-  let emailSent = false;
-  let emailError = null;
-  const sender =
-    env.BREVO_SENDER_EMAIL || env.FROM_EMAIL || "ernestkostevich@gmail.com";
-  const fromEmail = sender.includes("@")
-    ? `SiteX-Ray <${sender}>`
-    : "SiteX-Ray <ernestkostevich@gmail.com>";
-
-  const emailHtml = reportUrl
-    ? renderEmailNotification(report, { free, reportUrl, ctaUrl })
-    : html;
-
-  try {
-    await sendReportEmail({
-      toEmail: email,
-      subject,
-      html: emailHtml,
-      emailBinding: env.EMAIL,
-      fromEmail,
-      replyTo: env.REPLY_TO_EMAIL || "ernest2011kostevich@gmail.com",
-      brevoApiKey: env.BREVO_API_KEY,
-      apiToken: env.CLOUDFLARE_API_TOKEN || env.CF_API_TOKEN,
-      accountId: env.CLOUDFLARE_ACCOUNT_ID,
-    });
-    emailSent = true;
-  } catch (emailErr) {
-    emailError = emailErr && emailErr.message ? emailErr.message : String(emailErr);
-    console.error("Email delivery failed:", emailError);
-    if (!cacheKey) throw emailErr;
   }
 
   return {
@@ -136,5 +206,6 @@ export async function runAuditAndEmail(opts) {
     overall_score: report.overall_score,
     emailSent,
     emailError,
+    messageId,
   };
 }

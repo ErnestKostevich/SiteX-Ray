@@ -8,8 +8,40 @@ import {
   isLegacyWhiteReport,
   putJob,
 } from "./reportCache.js";
-import { runAuditAndEmail } from "./auditFlow.js";
+import {
+  buildReportUrl,
+  deliverReportEmail,
+  runAuditAndEmail,
+} from "./auditFlow.js";
 import { renderReport } from "./renderer.js";
+
+export async function ensureEmailDelivered(kind, key, env, job) {
+  if (!job || job.emailSent || !job.email) return job;
+
+  const data = await getCachedReportData(kind, key);
+  if (!data) return job;
+
+  const reportUrl = buildReportUrl(kind, key, env);
+  const mail = await deliverReportEmail({
+    email: job.email,
+    report: data,
+    free: job.free ?? kind === "free",
+    ctaUrl: job.ctaUrl || null,
+    reportUrl,
+    env,
+  });
+
+  const updated = {
+    ...job,
+    status: "done",
+    emailSent: !!mail.emailSent,
+    emailError: mail.emailError || null,
+    emailMessageId: mail.messageId || null,
+    emailDeliveredAt: mail.emailSent ? Date.now() : job.emailDeliveredAt || null,
+  };
+  await putJob(kind, key, updated);
+  return updated;
+}
 
 export function shouldStartGeneration(job) {
   if (!job || job.status === "error" || job.status === "done") return false;
@@ -37,7 +69,16 @@ async function refreshLegacyTheme(kind, key, env) {
 
 export async function ensureReport(kind, key, env) {
   const cached = await refreshLegacyTheme(kind, key, env);
-  if (cached) return cached;
+  if (cached) {
+    let job = await getJob(kind, key);
+    if (job) {
+      job = await ensureEmailDelivered(kind, key, env, job);
+      if (job.status !== "done") {
+        await putJob(kind, key, { ...job, status: "done" });
+      }
+    }
+    return cached;
+  }
 
   const job = await getJob(kind, key);
   if (!job) return null;
@@ -57,8 +98,7 @@ export async function ensureReport(kind, key, env) {
   const working = { ...job, status: "processing", startedAt: Date.now() };
   await putJob(kind, key, working);
 
-  const origin = env.SITE_URL || "https://sitexray.xyz";
-  const reportUrl = `${origin.replace(/\/$/, "")}/api/report?kind=${kind}&key=${encodeURIComponent(key)}`;
+  const reportUrl = buildReportUrl(kind, key, env);
 
   try {
     const result = await runAuditAndEmail({
@@ -76,6 +116,8 @@ export async function ensureReport(kind, key, env) {
       status: "done",
       emailSent: !!result.emailSent,
       emailError: result.emailError || null,
+      emailMessageId: result.messageId || null,
+      emailDeliveredAt: result.emailSent ? Date.now() : null,
     });
     return await getCachedReport(kind, key);
   } catch (err) {

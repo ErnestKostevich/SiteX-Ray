@@ -46,7 +46,7 @@ export function htmlToPlainText(html) {
 const DEFAULT_ACCOUNT_ID = "6609012adc88f397f50eba13ea2c242f";
 
 async function sendViaBrevo(opts) {
-  const { toEmail, subject, html, fromEmail, replyTo, apiKey } = opts;
+  const { toEmail, subject, html, fromEmail, replyTo, apiKey, tags } = opts;
   const from = parseFromAddress(fromEmail);
   const text = htmlToPlainText(html);
 
@@ -57,6 +57,7 @@ async function sendViaBrevo(opts) {
     subject,
     htmlContent: html,
     textContent: text || subject,
+    ...(Array.isArray(tags) && tags.length ? { tags } : {}),
     ...(reply?.email ? { replyTo: { email: reply.email, ...(reply.name ? { name: reply.name } : {}) } } : {}),
   };
 
@@ -124,6 +125,7 @@ export async function sendReportEmail(opts) {
     accountId = DEFAULT_ACCOUNT_ID,
     apiToken,
     brevoApiKey,
+    brevoTags,
   } = opts;
 
   if (!toEmail) throw new Error("toEmail is required");
@@ -142,6 +144,7 @@ export async function sendReportEmail(opts) {
         fromEmail: fromEmail || `${from.name} <${from.email}>`,
         replyTo,
         apiKey: brevoKey,
+        tags: brevoTags,
       });
     } catch (err) {
       const msg = err && err.message ? err.message : String(err);
