@@ -23,10 +23,11 @@ export async function onRequestPost(context) {
 
   const to = (body.email || "ernest2011kostevich@gmail.com").trim();
   const hasBrevo = !!env.BREVO_API_KEY;
-  const from =
-    env.FROM_EMAIL ||
-    env.BREVO_SENDER_EMAIL ||
-    "SiteX-Ray <ernest2011kostevich@gmail.com>";
+  const sender =
+    env.BREVO_SENDER_EMAIL || env.FROM_EMAIL || "ernest2011kostevich@gmail.com";
+  const from = sender.includes("@")
+    ? `SiteX-Ray <${sender}>`
+    : "SiteX-Ray <ernest2011kostevich@gmail.com>";
 
   try {
     const result = await sendReportEmail({

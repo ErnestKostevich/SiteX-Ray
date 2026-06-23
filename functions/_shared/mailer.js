@@ -50,13 +50,14 @@ async function sendViaBrevo(opts) {
   const from = parseFromAddress(fromEmail);
   const text = htmlToPlainText(html);
 
+  const reply = replyTo ? parseFromAddress(replyTo) : null;
   const body = {
     sender: { name: from.name, email: from.email },
     to: [{ email: toEmail }],
     subject,
     htmlContent: html,
     textContent: text || subject,
-    ...(replyTo ? { replyTo: replyTo.includes("@") ? replyTo : { email: replyTo } } : {}),
+    ...(reply?.email ? { replyTo: { email: reply.email, ...(reply.name ? { name: reply.name } : {}) } } : {}),
   };
 
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {

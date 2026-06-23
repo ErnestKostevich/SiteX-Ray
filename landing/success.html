@@ -241,7 +241,7 @@
   </div>
 
   <h1>USDT payment verified!</h1>
-  <p class="lead">Your full cosmic audit is generating — email + instant web backup.</p>
+  <p class="lead">Your full SiteX-Ray audit is generating — email + instant web download.</p>
 
   <div class="timing" id="timing-box">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;flex-shrink:0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -287,22 +287,27 @@
   const poll = async () => {
     tries++;
     try {
-      const res = await fetch("/api/report?kind=paid&key=" + encodeURIComponent(key));
-      if (res.status === 202) {
-        if (tries < maxTries) setTimeout(poll, 5000);
-        return;
-      }
-      if (res.ok) {
+      const st = await fetch("/api/report-status?kind=paid&key=" + encodeURIComponent(key));
+      const status = st.ok ? await st.json() : {};
+      if (status.ready) {
         dl.href = "/api/report?kind=paid&key=" + encodeURIComponent(key);
         dl.style.display = "inline-flex";
         if (timingText) {
-          timingText.innerHTML = "Report ready — emailed to you <strong>and</strong> available below if inbox is slow.";
+          if (status.emailSent) {
+            timingText.innerHTML = "Done! Report sent to your inbox — <strong>open below</strong> if email is slow.";
+          } else if (status.emailError) {
+            timingText.innerHTML = "Report ready. <strong>Email failed</strong> — use the button below. Need help? <a href='mailto:ernest2011kostevich@gmail.com'>Email us</a>.";
+          } else {
+            timingText.innerHTML = "Report ready — open below or check your inbox.";
+          }
         }
         return;
       }
     } catch (_) {}
-    if (tries < maxTries) setTimeout(poll, 5000);
-    else if (timingText) {
+    if (tries < maxTries) {
+      if (timingText) timingText.innerHTML = "Generating report… (" + tries + ")";
+      setTimeout(poll, 4000);
+    } else if (timingText) {
       timingText.innerHTML = "Still generating — check email in a few minutes or <a href='mailto:ernest2011kostevich@gmail.com'>contact support</a>.";
     }
   };
