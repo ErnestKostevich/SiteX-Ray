@@ -15,7 +15,7 @@ import { analyzeWithCloudflareAI } from "./cloudflareAI.js";
 import { normalizeReport } from "./normalize.js";
 import { renderReport, renderEmailNotification } from "./renderer.js";
 import { sendReportEmail } from "./mailer.js";
-import { cacheReport } from "./reportCache.js";
+import { cacheReport, cacheReportData } from "./reportCache.js";
 
 async function pickBackendAndAnalyze(siteData, env, free, byokAnthropicKey) {
   const claudeKey = byokAnthropicKey || env.ANTHROPIC_API_KEY;
@@ -89,7 +89,9 @@ export async function runAuditAndEmail(opts) {
   const html = renderReport(report, { free, ctaUrl });
 
   if (cacheKey) {
-    await cacheReport(free ? "free" : "paid", cacheKey, html);
+    const kind = free ? "free" : "paid";
+    await cacheReportData(kind, cacheKey, report);
+    await cacheReport(kind, cacheKey, html);
   }
 
   const subject = free
