@@ -6,7 +6,9 @@
 
 import { AUDITOR_SYSTEM_PROMPT } from "./prompt.js";
 
-const DEFAULT_MODEL = "@cf/meta/llama-3.1-8b-instruct";
+// llama-3.1-8b-instruct deprecated 2026-05-30; -fast variant remains active.
+const DEFAULT_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
+const FALLBACK_MODEL = "@cf/zai-org/glm-4.7-flash";
 const TEASER_MAX_TOKENS = 2000;
 const FULL_MAX_TOKENS = 6000;
 
@@ -61,29 +63,39 @@ export async function analyzeWithCloudflareAI(siteData, env, opts = {}) {
     max_tokens: free ? TEASER_MAX_TOKENS : FULL_MAX_TOKENS,
   };
 
+  async function runModel(modelId) {
+    try {
+      return await env.AI.run(modelId, {
+        ...baseRequest,
+        response_format: { type: "json_object" },
+      });
+    } catch (e) {
+      const msg = String(e && e.message ? e.message : e);
+      if (/response_format|json_object|unknown|unsupported/i.test(msg)) {
+        return await env.AI.run(modelId, {
+          ...baseRequest,
+          messages: [
+            baseRequest.messages[0],
+            {
+              role: "user",
+              content:
+                userMessage +
+                "\n\nIMPORTANT: Output ONLY a valid raw JSON object. No prose, no markdown fences.",
+            },
+          ],
+        });
+      }
+      throw e;
+    }
+  }
+
   let response;
   try {
-    // Try JSON mode first (supported by most Llama variants on Workers AI)
-    response = await env.AI.run(chosenModel, {
-      ...baseRequest,
-      response_format: { type: "json_object" },
-    });
+    response = await runModel(chosenModel);
   } catch (e) {
     const msg = String(e && e.message ? e.message : e);
-    if (/response_format|json_object|unknown|unsupported/i.test(msg)) {
-      // Fallback: ask for JSON in the prompt itself
-      response = await env.AI.run(chosenModel, {
-        ...baseRequest,
-        messages: [
-          baseRequest.messages[0],
-          {
-            role: "user",
-            content:
-              userMessage +
-              "\n\nIMPORTANT: Output ONLY a valid raw JSON object. No prose, no markdown fences.",
-          },
-        ],
-      });
+    if (/deprecated|5028/i.test(msg) && chosenModel !== FALLBACK_MODEL) {
+      response = await runModel(FALLBACK_MODEL);
     } else {
       throw e;
     }
