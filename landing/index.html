@@ -1892,6 +1892,10 @@
         tries++;
         try {
           const res = await fetch("/api/report?kind=free&key=" + encodeURIComponent(key));
+          if (res.status === 202) {
+            if (tries < maxTries) setTimeout(poll, 4000);
+            return;
+          }
           if (res.ok) {
             let a = document.getElementById(linkId);
             if (!a) {
