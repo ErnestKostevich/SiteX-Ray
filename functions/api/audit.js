@@ -100,7 +100,7 @@ export async function onRequestPost(context) {
     ok: true,
     reportKey,
     message: isFullReport
-      ? "Your full Claude-powered audit is generating — open the report below or check your inbox."
-      : "Your free teaser is generating — open the report below (email copy sent if configured).",
+      ? "Generating full audit — stay on this page. You'll get a private link + email (no account)."
+      : "Generating free teaser — stay on this page. Private link appears here + email sent.",
   });
 }

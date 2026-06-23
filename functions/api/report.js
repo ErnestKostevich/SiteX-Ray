@@ -41,6 +41,9 @@ async function ensureReport(kind, key, env) {
   const working = { ...job, status: "processing", startedAt: Date.now() };
   await putJob(kind, key, working);
 
+  const origin = env.SITE_URL || "https://sitexray.xyz";
+  const reportUrl = `${origin.replace(/\/$/, "")}/api/report?kind=${kind}&key=${encodeURIComponent(key)}`;
+
   try {
     const result = await runAuditAndEmail({
       url: working.url,
@@ -50,6 +53,7 @@ async function ensureReport(kind, key, env) {
       ctaUrl: working.ctaUrl || null,
       byokAnthropicKey: working.byokAnthropicKey || null,
       cacheKey: key,
+      reportUrl,
     });
     await putJob(kind, key, {
       ...working,

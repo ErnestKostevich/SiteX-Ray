@@ -13,7 +13,7 @@ import { scrapeSite } from "./scraper.js";
 import { analyzeWithClaude } from "./analyzer.js";
 import { analyzeWithCloudflareAI } from "./cloudflareAI.js";
 import { normalizeReport } from "./normalize.js";
-import { renderReport } from "./renderer.js";
+import { renderReport, renderEmailNotification } from "./renderer.js";
 import { sendReportEmail } from "./mailer.js";
 import { cacheReport } from "./reportCache.js";
 
@@ -68,6 +68,7 @@ export async function runAuditAndEmail(opts) {
     ctaUrl = null,
     byokAnthropicKey = null,
     cacheKey = null,
+    reportUrl = null,
   } = opts;
 
   if (!url) throw new Error("url is required");
@@ -105,11 +106,15 @@ export async function runAuditAndEmail(opts) {
     ? `SiteX-Ray <${sender}>`
     : "SiteX-Ray <ernestkostevich@gmail.com>";
 
+  const emailHtml = reportUrl
+    ? renderEmailNotification(report, { free, reportUrl, ctaUrl })
+    : html;
+
   try {
     await sendReportEmail({
       toEmail: email,
       subject,
-      html,
+      html: emailHtml,
       emailBinding: env.EMAIL,
       fromEmail,
       replyTo: env.REPLY_TO_EMAIL || "ernest2011kostevich@gmail.com",
