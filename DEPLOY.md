@@ -203,7 +203,7 @@ Once set, paid orders automatically use Claude. No code changes needed.
 
 ## 6. Wire everything together
 
-By now you should have committed two small edits to `landing/index.html` (LEMON_CHECKOUT_URL and TURNSTILE_SITE_KEY). Both are public-safe — they go in the HTML.
+By now you should have committed the Turnstile site key edit to `landing/index.html` (public-safe — goes in the HTML).
 
 ```powershell
 git -C "D:\Project 4" add landing/index.html
