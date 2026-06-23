@@ -1,7 +1,15 @@
 // On-demand report generation (triggered by /api/report poll or report-status waitUntil).
 
-import { getCachedReport, getJob, putJob } from "./reportCache.js";
+import {
+  cacheReport,
+  getCachedReport,
+  getCachedReportData,
+  getJob,
+  isLegacyWhiteReport,
+  putJob,
+} from "./reportCache.js";
 import { runAuditAndEmail } from "./auditFlow.js";
+import { renderReport } from "./renderer.js";
 
 export function shouldStartGeneration(job) {
   if (!job || job.status === "error" || job.status === "done") return false;
@@ -11,8 +19,24 @@ export function shouldStartGeneration(job) {
   return job.status === "pending" || job.status === "processing";
 }
 
+async function refreshLegacyTheme(kind, key, env) {
+  const html = await getCachedReport(kind, key);
+  if (!html || !isLegacyWhiteReport(html)) return html;
+
+  const data = await getCachedReportData(kind, key);
+  const job = await getJob(kind, key);
+  if (!data) return html;
+
+  const refreshed = renderReport(data, {
+    free: job?.free ?? kind === "free",
+    ctaUrl: job?.ctaUrl || null,
+  });
+  await cacheReport(kind, key, refreshed);
+  return refreshed;
+}
+
 export async function ensureReport(kind, key, env) {
-  const cached = await getCachedReport(kind, key);
+  const cached = await refreshLegacyTheme(kind, key, env);
   if (cached) return cached;
 
   const job = await getJob(kind, key);
