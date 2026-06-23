@@ -621,7 +621,7 @@
         </div>
       </details>
       <p class="unlock-cta" id="unlock-cta">
-        <a href="#pricing">Unlock lifetime full access — 39 USDT once</a>
+        <a href="#" id="unlock-cta-link" onclick="return goToCheckout(event)">Unlock lifetime full access — 39 USDT once</a>
       </p>
     </div>
   </div>
@@ -705,7 +705,7 @@
           <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Optional Claude Sonnet 4.6 (BYOK)</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>License saved ~10 years · code by email</li>
         </ul>
-        <a href="#" class="btn btn-primary" onclick="return goToCheckout(event)">Unlock — 39 USDT</a>
+        <button type="button" class="btn btn-primary" onclick="return goToCheckout(event)">Unlock — 39 USDT</button>
       </div>
     </div>
   </div>
@@ -1095,9 +1095,19 @@ const PAY_NETWORKS = {
   document.querySelectorAll(".pay-tab").forEach(tab =>
     tab.addEventListener("click", () => selectPayNetwork(tab.getAttribute("data-network"))));
 
-  document.getElementById("pay-close")?.addEventListener("click", () => payOverlay.classList.remove("open"));
-  document.getElementById("pay-cancel")?.addEventListener("click", () => payOverlay.classList.remove("open"));
-  payOverlay?.addEventListener("click", e => { if (e.target === payOverlay) payOverlay.classList.remove("open"); });
+  function closePayOverlay() {
+    payOverlay?.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function openPayOverlay() {
+    payOverlay?.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  document.getElementById("pay-close")?.addEventListener("click", closePayOverlay);
+  document.getElementById("pay-cancel")?.addEventListener("click", closePayOverlay);
+  payOverlay?.addEventListener("click", e => { if (e.target === payOverlay) closePayOverlay(); });
 
   document.getElementById("pay-copy")?.addEventListener("click", async () => {
     try {
@@ -1279,19 +1289,24 @@ const PAY_NETWORKS = {
   }
 
   window.goToCheckout = function (event) {
-    if (event) event.preventDefault();
-    const email = emailInput.value.trim();
-    if (!email) {
-      document.getElementById("audit").scrollIntoView({ behavior: "smooth" });
-      setStatus("Enter your email first (used for lifetime unlock).", "error");
-      return false;
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
     }
-    if (payEmailInput) payEmailInput.value = email;
+    const email = emailInput.value.trim();
+    const payEmail = payEmailInput?.value.trim() || email;
+    if (payEmailInput) payEmailInput.value = payEmail;
     setStatus("", null);
-    setPayStatus("", null);
+    setPayStatus(
+      payEmail ? "" : "Enter your email below — your lifetime license is tied to it.",
+      payEmail ? null : "error"
+    );
     payTxInput.value = "";
     selectPayNetwork("trc20");
-    payOverlay.classList.add("open");
+    openPayOverlay();
+    if (!payEmail && payEmailInput) {
+      setTimeout(() => payEmailInput.focus(), 80);
+    }
     return false;
   };
 
