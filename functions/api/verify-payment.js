@@ -86,6 +86,7 @@ export async function onRequestPost(context) {
       free: false,
       env,
       ctaUrl: null,
+      cacheKey: payment.txHash,
     }).catch(async (err) => {
       await notifyFounderOfFailure(env, {
         orderId: payment.txHash,
@@ -104,5 +105,6 @@ export async function onRequestPost(context) {
     message: `Payment verified (${PRICE_USDT} USDT). Your full audit is generating — check ${email} in 2–3 minutes.`,
     txHash: payment.txHash,
     network: payment.network,
+    reportKey: payment.txHash,
   });
 }

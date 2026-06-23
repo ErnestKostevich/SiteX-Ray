@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SiteX-Ray — AI-powered website audit in 60 seconds</title>
+<title>SiteX-Ray v2 — USDT crypto audit · AI report in 60s</title>
 <meta name="description" content="Get a pro-grade audit of your website in 60 seconds. AI analyzes SEO, UX, conversion, content, and tech. Specific fixes, not vague advice. Free teaser, full report $39.">
 <meta property="og:title" content="SiteX-Ray — AI audit your website in 60 seconds">
 <meta property="og:description" content="Pro-grade website audit, powered by AI. Free teaser, full report $39.">
@@ -18,27 +18,30 @@
 
 <style>
   :root {
-    --bg: #07090d;
-    --bg-elev: #0e1117;
-    --bg-card: #12161d;
-    --bg-card-hover: #161b22;
-    --border: #21262d;
-    --border-subtle: #1a1f27;
-    --ink: #f0f6fc;
-    --ink-soft: #c9d1d9;
-    --muted: #8b949e;
-    --muted-2: #636e7b;
-    --accent-1: #818cf8;
-    --accent-2: #c084fc;
+    --bg: #04060a;
+    --bg-elev: #0a0d14;
+    --bg-card: #0f131c;
+    --bg-card-hover: #141a25;
+    --border: #1e2a3d;
+    --border-subtle: #151c28;
+    --ink: #f4f8ff;
+    --ink-soft: #b8c5d9;
+    --muted: #7b8ba3;
+    --muted-2: #5a6b82;
+    --accent-1: #7c8cff;
+    --accent-2: #b794f6;
     --accent-3: #f472b6;
+    --gold: #f5c451;
+    --gold-soft: #fcd34d;
     --green: #34d399;
     --red: #f87171;
     --yellow: #fbbf24;
-    --gradient: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
-    --gradient-soft: linear-gradient(135deg, rgba(129,140,248,0.15), rgba(192,132,252,0.15));
+    --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 45%, #ec4899 100%);
+    --gradient-gold: linear-gradient(135deg, #f5c451 0%, #f59e0b 50%, #fcd34d 100%);
+    --gradient-soft: linear-gradient(135deg, rgba(99,102,241,0.18), rgba(168,85,247,0.12));
     --radius: 16px;
     --radius-sm: 10px;
-    --shadow-glow: 0 0 40px rgba(129, 140, 248, 0.35);
+    --shadow-glow: 0 0 50px rgba(99, 102, 241, 0.4);
     --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
@@ -192,12 +195,144 @@
   }
   .btn-sm { padding: 10px 18px; font-size: 14px; }
 
+  /* ──────── LAUNCH BANNER + AURORA ──────── */
+  .launch-banner {
+    position: sticky;
+    top: 0;
+    z-index: 110;
+    background: linear-gradient(90deg, rgba(99,102,241,0.25), rgba(245,196,81,0.2), rgba(168,85,247,0.25));
+    border-bottom: 1px solid rgba(245,196,81,0.35);
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+    backdrop-filter: blur(16px);
+  }
+  .launch-badge {
+    display: inline-block;
+    background: var(--gradient-gold);
+    color: #1a1200;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-right: 8px;
+    vertical-align: middle;
+    letter-spacing: 0.08em;
+  }
+  .cosmic-aurora {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99,102,241,0.35), transparent 55%),
+      radial-gradient(ellipse 60% 40% at 90% 40%, rgba(245,196,81,0.12), transparent 50%),
+      radial-gradient(ellipse 50% 35% at 10% 70%, rgba(236,72,153,0.15), transparent 45%);
+    animation: aurora-pulse 18s ease-in-out infinite alternate;
+  }
+  @keyframes aurora-pulse {
+    0% { opacity: 0.85; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.03); }
+  }
+  .nav-chip {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(245,196,81,0.15);
+    border: 1px solid rgba(245,196,81,0.45);
+    color: var(--gold-soft);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
   /* ──────── HERO ──────── */
   .hero {
-    padding: 80px 0 60px;
-    text-align: center;
+    padding: 56px 0 72px;
     position: relative;
   }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px;
+    align-items: center;
+    text-align: left;
+  }
+  .hero-left { position: relative; z-index: 1; }
+  .hero-right { position: relative; z-index: 1; }
+
+  .usdt-hero-card {
+    background: linear-gradient(145deg, rgba(15,19,28,0.95), rgba(20,26,38,0.88));
+    border: 1px solid rgba(245,196,81,0.35);
+    border-radius: 20px;
+    padding: 28px 26px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 0 40px rgba(245,196,81,0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  .usdt-hero-card::before {
+    content: "";
+    position: absolute;
+    top: -50%; right: -30%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(245,196,81,0.25), transparent 70%);
+    pointer-events: none;
+  }
+  .usdt-hero-card .uh-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .usdt-hero-card .uh-price {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .usdt-hero-card .uh-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+  .usdt-networks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .usdt-net {
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  .usdt-net strong { display: block; color: var(--ink); font-size: 13px; margin-bottom: 4px; }
+  .usdt-net code {
+    display: block;
+    font-size: 10px;
+    color: var(--gold-soft);
+    word-break: break-all;
+    margin-top: 6px;
+    opacity: 0.9;
+  }
+  .usdt-hero-card .btn { width: 100%; }
+  .usdt-steps {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .usdt-steps strong { color: var(--ink-soft); }
   .pill {
     display: inline-flex;
     align-items: center;
@@ -248,8 +383,8 @@
   .hero-sub {
     font-size: clamp(17px, 1.6vw, 21px);
     color: var(--ink-soft);
-    max-width: 640px;
-    margin: 0 auto 40px;
+    max-width: 560px;
+    margin: 0 0 32px;
     line-height: 1.5;
   }
 
@@ -258,8 +393,8 @@
     display: grid;
     grid-template-columns: 1.4fr 1fr auto;
     gap: 10px;
-    max-width: 720px;
-    margin: 0 auto 14px;
+    max-width: 100%;
+    margin: 0 0 14px;
     padding: 8px;
     background: rgba(18, 22, 29, 0.6);
     border: 1px solid var(--border);
@@ -292,7 +427,7 @@
     align-items: center;
     gap: 14px;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
   }
   .hero-tiny span { display: inline-flex; align-items: center; gap: 6px; }
   .hero-tiny svg { width: 14px; height: 14px; color: var(--green); }
@@ -335,8 +470,8 @@
 
   /* BYOK / Pro section under the form */
   .pro-section {
-    max-width: 720px;
-    margin: 16px auto 0;
+    max-width: 100%;
+    margin: 16px 0 0;
     background: rgba(18, 22, 29, 0.5);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -1043,6 +1178,11 @@
   /* ──────── MOBILE ──────── */
   @media (max-width: 880px) {
     .nav-links a:not(.btn) { display: none; }
+    .nav-chip { display: none; }
+    .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 32px; }
+    .hero-sub { margin-left: auto; margin-right: auto; }
+    .hero-tiny { justify-content: center; }
+    .launch-banner { font-size: 11px; padding: 8px 12px; }
     .hero-form { grid-template-columns: 1fr; gap: 8px; padding: 10px; }
     .hero-form .btn { width: 100%; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
@@ -1065,6 +1205,7 @@
 </head>
 <body>
 
+<div class="cosmic-aurora" aria-hidden="true"></div>
 <div class="mesh-bg" aria-hidden="true">
   <div class="mesh-blob a"></div>
   <div class="mesh-blob b"></div>
@@ -1073,13 +1214,18 @@
 <div class="grain" aria-hidden="true"></div>
 <div class="stars" aria-hidden="true"></div>
 
+<div class="launch-banner">
+  <span class="launch-badge">V2 LIVE</span>
+  Pay with <strong style="color:var(--gold-soft)">39 USDT</strong> — TRC-20 (TRON) or ERC-20 (Ethereum) · On-chain verify · Auto email delivery
+</div>
+
 <nav>
   <div class="container">
     <a class="logo" href="/">
       <span class="logo-mark">
         <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><line x1="7" y1="7" x2="13" y2="13" stroke-width="1.2" opacity="0.55"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
       </span>
-      SiteX-Ray
+      SiteX-Ray <span class="nav-chip">USDT · v2</span>
     </a>
     <div class="nav-links">
       <a href="#how">How it works</a>
@@ -1093,16 +1239,17 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="container">
+  <div class="container hero-grid">
+    <div class="hero-left">
     <div class="pill">
       <span class="pulse-dot"></span>
-      AI-powered · analyzes 50+ signals in 60 seconds
+      Cosmic AI audit · 50+ signals · crypto checkout
     </div>
 
-    <h1>Your website is leaking<br><span class="grad">money</span>. Find out where.</h1>
+    <h1>Find where your site<br>leaks <span class="grad">revenue</span>.</h1>
 
     <p class="hero-sub">
-      Get a senior-consultant-grade audit of your site in 60 seconds. We scan SEO, UX, conversion, content and tech — then hand you specific fixes, not vague advice.
+      Pro-grade audit in 60 seconds. Free teaser to your inbox — or unlock the full 10–15 page report with <strong style="color:var(--gold-soft)">39 USDT</strong> (no cards, no subscriptions).
     </p>
 
     <form class="hero-form" id="hero-form" novalidate>
@@ -1142,11 +1289,41 @@
     </p>
 
     <p class="hero-secondary-row">
-      Skip the teaser — <a href="#" onclick="return goToCheckout(event)">get the full $39 audit</a>
-      &nbsp;·&nbsp;
       <a href="/sample-report.html" target="_blank" rel="noopener">See sample report →</a>
     </p>
+    </div>
 
+    <div class="hero-right reveal">
+      <div class="usdt-hero-card">
+        <div class="uh-label">Full audit · Crypto checkout</div>
+        <div class="uh-price">39 USDT</div>
+        <div class="uh-sub">Exact amount · tx hash verify · 24h window · auto delivery</div>
+        <div class="usdt-networks">
+          <div class="usdt-net">
+            <strong>TRC-20 · TRON</strong>
+            Low fees, fast
+            <code>TV1EBHTyvpP98jZGerz6sRmZvipn15LqDA</code>
+          </div>
+          <div class="usdt-net">
+            <strong>ERC-20 · Ethereum</strong>
+            Widely supported
+            <code>0x9339686861079c781e0249ee64a509F893E2367c</code>
+          </div>
+        </div>
+        <a href="#" onclick="return goToCheckout(event)" class="btn btn-primary" style="background:var(--gradient-gold);color:#1a1200;box-shadow:0 8px 32px rgba(245,196,81,0.35);">
+          Pay 39 USDT — get full audit
+        </a>
+        <p class="usdt-steps">
+          <strong>1.</strong> Enter URL + email (left) ·
+          <strong>2.</strong> Send 39 USDT ·
+          <strong>3.</strong> Paste tx hash ·
+          <strong>4.</strong> Report in inbox + web backup
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
     <!-- Floating mockup -->
     <div class="hero-mockup reveal">
       <div class="mockup-card">
@@ -1611,15 +1788,11 @@
         });
         const data = await response.json().catch(() => ({}));
         if (response.ok && data.ok) {
-          setStatus(
-            data.message ||
-              "Your report is on its way! Check your inbox in ~2 minutes.",
-            "success"
-          );
+          setStatus(data.message || "Generating your report…", "success");
           form.style.display = "none";
-          // Hide the BYOK panel after submission for a cleaner success state.
           const proSection = document.getElementById("pro-section");
           if (proSection) proSection.style.display = "none";
+          if (data.reportKey) pollFreeReport(data.reportKey);
         } else {
           setStatus(data.error || "Something went wrong. Please try again.", "error");
         }
@@ -1697,7 +1870,10 @@
         const data = await response.json().catch(() => ({}));
         if (response.ok && data.ok) {
           setPayStatus(data.message || "Verified! Check your inbox.", "success");
-          setTimeout(() => { window.location.href = "/success.html"; }, 1500);
+          const rk = data.reportKey || txHash;
+          setTimeout(() => {
+            window.location.href = "/success.html?key=" + encodeURIComponent(rk);
+          }, 1500);
         } else {
           setPayStatus(data.error || "Verification failed. Check amount, address, and tx hash.", "error");
         }
@@ -1707,6 +1883,37 @@
         paySubmit.disabled = false;
       }
     });
+
+    function pollFreeReport(key) {
+      let tries = 0;
+      const maxTries = 60;
+      const linkId = "report-ready-link";
+      const poll = async () => {
+        tries++;
+        try {
+          const res = await fetch("/api/report?kind=free&key=" + encodeURIComponent(key));
+          if (res.ok) {
+            let a = document.getElementById(linkId);
+            if (!a) {
+              a = document.createElement("a");
+              a.id = linkId;
+              a.className = "btn btn-primary";
+              a.style.marginTop = "16px";
+              a.target = "_blank";
+              a.rel = "noopener";
+              a.textContent = "Open your report →";
+              statusEl.parentNode.insertBefore(a, statusEl.nextSibling);
+            }
+            a.href = "/api/report?kind=free&key=" + encodeURIComponent(key);
+            setStatus("Report ready! Open below or check your inbox.", "success");
+            return;
+          }
+        } catch (_) {}
+        if (tries < maxTries) setTimeout(poll, 4000);
+        else setStatus("Still generating — refresh in a minute or check email.", "success");
+      };
+      poll();
+    }
 
     window.goToCheckout = function (event) {
       if (event) event.preventDefault();

@@ -28,7 +28,7 @@ export async function notifyFounderOfFailure(env, ctx) {
   const html = `<!doctype html>
 <html><body style="font-family:-apple-system,Segoe UI,Roboto,sans-serif; color:#0f172a; max-width:640px; margin:0 auto; padding:24px;">
   <div style="background:#fef3c7; border:1px solid #fde68a; color:#92400e; padding:12px 16px; border-radius:8px; margin-bottom:24px;">
-    <strong>⚠ Paid order failed to deliver.</strong> A customer paid via NOWPayments
+    <strong>⚠ Paid order failed to deliver.</strong> A customer paid via USDT
     but the automated pipeline could not generate or email their audit.
     You'll need to fulfill this manually.
   </div>
@@ -38,7 +38,7 @@ export async function notifyFounderOfFailure(env, ctx) {
     <tr><td><strong>Customer email</strong></td><td><code>${escapeHtml(customerEmail || "(missing)")}</code></td></tr>
     <tr><td><strong>Site URL to audit</strong></td><td><code>${escapeHtml(customerUrl || "(missing)")}</code></td></tr>
     <tr><td><strong>Order ID</strong></td><td><code>${escapeHtml(orderId || "(missing)")}</code></td></tr>
-    <tr><td><strong>NOWPayments payment ID</strong></td><td><code>${escapeHtml(paymentId || "(missing)")}</code></td></tr>
+    <tr><td><strong>Payment / tx ID</strong></td><td><code>${escapeHtml(paymentId || "(missing)")}</code></td></tr>
     <tr><td><strong>When</strong></td><td>${new Date().toUTCString()}</td></tr>
   </table>
 
@@ -48,7 +48,7 @@ export async function notifyFounderOfFailure(env, ctx) {
   <h2 style="margin:24px 0 12px; font-size:18px;">How to fulfill manually</h2>
   <ol style="font-size:14px; line-height:1.6;">
     <li>Open Cloudflare Pages → sitexray → Logs to see the full error trace.</li>
-    <li>Verify payment in NOWPayments dashboard → Payments → search by order_id.</li>
+    <li>Verify USDT tx on Tronscan or Etherscan using the payment ID above.</li>
     <li>On your local machine: <code>python audit.py ${escapeHtml(customerUrl || "URL")} --out report.html</code></li>
     <li>Open <code>report.html</code> in your browser, save as PDF (Ctrl+P).</li>
     <li>Email the PDF to <code>${escapeHtml(customerEmail || "the customer")}</code> with a brief apology.</li>
@@ -73,7 +73,8 @@ export async function notifyFounderOfFailure(env, ctx) {
       subject: `🚨 SiteX-Ray order failed — ${customerEmail || "unknown customer"} (${orderId || "no id"})`,
       html,
       emailBinding: env.EMAIL,
-      fromEmail: env.FROM_EMAIL || env.RESEND_FROM_EMAIL,
+      fromEmail: env.FROM_EMAIL || env.BREVO_SENDER_EMAIL,
+      brevoApiKey: env.BREVO_API_KEY,
       apiToken: env.CLOUDFLARE_API_TOKEN || env.CF_API_TOKEN,
       accountId: env.CLOUDFLARE_ACCOUNT_ID,
     });

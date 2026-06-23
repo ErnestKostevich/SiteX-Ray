@@ -15,6 +15,7 @@ import { analyzeWithCloudflareAI } from "./cloudflareAI.js";
 import { normalizeReport } from "./normalize.js";
 import { renderReport } from "./renderer.js";
 import { sendReportEmail } from "./mailer.js";
+import { cacheReport } from "./reportCache.js";
 
 async function pickBackendAndAnalyze(siteData, env, free, byokAnthropicKey) {
   const claudeKey = byokAnthropicKey || env.ANTHROPIC_API_KEY;
@@ -66,6 +67,7 @@ export async function runAuditAndEmail(opts) {
     env,
     ctaUrl = null,
     byokAnthropicKey = null,
+    cacheKey = null,
   } = opts;
 
   if (!url) throw new Error("url is required");
@@ -85,22 +87,35 @@ export async function runAuditAndEmail(opts) {
 
   const html = renderReport(report, { free, ctaUrl });
 
+  if (cacheKey) {
+    await cacheReport(free ? "free" : "paid", cacheKey, html);
+  }
+
   const subject = free
     ? `Your free site audit — ${siteData.domain}`
     : byokAnthropicKey
       ? `Your full SiteX-Ray audit (Claude · BYOK) — ${siteData.domain}`
       : `Your full SiteX-Ray report — ${siteData.domain}`;
 
-  await sendReportEmail({
-    toEmail: email,
-    subject,
-    html,
-    emailBinding: env.EMAIL,
-    fromEmail: env.FROM_EMAIL || env.RESEND_FROM_EMAIL,
-    replyTo: env.REPLY_TO_EMAIL || "support@sitexray.xyz",
-    apiToken: env.CLOUDFLARE_API_TOKEN || env.CF_API_TOKEN,
-    accountId: env.CLOUDFLARE_ACCOUNT_ID,
-  });
+  try {
+    await sendReportEmail({
+      toEmail: email,
+      subject,
+      html,
+      emailBinding: env.EMAIL,
+      fromEmail: env.FROM_EMAIL || env.BREVO_SENDER_EMAIL,
+      replyTo: env.REPLY_TO_EMAIL || "support@sitexray.xyz",
+      brevoApiKey: env.BREVO_API_KEY,
+      apiToken: env.CLOUDFLARE_API_TOKEN || env.CF_API_TOKEN,
+      accountId: env.CLOUDFLARE_ACCOUNT_ID,
+    });
+  } catch (emailErr) {
+    if (!cacheKey) throw emailErr;
+    console.error(
+      "Email delivery failed (report available via web cache):",
+      emailErr && emailErr.message ? emailErr.message : emailErr
+    );
+  }
 
   return { domain: siteData.domain, overall_score: report.overall_score };
 }
