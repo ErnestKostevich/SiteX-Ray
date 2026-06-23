@@ -41,7 +41,7 @@
     <tr><td>The URL you submitted</td><td>To audit it</td><td>Not stored after the report is generated</td></tr>
     <tr><td>The audit report we generated</td><td>To deliver it to you</td><td>Sent to your email, not retained server-side</td></tr>
     <tr><td>Your IP address</td><td>Bot protection (via Cloudflare)</td><td>~30 days of Cloudflare logs</td></tr>
-    <tr><td>Payment info (only paid customers)</td><td>To process the $39 charge</td><td>Handled by NOWPayments (crypto checkout) — we never see your wallet keys</td></tr>
+    <tr><td>Payment tx hash (only paid customers)</td><td>To verify 39 USDT on-chain</td><td>Verified via public blockchain APIs — we never see your wallet keys</td></tr>
   </table>
 
   <p>We do <strong>not</strong> use cookies for tracking. The only cookies that may be set are technical ones from Cloudflare Turnstile (anti-bot) — these have no marketing or analytics purpose.</p>
@@ -51,7 +51,7 @@
     <li><strong>Cloudflare</strong> — hosts the site, runs the backend, provides bot protection, and runs the open-weight AI model that generates most audits. The scraped page content is processed in Cloudflare's edge network and not retained after the response. See <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's privacy policy</a> and <a href="https://developers.cloudflare.com/workers-ai/privacy/" target="_blank" rel="noopener">Workers AI privacy notes</a>.</li>
     <li><strong>Anthropic</strong> — for the paid $39 tier, we may send your submitted URL plus the scraped page content to Anthropic's API to generate a higher-quality report. Per <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic's privacy policy</a>, API inputs are not used to train their models.</li>
     <li><strong>Cloudflare Email Service</strong> — delivers your report by email from our domain. Covered under <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's privacy policy</a>.</li>
-    <li><strong>NOWPayments</strong> — processes crypto payments for paid audits. See <a href="https://nowpayments.io/privacy-policy" target="_blank" rel="noopener">NOWPayments' privacy policy</a>.</li>
+    <li><strong>TronScan / TronGrid / public Ethereum RPC</strong> — used to verify USDT transaction hashes on-chain. No wallet keys are collected.</li>
   </ul>
 
   <p>We do not sell your data. We do not share it for marketing. We do not have an ad partner.</p>
