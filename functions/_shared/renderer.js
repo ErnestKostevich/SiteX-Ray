@@ -162,6 +162,44 @@ const SECTION_SHORT = {
   technical: "Tech",
 };
 
+/** Lightweight email — link to full report (better Gmail deliverability). */
+export function renderEmailNotification(report, opts = {}) {
+  const { free = false, reportUrl, ctaUrl } = opts;
+  if (!reportUrl) return renderReport(report, opts);
+
+  const headerCol = scoreColor(report.overall_score);
+  const verdictBg = verdictColor(report.verdict);
+  const badge = free ? "Free preview" : "Full report";
+  const topWin = (report.quick_wins || [])[0];
+
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:${C.outer};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${C.outer}" style="background:${C.outer};">
+<tr><td align="center" style="padding:32px 16px;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;background:${C.card};border-radius:16px;border:1px solid ${C.border};">
+<tr><td style="height:4px;background:linear-gradient(90deg,${C.accent},#8b5cf6);border-radius:16px 16px 0 0;font-size:0;">&nbsp;</td></tr>
+<tr><td style="padding:32px 24px;">
+  <div style="font-size:20px;font-weight:800;color:${C.ink};margin-bottom:4px;">Site<span style="color:${C.accent};">X</span>-Ray</div>
+  <div style="font-size:11px;color:${C.muted};margin-bottom:20px;">${badge} · ${esc(report.domain)}</div>
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${C.soft};border:1px solid ${C.border};border-radius:12px;margin-bottom:20px;">
+  <tr><td style="padding:20px;text-align:center;">
+    <div style="display:inline-block;width:72px;height:72px;line-height:72px;border-radius:50%;background:${headerCol};color:#fff;font-size:32px;font-weight:800;">${esc(report.overall_score)}</div>
+    <div style="margin-top:10px;"><span style="display:inline-block;padding:4px 12px;border-radius:99px;background:${verdictBg};color:#fff;font-size:11px;font-weight:700;">${esc(report.verdict)}</span></div>
+    <p style="margin:12px 0 0;font-size:15px;line-height:1.55;color:${C.inkSoft};">${esc(report.tldr)}</p>
+  </td></tr></table>
+  ${topWin ? `<p style="font-size:14px;color:${C.inkSoft};margin:0 0 20px;line-height:1.55;"><strong style="color:${C.ink};">Top fix:</strong> ${esc(topWin.title)} — ${esc(topWin.how)}</p>` : ""}
+  <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td align="center">
+    <a href="${esc(reportUrl)}" style="display:inline-block;padding:16px 32px;background:${C.accent};color:#fff;border-radius:10px;font-weight:700;font-size:16px;text-decoration:none;">Open your full report →</a>
+  </td></tr></table>
+  <p style="font-size:12px;color:${C.muted};text-align:center;margin:16px 0 0;line-height:1.5;">No account needed — this link is yours for 7 days.<br>Bookmark it if email is slow.</p>
+  ${free && ctaUrl ? `<p style="text-align:center;margin-top:20px;font-size:13px;"><a href="${esc(ctaUrl)}" style="color:${C.accent};font-weight:600;">Upgrade to full audit — $39 USDT</a></p>` : ""}
+  <p style="font-size:11px;color:${C.muted};text-align:center;margin-top:24px;border-top:1px solid ${C.border};padding-top:16px;">SiteX-Ray · sitexray.xyz</p>
+</td></tr></table>
+</td></tr></table>
+</body></html>`;
+}
+
 export function renderReport(report, opts = {}) {
   const { free = false, ctaUrl = null } = opts;
   const premium = !free;
@@ -220,9 +258,9 @@ export function renderReport(report, opts = {}) {
     : "";
 
   const cardInner = `
-  <table cellpadding="0" cellspacing="0" border="0" width="640" style="max-width:640px;width:100%;background:${C.card};border-radius:16px;border:1px solid ${C.border};box-shadow:0 4px 24px rgba(15,23,42,0.08);">
+  <table cellpadding="0" cellspacing="0" border="0" width="640" class="report-card" style="max-width:640px;width:100%;background:${C.card};border-radius:16px;border:1px solid ${C.border};box-shadow:0 4px 24px rgba(15,23,42,0.08);">
   <tr><td style="height:4px;background:linear-gradient(90deg,${C.accent},#8b5cf6);border-radius:16px 16px 0 0;font-size:0;line-height:0;">&nbsp;</td></tr>
-  <tr><td style="padding:36px 32px 40px;">
+  <tr><td class="report-inner" style="padding:36px 32px 40px;">
 
     ${brandHeader(free)}
     ${paidRibbon}
@@ -230,9 +268,9 @@ export function renderReport(report, opts = {}) {
     <h1 style="font-size:28px;margin:0 0 4px;color:${C.ink};font-weight:800;letter-spacing:-0.03em;line-height:1.15;">${esc(report.domain)}</h1>
     <div style="font-size:13px;margin-bottom:24px;"><a href="${esc(report.url)}" style="color:${C.accent};text-decoration:none;">${esc(report.url)}</a></div>
 
-    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:28px;background:${C.soft};border:1px solid ${C.border};border-radius:12px;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" class="score-hero" style="margin-bottom:28px;background:${C.soft};border:1px solid ${C.border};border-radius:12px;">
       <tr>
-        <td width="120" align="center" valign="middle" style="padding:24px 12px;">
+        <td class="score-cell" width="120" align="center" valign="middle" style="padding:24px 12px;">
           <table cellpadding="0" cellspacing="0" border="0" width="96" height="96" style="border-radius:50%;background:${headerCol};">
             <tr><td align="center" valign="middle" style="color:#fff;">
               <div style="font-size:38px;font-weight:800;line-height:1;">${esc(report.overall_score)}</div>
@@ -275,11 +313,20 @@ export function renderReport(report, opts = {}) {
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>SiteX-Ray — ${esc(report.domain)}</title>
 <style>
+  * { box-sizing: border-box; }
+  img { max-width: 100%; height: auto; }
   @media screen {
     body { margin: 0; padding: 24px 16px; background: ${C.outer}; }
   }
-  @media print {
-    body { background: #fff; padding: 0; }
+  @media print { body { background: #fff; padding: 0; } }
+  @media (max-width: 600px) {
+    body { padding: 12px 8px !important; }
+    .report-card { border-radius: 12px !important; }
+    .report-inner { padding: 24px 16px !important; }
+    .score-hero td { display: block !important; width: 100% !important; text-align: center !important; padding: 16px !important; }
+    .score-hero .score-cell { padding-bottom: 0 !important; }
+    .dim-grid td { display: inline-block !important; width: 48% !important; margin-bottom: 8px; }
+    h1 { font-size: 22px !important; }
   }
 </style>
 </head>

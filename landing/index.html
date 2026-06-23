@@ -48,7 +48,8 @@
   }
   a { color: var(--accent-2); text-decoration: none; }
   a:hover { color: #a5b4fc; }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  img, svg { max-width: 100%; height: auto; }
 
   /* Nav */
   nav {
@@ -134,8 +135,27 @@
   .field input {
     width: 100%; padding: 12px 14px; border-radius: 8px;
     border: 1px solid var(--border); background: var(--bg);
-    color: var(--text); font-size: 15px; font-family: inherit;
+    color: var(--text); font-size: 16px; font-family: inherit;
   }
+  .no-account {
+    margin-top: 14px; padding: 12px 14px; border-radius: 10px;
+    background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.25);
+    font-size: 13px; color: var(--text-2); line-height: 1.5;
+  }
+  .no-account strong { color: var(--text); }
+  .report-ready-box {
+    margin-top: 16px; padding: 16px; border-radius: 12px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    text-align: left;
+  }
+  .report-ready-box p { font-size: 14px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+  .mobile-cta {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(9,9,11,0.95); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+  }
+  .mobile-cta .btn { width: 100%; }
   .field input:focus { outline: none; border-color: var(--accent); }
   .field input::placeholder { color: #52525b; }
   .form-card .btn { width: 100%; margin-top: 4px; }
@@ -353,13 +373,29 @@
   .pay-status[data-kind="error"] { color: var(--red); }
   .pay-status[data-kind="success"] { color: var(--green); }
 
-  @media (max-width: 860px) {
+  @media (max-width: 900px) {
     .nav-links a:not(.btn) { display: none; }
-    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-    .preview { order: -1; max-width: 400px; margin: 0 auto; }
+    .hero { padding: 40px 0 100px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+    .preview { display: none; }
+    .eyebrow, h1, .lead { text-align: center; }
+    .lead { margin-left: auto; margin-right: auto; }
+    .form-card, .pro-toggle, .no-account { max-width: 100%; }
+    section { padding: 56px 0; }
     .steps, .features, .pricing { grid-template-columns: 1fr; }
-    h1, .lead { text-align: center; margin-left: auto; margin-right: auto; }
-    .form-card, .pro-toggle { max-width: 100%; }
+    .cta-box { padding: 40px 20px; }
+    footer .wrap { flex-direction: column; text-align: center; }
+    .mobile-cta { display: block; }
+    body { padding-bottom: 72px; }
+    .pay-overlay { align-items: flex-end; padding: 0; }
+    .pay-modal { max-width: 100%; border-radius: 16px 16px 0 0; max-height: 92vh; overflow-y: auto; }
+    .pay-tab { font-size: 11px; padding: 8px 6px; }
+  }
+  @media (max-width: 400px) {
+    .wrap { padding: 0 16px; }
+    h1 { font-size: 28px; }
+    .plan { padding: 24px 20px; }
+    .plan-price { font-size: 36px; }
   }
 </style>
 </head>
@@ -380,14 +416,14 @@
   </div>
 </nav>
 
-<section class="hero" id="top">
+<section class="hero" id="hero-form">
   <div class="wrap hero-grid">
     <div>
       <div class="eyebrow"><span class="dot"></span> AI audit · 60 seconds · 50+ signals</div>
       <h1>See exactly what's wrong with your <em>website</em></h1>
       <p class="lead">Paste your URL. Get a clean, professional audit with specific fixes — not vague AI advice. Delivered to email and web.</p>
 
-      <form class="form-card" id="hero-form" novalidate>
+      <form class="form-card" novalidate>
         <div class="field">
           <label for="url-input">Website URL</label>
           <input type="url" id="url-input" name="url" placeholder="https://yourwebsite.com" required autocomplete="url">
@@ -397,11 +433,16 @@
           <input type="email" id="email-input" name="email" placeholder="you@company.com" required autocomplete="email">
         </div>
         <button type="submit" class="btn btn-primary" id="submit-btn">Get free report →</button>
-        <p class="form-note">Free 1-page teaser · no signup · report in ~2 min</p>
+        <p class="form-note">Free teaser · ~2 min · link on this page + email</p>
       </form>
+
+      <div class="no-account">
+        <strong>No account.</strong> We don't save profiles. You get a private link (7 days) + email copy. Nobody else can see your report without the link.
+      </div>
 
       <div id="turnstile-container"></div>
       <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
+      <div id="report-ready-box" class="report-ready-box" style="display:none" aria-live="polite"></div>
 
       <details class="pro-toggle" id="pro-section">
         <summary>Have a Claude API key? Get the full report free</summary>
@@ -541,8 +582,12 @@
         <div class="ans">Full refund within 7 days, no questions. Email us.</div>
       </details>
       <details>
+        <summary>Do I need an account?</summary>
+        <div class="ans"><strong>No.</strong> Enter URL + email, get a secret report link on this page and in your inbox. The link works for 7 days. We don't create logins or save user profiles — each audit is one-time, tied only to that private link.</div>
+      </details>
+      <details>
         <summary>Do you store my data?</summary>
-        <div class="ans">We generate the report and email it. We don't keep your URL or report on file.</div>
+        <div class="ans">Reports live in temporary cache for 7 days (so your link works), then auto-delete. We don't build a database of customers or URLs.</div>
       </details>
     </div>
   </div>
@@ -582,6 +627,10 @@
     </div>
     <div class="pay-status" id="pay-status" role="status"></div>
   </div>
+</div>
+
+<div class="mobile-cta">
+  <a href="#hero-form" class="btn btn-primary">Get free report →</a>
 </div>
 
 <footer>
@@ -746,21 +795,34 @@ const PAY_NETWORKS = {
         const st = await fetch("/api/report-status?kind=free&key=" + encodeURIComponent(key));
         const status = st.ok ? await st.json() : {};
         if (status.ready) {
+          const reportHref = "/api/report?kind=free&key=" + encodeURIComponent(key);
           let a = document.getElementById("report-ready-link");
           if (!a) {
             a = document.createElement("a");
             a.id = "report-ready-link";
             a.className = "btn btn-primary";
             a.style.marginTop = "14px";
+            a.style.display = "inline-flex";
             a.target = "_blank";
             a.rel = "noopener";
-            a.textContent = "Open your report →";
+            a.textContent = "Open your full report →";
             statusEl.after(a);
           }
-          a.href = "/api/report?kind=free&key=" + encodeURIComponent(key);
-          setStatus(status.emailSent
-            ? "Done! Check email or open report below."
-            : "Report ready — open below.", "success");
+          a.href = reportHref;
+          const box = document.getElementById("report-ready-box");
+          if (box) {
+            box.style.display = "block";
+            if (status.emailSent) {
+              box.innerHTML = "<strong style=\"color:var(--text)\">✓ Report ready</strong><p>Email sent with a link. <strong>Save this page link too</strong> — no account, this is your private access for 7 days.</p>";
+              setStatus("Done! Open report below or check email.", "success");
+            } else if (status.emailError) {
+              box.innerHTML = "<strong style=\"color:var(--red)\">Email failed</strong><p>Use the button below — your report is ready. Error: " + (status.emailError || "unknown") + "</p>";
+              setStatus("Report ready on web — email did not send.", "error");
+            } else {
+              box.innerHTML = "<strong style=\"color:var(--text)\">✓ Report ready</strong><p>Open below. Bookmark this link — no account needed.</p>";
+              setStatus("Report ready — open below.", "success");
+            }
+          }
           return;
         }
       } catch (_) {}
