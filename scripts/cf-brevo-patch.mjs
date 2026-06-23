@@ -35,7 +35,7 @@ const patch = await fetch(`${API}/accounts/${ACCOUNT}/pages/projects/${PROJECT}`
           ...ev,
           BREVO_API_KEY: { type: "secret_text", value: BREVO_KEY },
           BREVO_SENDER_EMAIL: { type: "plain_text", value: SENDER },
-          FROM_EMAIL: { type: "plain_text", value: `SiteX-Ray <${SENDER}>` },
+          FROM_EMAIL: { type: "plain_text", value: SENDER },
           REPLY_TO_EMAIL: { type: "plain_text", value: SENDER },
         },
       },
