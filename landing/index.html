@@ -1224,14 +1224,24 @@ const PAY_NETWORKS = {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.ok) {
-        setPayStatus("Unlocked! Check your email…", "success");
         const em = emailInput.value.trim();
         const tok = data.unlockToken || "";
+        if (data.emailSent) {
+          setPayStatus("Unlocked! Check your email for the code.", "success");
+        } else {
+          setPayStatus(
+            "Unlocked! Email did not send" +
+              (data.emailError ? ": " + data.emailError : "") +
+              " — save code on next screen.",
+            "error"
+          );
+        }
         setTimeout(() => {
           let href = "/success.html?unlock=" + encodeURIComponent(tok);
           if (em) href += "&email=" + encodeURIComponent(em);
+          if (!data.emailSent) href += "&emailSent=0";
           window.location.href = href;
-        }, 1200);
+        }, data.emailSent ? 1200 : 2200);
       } else {
         setPayStatus(data.error || "Verification failed.", "error");
       }
