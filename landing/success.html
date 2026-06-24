@@ -2,97 +2,377 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Lifetime access unlocked — SiteX-Ray</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #08050f; --surface: #110a1c; --border: rgba(167,139,250,0.14);
-    --text: #f3eeff; --muted: #7c6b9e; --accent: #8b5cf6; --green: #34d399; --red: #f87171;
+    --bg: #08050f;
+    --surface: #110a1c;
+    --surface-2: #160f24;
+    --border: rgba(167,139,250,0.14);
+    --border-strong: rgba(167,139,250,0.28);
+    --text: #f3eeff;
+    --text-2: #c4b5e0;
+    --muted: #7c6b9e;
+    --accent: #8b5cf6;
+    --accent-2: #a78bfa;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --radius: 12px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
     font-family: "Inter", system-ui, sans-serif;
-    background: var(--bg); color: var(--text);
-    min-height: 100dvh; display: flex; align-items: center; justify-content: center;
-    padding: 24px; -webkit-font-smoothing: antialiased;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
   }
   body::before {
-    content: ""; position: fixed; inset: 0; z-index: -1;
-    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(139,92,246,0.15), transparent);
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(139,92,246,0.2), transparent),
+      radial-gradient(ellipse 40% 30% at 100% 80%, rgba(124,58,237,0.08), transparent);
   }
+
   .card {
-    width: 100%; max-width: 440px; text-align: center;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 14px; padding: 36px 28px;
+    width: 100%;
+    max-width: 480px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+    padding: 32px 28px 28px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    animation: card-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+
   .brand {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-weight: 700; font-size: 15px; margin-bottom: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 24px;
+    color: var(--text);
+    text-decoration: none;
   }
   .brand-mark {
-    width: 28px; height: 28px; border-radius: 7px;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
     background: linear-gradient(135deg, #7c3aed, #a78bfa);
-    display: grid; place-items: center;
+    display: grid;
+    place-items: center;
   }
-  .brand-mark svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2; }
-  .brand em { font-style: normal; color: #a78bfa; }
+  .brand-mark svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2; }
+  .brand em { font-style: normal; color: var(--accent-2); }
+
+  .hero-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
   .check {
-    width: 48px; height: 48px; border-radius: 50%;
-    background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3);
-    display: grid; place-items: center; margin: 0 auto 18px; color: var(--green);
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: rgba(52,211,153,0.1);
+    border: 1px solid rgba(52,211,153,0.35);
+    display: grid;
+    place-items: center;
+    color: var(--green);
   }
-  .check svg { width: 24px; height: 24px; stroke-width: 2.5; fill: none; stroke: currentColor; }
-  h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.02em; }
-  .lead { color: var(--muted); font-size: 14px; margin-bottom: 16px; line-height: 1.55; text-align: left; }
-  .lead li { margin: 6px 0 6px 18px; }
-  .status-box {
-    font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.5;
-    min-height: 1.4em;
+  .check svg { width: 22px; height: 22px; stroke-width: 2.5; fill: none; stroke: currentColor; }
+  h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .subtitle { font-size: 13px; color: var(--muted); }
+
+  .warn {
+    display: flex;
+    gap: 12px;
+    text-align: left;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(245,158,11,0.06));
+    border: 1px solid rgba(251,191,36,0.35);
+    box-shadow: 0 0 24px rgba(251,191,36,0.06);
+  }
+  .warn-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: rgba(251,191,36,0.12);
+    border: 1px solid rgba(251,191,36,0.3);
+    display: grid;
+    place-items: center;
+    color: var(--amber);
+  }
+  .warn-icon svg { width: 18px; height: 18px; stroke-width: 2; fill: none; stroke: currentColor; }
+  .warn-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--amber);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .warn-text { font-size: 12px; color: var(--text-2); line-height: 1.55; }
+  .warn-text strong { color: var(--text); font-weight: 600; }
+
+  .email-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .email-pill--ok {
+    color: var(--green);
+    background: rgba(52,211,153,0.1);
+    border: 1px solid rgba(52,211,153,0.28);
+  }
+  .email-pill--fail {
+    color: var(--red);
+    background: rgba(248,113,113,0.1);
+    border: 1px solid rgba(248,113,113,0.28);
+  }
+  .email-pill svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  .code-section { margin-bottom: 20px; text-align: left; }
+  .code-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .code-label span {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .code-label em {
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent-2);
+  }
+  .code-wrap {
+    position: relative;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    overflow: hidden;
   }
   .code-box {
-    font-family: ui-monospace, monospace; font-size: 11px; word-break: break-all;
-    text-align: left; padding: 12px; background: var(--bg); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text); margin: 12px 0 18px;
+    font-family: ui-monospace, "Cascadia Code", monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    word-break: break-all;
+    padding: 14px 14px 14px;
+    color: var(--text);
+    max-height: 88px;
+    overflow-y: auto;
   }
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-top: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-2);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .copy-btn:hover { background: rgba(139,92,246,0.12); color: var(--text); }
+  .copy-btn.copied { color: var(--green); }
+  .copy-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  .steps {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    background: rgba(139,92,246,0.06);
+    border: 1px solid var(--border);
+  }
+  .steps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--text-2);
+    padding: 5px 0;
+  }
+  .steps li + li { border-top: 1px solid var(--border); margin-top: 2px; padding-top: 10px; }
+  .step-num {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    background: rgba(139,92,246,0.15);
+    border: 1px solid var(--border-strong);
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-2);
+  }
+
   .btn {
-    display: flex; align-items: center; justify-content: center;
-    width: 100%; padding: 11px 20px; border-radius: 9px;
-    font-weight: 600; font-size: 14px; text-decoration: none; margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 9px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 10px;
+    font-family: inherit;
+    transition: transform 0.15s, box-shadow 0.15s;
   }
   .btn-primary {
     background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-    color: #fff; box-shadow: 0 2px 16px rgba(139,92,246,0.35);
+    color: #fff;
+    box-shadow: 0 2px 16px rgba(139,92,246,0.35);
+    border: none;
+    cursor: pointer;
   }
-  .btn-ghost { color: var(--text); border: 1px solid var(--border); background: transparent; }
-  a { color: #a78bfa; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 24px rgba(139,92,246,0.45); color: #fff; }
+  .btn-ghost {
+    color: var(--text-2);
+    border: 1px solid var(--border-strong);
+    background: transparent;
+  }
+  .btn-ghost:hover { border-color: var(--accent-2); color: var(--text); }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  .error-state { text-align: center; }
+  .error-state h1 { margin-bottom: 10px; }
+  .error-state p { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="brand">
+<div class="card" id="card">
+  <a class="brand" href="/">
     <span class="brand-mark" aria-hidden="true">
       <svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="5"/><line x1="14" y1="14" x2="20" y2="20"/></svg>
     </span>
     Site<em>X</em>-Ray
+  </a>
+
+  <div id="success-view" hidden>
+    <div class="hero-row">
+      <div class="check" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div>
+        <h1>Lifetime access unlocked</h1>
+        <p class="subtitle" id="email-line">One payment · unlimited full audits forever</p>
+      </div>
+    </div>
+
+    <div class="warn" role="alert">
+      <div class="warn-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div>
+        <p class="warn-title">Save your unlock code now</p>
+        <p class="warn-text">
+          This page shows your <strong>secret code only once</strong>.
+          If the email doesn't arrive, you won't see it here again after you leave.
+          <strong>Copy it</strong> to a password manager, notes, or a safe place before continuing.
+        </p>
+      </div>
+    </div>
+
+    <div class="email-pill email-pill--ok" id="email-pill" hidden>
+      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      <span id="email-pill-text"></span>
+    </div>
+
+    <div class="code-section">
+      <div class="code-label">
+        <span>Your unlock code</span>
+        <em>Lifetime · not a subscription</em>
+      </div>
+      <div class="code-wrap">
+        <div class="code-box" id="unlock-code"></div>
+        <button type="button" class="copy-btn" id="copy-btn">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy unlock code
+        </button>
+      </div>
+    </div>
+
+    <ol class="steps">
+      <li><span class="step-num">1</span><span><strong>Copy the code above</strong> — treat it like a password.</span></li>
+      <li><span class="step-num">2</span><span id="step-email">Check your inbox and Spam — we sent the same code by email.</span></li>
+      <li><span class="step-num">3</span><span>Code is also saved in <strong>this browser</strong> — use the same device or paste it later under “Already paid?”.</span></li>
+    </ol>
+
+    <a href="/#audit" class="btn btn-primary" id="start-btn">I've saved it — run full audit</a>
+    <a href="/" class="btn btn-ghost">Back to home</a>
+    <p class="footer-note">Lost the code? Use “Resend code” on the home page with your payment email.</p>
   </div>
-  <div class="check">
-    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+
+  <div class="error-state" id="error-view" hidden>
+    <h1>Unlock code missing</h1>
+    <p>Check your payment email or use “Resend code” on the home page with the email you paid with.</p>
+    <a href="/#audit" class="btn btn-primary">Go to SiteX-Ray</a>
+    <a href="mailto:ernest2011kostevich@gmail.com" class="btn btn-ghost">Contact support</a>
   </div>
-  <h1>Lifetime full access unlocked</h1>
-  <p class="lead">Not a subscription — one payment, forever:</p>
-  <ul class="lead">
-    <li>Unlimited <strong>full</strong> Llama audits — no API key required</li>
-    <li>Optional Claude Sonnet 4.6 with your Anthropic key (BYOK)</li>
-    <li>License saved on our servers · code in this browser + email</li>
-    <li>Each report link lasts 7 days — audit again anytime</li>
-  </ul>
-  <div class="status-box" id="status-text">Saving your unlock code…</div>
-  <div class="code-box" id="unlock-code" hidden></div>
-  <a href="/#audit" class="btn btn-primary" id="start-btn">Run your first full audit</a>
-  <a href="/" class="btn btn-ghost">Back to home</a>
 </div>
 <script>
 (function () {
@@ -100,39 +380,80 @@
   const unlock = (params.get("unlock") || params.get("token") || "").trim();
   const email = (params.get("email") || "").trim();
   const emailSent = params.get("emailSent") !== "0";
-  const status = document.getElementById("status-text");
+
+  const successView = document.getElementById("success-view");
+  const errorView = document.getElementById("error-view");
   const codeBox = document.getElementById("unlock-code");
+  const copyBtn = document.getElementById("copy-btn");
+  const emailLine = document.getElementById("email-line");
+  const emailPill = document.getElementById("email-pill");
+  const emailPillText = document.getElementById("email-pill-text");
+  const stepEmail = document.getElementById("step-email");
 
   if (!unlock) {
-    status.textContent = "Missing unlock code. Check your email or contact support.";
-    status.style.color = "var(--red)";
+    errorView.hidden = false;
     return;
   }
+
+  successView.hidden = false;
 
   const store = { unlockToken: unlock, email: email || null, savedAt: Date.now() };
   try {
     localStorage.setItem("sitexray_unlock", JSON.stringify(store));
   } catch (_) {}
 
-  codeBox.hidden = false;
+  // Remove code from URL so refresh won't re-display it from the address bar
+  try {
+    const clean = new URL(location.href);
+    clean.searchParams.delete("unlock");
+    clean.searchParams.delete("token");
+    history.replaceState({}, "", clean.pathname + clean.search + clean.hash);
+  } catch (_) {}
+
   codeBox.textContent = unlock;
 
-  if (emailSent && email) {
-    status.textContent = "Unlocked for " + email + ". Code saved in this browser. We also emailed it.";
-    status.style.color = "var(--green)";
-  } else if (email) {
-    status.textContent =
-      "Unlocked for " + email + ". Email did not arrive — copy the code below and save it. Also in this browser.";
-    status.style.color = "var(--red)";
-  } else if (emailSent) {
-    status.textContent = "Unlock code saved in this browser. We also emailed it.";
-    status.style.color = "var(--green)";
-  } else {
-    status.textContent = "Unlock code saved in this browser. Email failed — copy the code below.";
-    status.style.color = "var(--red)";
+  if (email) {
+    emailLine.textContent = "Licensed to " + email;
   }
 
-  document.getElementById("start-btn").href = "/?unlock=" + encodeURIComponent(unlock) + (email ? "&email=" + encodeURIComponent(email) : "") + "#audit";
+  emailPill.hidden = false;
+  if (emailSent) {
+    emailPill.className = "email-pill email-pill--ok";
+    emailPillText.textContent = email
+      ? "Email sent to " + email + " — check Spam too"
+      : "Confirmation email sent — check Spam too";
+    stepEmail.innerHTML =
+      "Check your inbox and <strong>Spam / Promotions</strong> — we emailed the same code.";
+  } else {
+    emailPill.className = "email-pill email-pill--fail";
+    emailPillText.textContent = email
+      ? "Email to " + email + " did not send — save the code below"
+      : "Email did not send — save the code below";
+    stepEmail.innerHTML =
+      "<strong>Email failed</strong> — this screen is your backup. Copy the code before leaving.";
+  }
+
+  document.getElementById("start-btn").href =
+    "/?unlock=" + encodeURIComponent(unlock) +
+    (email ? "&email=" + encodeURIComponent(email) : "") +
+    "#audit";
+
+  copyBtn.addEventListener("click", async function () {
+    const code = codeBox.textContent || "";
+    try {
+      await navigator.clipboard.writeText(code);
+      copyBtn.classList.add("copied");
+      copyBtn.innerHTML =
+        '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied — keep it safe';
+      setTimeout(function () {
+        copyBtn.classList.remove("copied");
+        copyBtn.innerHTML =
+          '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy unlock code';
+      }, 2800);
+    } catch (_) {
+      copyBtn.textContent = "Select code and copy manually";
+    }
+  });
 })();
 </script>
 </body>
