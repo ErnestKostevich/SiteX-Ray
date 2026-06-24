@@ -276,6 +276,14 @@
     color: var(--text); font-size: 12px; font-family: ui-monospace, monospace;
   }
   .pro-note { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.45; }
+  .byok-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+  .byok-clear {
+    background: none; border: none; padding: 0;
+    font-size: 11px; color: var(--muted); cursor: pointer; font-family: inherit;
+    text-decoration: underline; text-underline-offset: 2px;
+  }
+  .byok-clear:hover { color: var(--text-2); }
+  .byok-saved { font-size: 11px; color: var(--green); }
   .unlock-banner {
     width: 100%; margin-top: 14px; padding: 12px 14px; border-radius: 9px;
     background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.28);
@@ -581,23 +589,27 @@
       <p class="result-heading">Report ready</p>
       <p class="result-detail" id="result-detail"></p>
       <a href="#" id="report-ready-link" class="btn btn-primary">Open your report</a>
+      <button type="button" class="btn btn-ghost btn-resend" id="new-audit-btn" hidden>Run another audit</button>
       <button type="button" class="btn btn-resend" id="resend-email-btn" hidden>Resend email</button>
       <p class="result-hint" id="result-hint"></p>
     </div>
 
     <div id="hero-extra">
-      <a class="sample-link" href="/sample-report.html" target="_blank" rel="noopener">
+      <a class="sample-link" id="sample-link" href="/sample-report.html" target="_blank" rel="noopener">
         View sample report
         <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       </a>
+    </div>
+
+    <div id="hero-tools">
       <div id="unlock-banner" class="unlock-banner" hidden>
         <span class="unlock-badge">Lifetime full access</span>
         <span class="unlock-text">Full Llama audits included · optional Claude Sonnet 4.6 (BYOK)</span>
       </div>
-      <details class="unlock-restore" id="unlock-restore">
+      <details class="unlock-restore" id="unlock-restore" open>
         <summary>Already paid? Enter unlock code</summary>
         <div class="inner">
-          <p class="pro-note">Use the email from payment and the code we emailed you. Saved in this browser after first unlock.</p>
+          <p class="pro-note">For lifetime access only — free users can ignore this. Paid users: email + code from payment mail. Saved in this browser after unlock.</p>
           <div class="field-mini">
             <label for="unlock-email-input">License email</label>
             <input type="email" id="unlock-email-input" placeholder="you@company.com" autocomplete="email">
@@ -616,8 +628,12 @@
       <details class="pro-toggle" id="pro-section" hidden>
         <summary>Optional — Claude Sonnet 4.6 (your Anthropic API key)</summary>
         <div class="inner">
-          <p class="pro-note">Without a key you get a full Llama report. Paste your key for Claude — used once per audit, never stored.</p>
+          <p class="pro-note">Without a key you get a full Llama report. Key is saved in <strong>this browser only</strong> so you don't retype it — never sent to our servers except per audit.</p>
           <input type="password" id="anthropic-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false">
+          <div class="byok-actions">
+            <span class="byok-saved" id="byok-saved-hint" hidden>Saved in this browser</span>
+            <button type="button" class="byok-clear" id="byok-clear-btn">Clear saved key</button>
+          </div>
         </div>
       </details>
       <p class="unlock-cta" id="unlock-cta">
@@ -816,12 +832,17 @@ const PAY_NETWORKS = {
   const resendUnlockBtn = document.getElementById("resend-unlock-btn");
   const unlockRestoreStatus = document.getElementById("unlock-restore-status");
   const payEmailInput = document.getElementById("pay-email");
+  const byokSavedHint = document.getElementById("byok-saved-hint");
+  const byokClearBtn = document.getElementById("byok-clear-btn");
+  const newAuditBtn = document.getElementById("new-audit-btn");
+  const sampleLink = document.getElementById("sample-link");
   let activeReportKey = null;
   let activeReportKind = "free";
   let unlockToken = null;
   let licensed = false;
 
   const UNLOCK_STORAGE = "sitexray_unlock";
+  const BYOK_STORAGE = "sitexray_byok";
 
   function saveUnlock(data) {
     try { localStorage.setItem(UNLOCK_STORAGE, JSON.stringify(data)); } catch (_) {}
@@ -860,6 +881,30 @@ const PAY_NETWORKS = {
       };
     }
     return loadUnlockFromStorage() || loadUnlockFromUrl();
+  }
+
+  function loadByokKey() {
+    try { return localStorage.getItem(BYOK_STORAGE) || ""; } catch (_) { return ""; }
+  }
+
+  function saveByokKey(key) {
+    try {
+      if (key) localStorage.setItem(BYOK_STORAGE, key);
+      else localStorage.removeItem(BYOK_STORAGE);
+    } catch (_) {}
+    updateByokHint();
+  }
+
+  function updateByokHint() {
+    const hasKey = !!(byokInput?.value.trim() || loadByokKey());
+    if (byokSavedHint) byokSavedHint.hidden = !hasKey;
+  }
+
+  function restoreByokKey() {
+    if (!licensed || !byokInput) return;
+    const saved = loadByokKey();
+    if (saved && !byokInput.value.trim()) byokInput.value = saved;
+    updateByokHint();
   }
 
   function updateSubmitLabel() {
@@ -917,6 +962,7 @@ const PAY_NETWORKS = {
         unlockBanner.hidden = false;
         unlockCta.hidden = true;
         if (active.email) emailInput.value = active.email;
+        restoreByokKey();
         updateSubmitLabel();
         return true;
       }
@@ -934,7 +980,15 @@ const PAY_NETWORKS = {
   emailInput.addEventListener("change", refreshUnlockUI);
   unlockCodeInput?.addEventListener("change", refreshUnlockUI);
   unlockEmailInput?.addEventListener("change", refreshUnlockUI);
-  byokInput?.addEventListener("input", updateSubmitLabel);
+  byokInput?.addEventListener("input", () => {
+    if (licensed) saveByokKey(byokInput.value.trim());
+    updateSubmitLabel();
+  });
+  byokClearBtn?.addEventListener("click", () => {
+    if (byokInput) byokInput.value = "";
+    saveByokKey("");
+    updateSubmitLabel();
+  });
 
   unlockApplyBtn?.addEventListener("click", async () => {
     const code = unlockCodeInput?.value.trim() || "";
@@ -975,7 +1029,10 @@ const PAY_NETWORKS = {
       if (res.ok && data.ok) {
         setUnlockRestoreStatus("New unlock code sent — check inbox and spam.", "success");
       } else {
-        setUnlockRestoreStatus(data.error || "Could not resend.", "error");
+        const msg = res.status === 404
+          ? "No license on this email yet. Pay 39 USDT first, or check the spelling."
+          : (data.error || "Could not resend.");
+        setUnlockRestoreStatus(msg, "error");
       }
     } catch {
       setUnlockRestoreStatus("Server error.", "error");
@@ -1020,21 +1077,23 @@ const PAY_NETWORKS = {
     heroSection?.classList.remove("hero--ready");
     document.getElementById("hero-intro").hidden = false;
     document.getElementById("hero-extra").hidden = false;
+    if (sampleLink) sampleLink.hidden = false;
     document.getElementById("audit-form").hidden = false;
     document.getElementById("hero-actions").hidden = false;
     document.getElementById("hero-result").hidden = true;
     if (resendBtn) resendBtn.hidden = true;
+    if (newAuditBtn) newAuditBtn.hidden = true;
     activeReportKey = null;
 
-    const byok = byokInput?.value.trim() || "";
-    const active = getActiveUnlock();
-    const token = active?.unlockToken || unlockToken;
+    const byok = byokInput?.value.trim() || (licensed ? loadByokKey() : "");
+    if (byok && byokInput && !byokInput.value.trim()) byokInput.value = byok;
+    const token = licensed ? (unlockToken || getActiveUnlock()?.unlockToken) : null;
     const payload = {
       url, email,
       turnstileToken: getTurnstileToken(),
     };
     if (byok) {
-      if (!token) {
+      if (!licensed || !token) {
         setStatus("Lifetime unlock required for Claude. Pay 39 USDT once.", "error");
         submitBtn.disabled = false;
         submitBtn.textContent = orig;
@@ -1043,7 +1102,7 @@ const PAY_NETWORKS = {
       }
       payload.anthropicApiKey = byok;
     }
-    if (token) payload.unlockToken = token;
+    if (licensed && token) payload.unlockToken = token;
 
     try {
       const res = await fetch("/api/audit", {
@@ -1056,7 +1115,7 @@ const PAY_NETWORKS = {
         activeReportKind = data.kind || (data.full ? "full" : "free");
         setStatus("Generating… stay on this page.", "success");
         if (data.reportKey) pollReport(data.reportKey, activeReportKind);
-        if (byok && byokInput) byokInput.value = "";
+        if (byok) saveByokKey(byok);
       } else {
         if (data.needsUnlock) refreshUnlockUI();
         setStatus(data.error || "Something went wrong.", "error");
@@ -1177,12 +1236,13 @@ const PAY_NETWORKS = {
 
     heroSection?.classList.add("hero--ready");
     document.getElementById("hero-intro").hidden = true;
-    document.getElementById("hero-extra").hidden = true;
+    if (sampleLink) sampleLink.hidden = true;
     document.getElementById("audit-form").hidden = true;
     document.getElementById("hero-actions").hidden = true;
     document.getElementById("hero-result").hidden = false;
     setStatus("", null);
 
+    if (newAuditBtn) newAuditBtn.hidden = false;
     if (resendBtn) {
       resendBtn.hidden = false;
       resendBtn.disabled = false;
@@ -1212,6 +1272,20 @@ const PAY_NETWORKS = {
 
     heroSection?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  newAuditBtn?.addEventListener("click", function () {
+    heroSection?.classList.remove("hero--ready");
+    document.getElementById("hero-intro").hidden = false;
+    if (sampleLink) sampleLink.hidden = false;
+    document.getElementById("audit-form").hidden = false;
+    document.getElementById("hero-actions").hidden = false;
+    document.getElementById("hero-result").hidden = true;
+    if (newAuditBtn) newAuditBtn.hidden = true;
+    if (resendBtn) resendBtn.hidden = true;
+    activeReportKey = null;
+    setStatus("", null);
+    urlInput.focus();
+  });
 
   resendBtn?.addEventListener("click", async function () {
     if (!activeReportKey) return;
