@@ -413,6 +413,31 @@
   .faq summary::-webkit-details-marker { display: none; }
   .faq .ans { padding: 0 0 16px; font-size: 13px; color: var(--muted); line-height: 1.6; }
 
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.reveal--left { transform: translateX(-28px); }
+  .reveal.reveal--right { transform: translateX(28px); }
+  .reveal.reveal--scale { transform: translateY(24px) scale(0.96); }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+      will-change: auto;
+    }
+  }
+
   .mobile-cta { display: none; }
 
   footer {
@@ -1387,6 +1412,50 @@ const PAY_NETWORKS = {
   payEmailInput?.addEventListener("change", () => {
     if (payEmailInput.value.trim()) emailInput.value = payEmailInput.value.trim();
   });
+})();
+
+(function initScrollReveal() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const groups = [
+    { sel: "#delivery .section-head", stagger: 0 },
+    { sel: "#delivery .step", stagger: 90 },
+    { sel: "#pricing .section-head", stagger: 0 },
+    { sel: "#pricing .plan:first-child", variant: "reveal--left", stagger: 0 },
+    { sel: "#pricing .plan.featured", variant: "reveal--right reveal--scale", stagger: 120 },
+    { sel: "#faq .section-head", stagger: 0 },
+    { sel: "#faq .faq details", stagger: 70 },
+    { sel: "footer .wrap", stagger: 0 },
+  ];
+
+  const items = [];
+  groups.forEach((g) => {
+    document.querySelectorAll(g.sel).forEach((el, i) => {
+      el.classList.add("reveal");
+      if (g.variant) g.variant.split(" ").forEach((c) => el.classList.add(c));
+      const delay = (g.stagger || 0) * i;
+      if (delay) el.style.transitionDelay = delay + "ms";
+      items.push(el);
+    });
+  });
+
+  if (!items.length || !("IntersectionObserver" in window)) {
+    items.forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.14, rootMargin: "0px 0px -6% 0px" }
+  );
+
+  items.forEach((el) => observer.observe(el));
 })();
 </script>
 </body>
